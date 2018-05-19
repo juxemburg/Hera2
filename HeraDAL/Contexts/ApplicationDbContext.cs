@@ -11,7 +11,7 @@ using System.Text;
 
 namespace HeraDAL.Contexts
 {
-    class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         //Tablas
         public DbSet<Profesor> Profesores { get; set; }

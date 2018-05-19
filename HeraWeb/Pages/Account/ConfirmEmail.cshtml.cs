@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using HeraWeb.Data;
+using Entities.Usuarios;
 
 namespace HeraWeb.Pages.Account
 {

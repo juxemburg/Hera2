@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using HeraWeb.Data;
+using Entities.Usuarios;
 
 namespace HeraWeb.Pages.Account.Manage
 {
