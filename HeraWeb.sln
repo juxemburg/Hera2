@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeraWeb", "HeraWeb\HeraWeb.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{DFE7CC59-D1BC-46D0-86EC-461A10314C13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeraDAL", "HeraDAL\HeraDAL.csproj", "{04CA0AAF-179B-48F6-820F-AE79EE10F87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DFE7CC59-D1BC-46D0-86EC-461A10314C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFE7CC59-D1BC-46D0-86EC-461A10314C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFE7CC59-D1BC-46D0-86EC-461A10314C13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04CA0AAF-179B-48F6-820F-AE79EE10F87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CA0AAF-179B-48F6-820F-AE79EE10F87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CA0AAF-179B-48F6-820F-AE79EE10F87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CA0AAF-179B-48F6-820F-AE79EE10F87F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
