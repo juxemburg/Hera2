@@ -30,6 +30,9 @@ namespace HeraWeb
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HeraDb")));
 
+            services.AddDbContext<NotificationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("HeraDb")));
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
