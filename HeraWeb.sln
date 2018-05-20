@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entiti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeraDAL", "HeraDAL\HeraDAL.csproj", "{04CA0AAF-179B-48F6-820F-AE79EE10F87F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeraServices", "HeraServices\HeraServices.csproj", "{3379034D-0517-44B3-B52E-15D53B737569}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeraServices", "HeraServices\HeraServices.csproj", "{3379034D-0517-44B3-B52E-15D53B737569}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeraScratch", "HeraScratch\HeraScratch.csproj", "{FD46BDA8-F270-4425-9C8A-9AA3C00AAF09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestClient", "HttpClient\RestClient.csproj", "{2D57314E-29EB-42C1-875E-CD559C1E1306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{3379034D-0517-44B3-B52E-15D53B737569}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3379034D-0517-44B3-B52E-15D53B737569}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3379034D-0517-44B3-B52E-15D53B737569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD46BDA8-F270-4425-9C8A-9AA3C00AAF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD46BDA8-F270-4425-9C8A-9AA3C00AAF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD46BDA8-F270-4425-9C8A-9AA3C00AAF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD46BDA8-F270-4425-9C8A-9AA3C00AAF09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D57314E-29EB-42C1-875E-CD559C1E1306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D57314E-29EB-42C1-875E-CD559C1E1306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D57314E-29EB-42C1-875E-CD559C1E1306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D57314E-29EB-42C1-875E-CD559C1E1306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
