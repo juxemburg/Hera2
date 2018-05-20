@@ -177,6 +177,23 @@ namespace HeraDAL.Contexts
                 .HasKey(entity =>
                 new { entity.ProfesorId, entity.DesafioId });
 
+            builder.Entity<Rel_Rating>()
+                .HasOne(e => e.Desafio)
+                .WithMany(par => par.Ratings)
+                .HasForeignKey(e => e.DesafioId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Entity<Rel_Rating>()
+                .HasOne(e => e.Profesor)
+                .WithMany(par => par.Ratings)
+                .HasForeignKey(e => e.ProfesorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Entity<Rel_DesafiosCursos>()
+                .HasOne(e => e.Desafio)
+                .WithMany(par => par.Cursos)
+                .HasForeignKey(e => e.DesafioId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
