@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Entities.Usuarios;
 using HeraWeb.Services;
+using HeraServices.MessageServices;
 
 namespace HeraWeb.Pages.Account
 {

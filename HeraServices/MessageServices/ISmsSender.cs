@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HeraServices.Services
+namespace HeraServices.MessageServices
 {
     public interface ISmsSender
     {

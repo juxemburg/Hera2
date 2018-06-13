@@ -38,5 +38,6 @@ namespace HeraServices.ViewModels.AccountViewModels
         [Range(7, 100,
             ErrorMessage = "Error la edad debe estar entre 7 y 100 años")]
         public int Edad { get; set; }
+        
     }
 }

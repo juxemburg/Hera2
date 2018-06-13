@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using HeraWeb.Services;
 using HeraDAL.Contexts;
 using Entities.Usuarios;
+using HeraServices.Services;
+using HeraServices.MessageServices;
 
 namespace HeraWeb
 {
@@ -27,6 +29,8 @@ namespace HeraWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HeraDb")));
 
@@ -46,7 +50,7 @@ namespace HeraWeb
 
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IEmailSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +61,12 @@ namespace HeraWeb
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseCors(builder => 
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
             }
             else
             {
