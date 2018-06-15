@@ -1,6 +1,7 @@
 ﻿using Entities.Usuarios;
 using HeraDAL.DataAcess;
 using HeraServices.ViewModels.AccountViewModels;
+using HeraServices.ViewModels.ApiViewModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -29,14 +30,41 @@ namespace HeraServices.UserServices
             _dataAccess = dataAccess;
         }
 
-        public async Task<bool> RegisterProfesor
+        public async Task<ApiResult<bool>> Login(LoginViewModel model, string returnUrl= "")
+        {
+            var apiResult = new ApiResult<bool>()
+            {
+                ModelErrors = new Dictionary<string, string>(),
+                Value = false
+            };
+            var result = await _signInManager
+                    .PasswordSignInAsync(model.Email, model.Password,
+                    model.RememberMe, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                apiResult.ModelErrors.Add("", "Correo y/o contraseña inválidos.");
+            }
+            apiResult.Value = result.Succeeded;
+
+            return apiResult;
+        }
+
+        public async Task<ApiResult<bool>> RegisterProfesor
             (RegisterProfesorViewModel model, string returnUrl = null)
         {
-            return await RegisterUser(model, "Profesor",
+            var apiResult = new ApiResult<bool>()
+            {
+                ModelErrors = new Dictionary<string, string>(),
+                Value = false
+            };
+            var res = await RegisterUser(model, "Profesor",
                     (usuarioId) =>
                     {
                         _dataAccess.AddProfesor(model.Map(usuarioId));
                     });
+
+            apiResult.Value = res;
+            return apiResult;
 
         }
 

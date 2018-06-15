@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HeraServices.ViewModels.ApiViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,35 @@ namespace HeraWeb.Utils
         /// <param name="modelstate">Estado del modelo a ser validado</param>
         /// <param name="fnInsert">Función de inserción del modelo</param>
         public static async Task<IActionResult> InsertModel<T>(this Controller controller,  T model,
-            ModelStateDictionary modelState, Func<Task<bool>> fnInsert)
+            ModelStateDictionary modelState, Func<Task<ApiResult<bool>>> fnInsert)
         {
             if(modelState.IsValid)
             {
+                
                 var result = await fnInsert();
-                return controller.Ok();
+                addModelErrors(modelState, result.ModelErrors);
+
+                if (result.Value)
+                    return controller.Ok();
+                else
+                    return controller.BadRequest(modelState);
             }
             else
             {
                 return controller.BadRequest(modelState);
             }
-        }   
+        }
+        
+
+        private static void addModelErrors(ModelStateDictionary modelState, Dictionary<string, string> errDictionary)
+        {
+            if (errDictionary == null)
+                return;
+
+            foreach (var key in errDictionary.Keys)
+            {
+                modelState.AddModelError(key, errDictionary[key]);
+            }
+        }
     }
 }
