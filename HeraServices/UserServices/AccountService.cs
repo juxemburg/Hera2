@@ -23,7 +23,10 @@ namespace HeraServices.UserServices
             SignInManager<ApplicationUser> signInManager,
             IDataAccess dataAccess)
         {
-
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
+            _dataAccess = dataAccess;
         }
 
         public async Task<bool> RegisterProfesor
@@ -73,7 +76,7 @@ namespace HeraServices.UserServices
                 else
                     return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }

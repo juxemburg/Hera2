@@ -60,7 +60,7 @@ namespace HeraWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterProfesor(RegisterProfesorViewModel model)
+        public async Task<IActionResult> RegisterTeacher([FromBody]RegisterProfesorViewModel model)
         {
             return await this.InsertModel<RegisterProfesorViewModel>(model, ModelState, async () => {
                 return await this._accountService.RegisterProfesor(model);

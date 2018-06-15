@@ -14,6 +14,9 @@ using HeraDAL.Contexts;
 using Entities.Usuarios;
 using HeraServices.Services;
 using HeraServices.MessageServices;
+using HeraServices.UserServices;
+using HeraDAL.DataAcess;
+using HeraDAL.Services.FileServices;
 
 namespace HeraWeb
 {
@@ -37,9 +40,17 @@ namespace HeraWeb
             services.AddDbContext<NotificationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HeraDb")));
 
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+
+
+            //Adding custom services
+            services.AddScoped<IDataAccess, DataAccess_Sql>();
+            services.AddScoped<AccountService>();
+            services.AddSingleton<FileManagerService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
