@@ -18,6 +18,8 @@ using HeraServices.UserServices;
 using HeraDAL.DataAcess;
 using HeraDAL.Services.FileServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using HeraServices.Services.UserServices;
+using HeraServices.Services.ApplicationServices;
 
 namespace HeraWeb
 {
@@ -67,9 +69,12 @@ namespace HeraWeb
 
 
             //Adding custom services
+            services.AddSingleton<FileManagerService>();
             services.AddScoped<IDataAccess, DataAccess_Sql>();
             services.AddScoped<AccountService>();
-            services.AddSingleton<FileManagerService>();
+            
+            services.AddScoped<UserService>();
+            services.AddScoped<ProfesorService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
@@ -88,7 +93,7 @@ namespace HeraWeb
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                app.UseBrowserLink(); 
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseCors(builder => 
