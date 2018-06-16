@@ -32,17 +32,13 @@ namespace HeraServices.UserServices
 
         public async Task<ApiResult<bool>> Login(LoginViewModel model, string returnUrl = "")
         {
-            var apiResult = new ApiResult<bool>()
-            {
-                ModelErrors = new Dictionary<string, string>(),
-                Value = false
-            };
+            var apiResult = ApiResult<bool>.Initialize(false);
             var result = await _signInManager
                     .PasswordSignInAsync(model.Email, model.Password,
                     model.RememberMe, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                apiResult.ModelErrors.Add("", "Correo y/o contraseña inválidos.");
+                apiResult.AddError("", "Correo y/o contraseña inválidos.");
             }
             apiResult.Value = result.Succeeded;
 
@@ -72,11 +68,7 @@ namespace HeraServices.UserServices
         private async Task<ApiResult<bool>> RegisterUser(RegisterViewModel model,
             string role, Action<int> userCreation)
         {
-            var apiResult = new ApiResult<bool>()
-            {
-                ModelErrors = new Dictionary<string, string>(),
-                Value = false
-            };
+            var apiResult = ApiResult<bool>.Initialize(false);
 
             try
             {
@@ -110,7 +102,7 @@ namespace HeraServices.UserServices
                 }
                 else
                 {
-                    apiResult.ModelErrors.Add("", result.Errors.ToString());
+                    apiResult.AddError("", result.Errors.ToString());
                     return apiResult;
                 }
 

@@ -10,6 +10,12 @@ namespace HeraWeb.Utils
 {
     public static class CrudController
     {
+        /// <summary>
+        /// Función genérica para obtener un recurso
+        /// </summary>
+        /// <typeparam name="T">Tipo de dato del recurso a obtener</typeparam>
+        /// <param name="fnGetModel">Función que obtiene el modelo</param>
+        /// <returns></returns>
         public static async Task<IActionResult> GetModel<T>(this Controller controller, Func<Task<T>> fnGetModel)
         {
             try
@@ -19,7 +25,7 @@ namespace HeraWeb.Utils
             }
             catch (Exception err)
             {
-
+                //Log error.
                 return controller.StatusCode(500, err);
             }
         }

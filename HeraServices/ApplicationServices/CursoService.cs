@@ -6,6 +6,7 @@ using Entities.Notifications;
 using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.Services.UtilServices;
+using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos;
@@ -51,18 +52,19 @@ namespace HeraServices.Services.ApplicationServices
             return new EditCursoViewModel(model);
         }
 
-        public async Task<bool> Create_Curso(int profId,
+        public async Task<ApiResult<bool>> Create_Curso(int profId,
             CreateCursoViewModel model)
         {
+            var result = ApiResult<bool>.Initialize(false);
             var desafio = await _data
                 .Find_Desafio(model.DesafioId.GetValueOrDefault());
             if (desafio == null)
-                throw new ApplicationServicesException(
-                    "Error en la creación del curso");
+                result.AddError("", "Error en la creación del curso");
 
             _data.AddCurso(model.Map(profId, desafio,
                 _clrService.RandomColor));
-            return await _data.SaveAllAsync();
+            result.Value  = await _data.SaveAllAsync();
+            return result;
         }
 
         public async Task<bool> Edit_Cruso(int profId,

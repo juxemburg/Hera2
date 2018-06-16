@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HeraDAL.DataAcess;
+using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 using HeraServices.ViewModels.EntitiesViewModels.Ratings;
@@ -50,20 +52,21 @@ namespace HeraServices.Services.ApplicationServices
                 : new DesafioDetailsViewModel(model);
         }
 
-        public async Task<bool> Create_Desafio(int profId,
+        public async Task<ApiResult<bool>> Create_Desafio(int profId,
             CreateDesafioViewModel model)
         {
+            var result = ApiResult<bool>.Initialize(false);
             try
             {
                 _data.AddDesafio(model.Map(profId));
-                return await _data.SaveAllAsync();
+                result.Value = await _data.SaveAllAsync();
+                return result;
 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw new ApplicationServicesException(
-                    "Error en la creación de desafío");
+                result.AddError("", "Error en la creación de desafío");
+                return result;
             }
         }
 

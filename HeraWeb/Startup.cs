@@ -75,6 +75,7 @@ namespace HeraWeb
             
             services.AddScoped<UserService>();
             services.AddScoped<ProfesorService>();
+            services.AddScoped<DesafioService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
