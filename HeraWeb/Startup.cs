@@ -17,6 +17,7 @@ using HeraServices.MessageServices;
 using HeraServices.UserServices;
 using HeraDAL.DataAcess;
 using HeraDAL.Services.FileServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace HeraWeb
 {
@@ -34,7 +35,8 @@ namespace HeraWeb
         {
             services.AddCors();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext
+                <ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HeraDb")));
 
             services.AddDbContext<NotificationDbContext>(options =>
@@ -44,6 +46,11 @@ namespace HeraWeb
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication(config => {
+                config.DefaultScheme = IdentityConstants.ApplicationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer();
 
 
 

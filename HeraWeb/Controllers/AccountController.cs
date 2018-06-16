@@ -9,6 +9,7 @@ using Entities.Usuarios;
 using HeraServices.ViewModels.AccountViewModels;
 using HeraWeb.Utils;
 using HeraServices.UserServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HeraWeb.Controllers
 {
@@ -39,17 +40,10 @@ namespace HeraWeb.Controllers
             return await this.InsertModel<LoginViewModel>(model, ModelState, async () => {
                 return await _accountService.Login(model);
             });
-            
+
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return RedirectToPage("/Index");
-        }
+
 
         [HttpPost]
         public async Task<IActionResult> RegisterTeacher([FromBody]RegisterProfesorViewModel model)
@@ -58,5 +52,22 @@ namespace HeraWeb.Controllers
                 return await this._accountService.RegisterProfesor(model);
             });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
+            return RedirectToPage("/Index");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult IsAuthenticated()
+        {
+            
+            return Ok();
+        }
+
     }
 }
