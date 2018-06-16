@@ -30,7 +30,7 @@ namespace HeraServices.UserServices
             _dataAccess = dataAccess;
         }
 
-        public async Task<ApiResult<bool>> Login(LoginViewModel model, string returnUrl= "")
+        public async Task<ApiResult<bool>> Login(LoginViewModel model, string returnUrl = "")
         {
             var apiResult = new ApiResult<bool>()
             {
@@ -52,25 +52,31 @@ namespace HeraServices.UserServices
         public async Task<ApiResult<bool>> RegisterProfesor
             (RegisterProfesorViewModel model, string returnUrl = null)
         {
+
+            return await RegisterUser(model, "Profesor",
+                    (usuarioId) =>
+                    {
+                        _dataAccess.AddProfesor(model.Map(usuarioId));
+                    });
+        }
+
+        public async Task<ApiResult<bool>> RegisterEstudiante(RegisterEstudianteViewModel model)
+        {
+            return await RegisterUser(model, "Estudiante",
+                    (usuarioId) =>
+                    {
+                        _dataAccess.AddEstudiante(model.Map(usuarioId));
+                    });
+        }
+
+        private async Task<ApiResult<bool>> RegisterUser(RegisterViewModel model,
+            string role, Action<int> userCreation)
+        {
             var apiResult = new ApiResult<bool>()
             {
                 ModelErrors = new Dictionary<string, string>(),
                 Value = false
             };
-            var res = await RegisterUser(model, "Profesor",
-                    (usuarioId) =>
-                    {
-                        _dataAccess.AddProfesor(model.Map(usuarioId));
-                    });
-
-            apiResult.Value = res;
-            return apiResult;
-
-        }
-
-        private async Task<bool> RegisterUser(RegisterViewModel model,
-            string role, Action<int> userCreation)
-        {
 
             try
             {
@@ -99,14 +105,19 @@ namespace HeraServices.UserServices
                     //    new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     //await _emailSender.SendEmailAsync(model.Email, "Confirma tu cuenta",
                     //    $"Por favor confirma tu correo al hacer click aquí: <a href='{callbackUrl}'>link</a>");
-                    return true;
+                    apiResult.Value = true;
+                    return apiResult;
                 }
                 else
-                    return false;
+                {
+                    apiResult.ModelErrors.Add("", result.Errors.ToString());
+                    return apiResult;
+                }
+
             }
             catch (Exception e)
             {
-                return false;
+                return apiResult;
             }
 
         }

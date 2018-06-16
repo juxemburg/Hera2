@@ -46,6 +46,18 @@ namespace HeraWeb
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            services.Configure<IdentityOptions>(options => {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredUniqueChars = 6;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            });
 
             services.AddAuthentication(config => {
                 config.DefaultScheme = IdentityConstants.ApplicationScheme;

@@ -37,7 +37,8 @@ namespace HeraWeb.Controllers
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
 
-            return await this.InsertModel<LoginViewModel>(model, ModelState, async () => {
+            return await this.InsertModel<LoginViewModel>(model, ModelState, async () =>
+            {
                 return await _accountService.Login(model);
             });
 
@@ -48,8 +49,18 @@ namespace HeraWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterTeacher([FromBody]RegisterProfesorViewModel model)
         {
-            return await this.InsertModel<RegisterProfesorViewModel>(model, ModelState, async () => {
+            return await this.InsertModel(model, ModelState, async () =>
+            {
                 return await this._accountService.RegisterProfesor(model);
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterStudent([FromBody]RegisterEstudianteViewModel model)
+        {
+            return await this.InsertModel(model, ModelState, async () =>
+            {
+                return await this._accountService.RegisterEstudiante(model);
             });
         }
 
@@ -65,7 +76,7 @@ namespace HeraWeb.Controllers
         [Authorize]
         public IActionResult IsAuthenticated()
         {
-            
+
             return Ok();
         }
 
