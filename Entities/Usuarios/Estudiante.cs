@@ -6,6 +6,11 @@ namespace Entities.Usuarios
 {
     public class Estudiante: IUsuario
     {
+        public Estudiante()
+        {
+            Role = "Estudiante";
+        }
+
         public int Edad { get; set; }
         
         [Range(1, 11)]

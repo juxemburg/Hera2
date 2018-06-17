@@ -7,6 +7,7 @@ namespace HeraServices.ViewModels.ApiViewModels
     public class ApiResult<T>
     {
         public T Value { get; set; }
+        public bool Success { get; set; }
         public Dictionary<string, string> ModelErrors { get; set; }
 
         public void AddError(string modelKey, string error)
@@ -18,7 +19,8 @@ namespace HeraServices.ViewModels.ApiViewModels
         {
             return new ApiResult<T>()
             {
-                ModelErrors = new Dictionary<string, string>()
+                ModelErrors = new Dictionary<string, string>(),
+                Success = false
             };
 
         }
@@ -28,6 +30,7 @@ namespace HeraServices.ViewModels.ApiViewModels
             return new ApiResult<T>()
             {
                 ModelErrors = new Dictionary<string, string>(),
+                Success = false,
                 Value = val
             };
 

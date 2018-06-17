@@ -1,4 +1,6 @@
-﻿using HeraDAL.DataAcess;
+﻿using Entities.Usuarios;
+using HeraDAL.DataAcess;
+using HeraServices.ViewModels.AccountViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,15 @@ namespace HeraServices.Services.UserServices
             return _data.Get_UserId(claims);
         }
 
+        private async Task<IUsuario> Get_user(int usuarioId)
+        {
+            IUsuario user = null;
+            user = await _data.Find_ProfesorU(usuarioId);
+            if (user == null)
+                user = await _data.Find_EstudianteU(usuarioId);
+            return user;
+        }
+
         public int Get_Id(IEnumerable<Claim> claims)
         {
             var claimsList = ToList(claims);
@@ -30,6 +41,19 @@ namespace HeraServices.Services.UserServices
             if (Get_inRole(claimsList, "IsProfesor"))
                 return Get_ProfesorId(claimsList);
             return -1;
+        }
+
+        private string Get_role(IEnumerable<Claim> claims)
+        {
+            var claimsList = ToList(claims);
+
+            if (Get_inRole(claimsList, "IsEstudiante"))
+                return "Estudiante";
+            if (Get_inRole(claimsList, "IsProfesor"))
+                return "Profesor";
+            if (Get_inRole(claimsList, "IsAdmin"))
+                return "Admin";
+            return "";
         }
 
         public int Get_EstudianteId(IEnumerable<Claim> claims)
@@ -58,6 +82,36 @@ namespace HeraServices.Services.UserServices
             return (await _data.Find_Profesor(id))?.UsuarioId;
         }
 
+        public async Task<UserInfoViewModel> Get_UserInfo(IEnumerable<Claim> claims)
+        {
+            var userId = Get_UserId(claims);
+            var user = await Get_user(userId);
+            if (user == null)
+                return null;
+
+            return new UserInfoViewModel()
+            {
+                UserId = userId,
+                Role = Get_role(claims),
+                Username = user.NombreCompleto
+            };
+        }
+
+        public async Task<UserInfoViewModel> Get_UserInfo(int usuarioId)
+        {
+            
+            var user = await Get_user(usuarioId);
+            if (user == null)
+                return null;
+
+            return new UserInfoViewModel()
+            {
+                UserId = usuarioId,
+                Role = user.Role,
+                Username = user.NombreCompleto
+            };
+        }
+
         private List<Claim> ToList(IEnumerable<Claim> enumerable)
         {
             return enumerable as List<Claim> ?? enumerable.ToList();
@@ -74,5 +128,6 @@ namespace HeraServices.Services.UserServices
                 return false;
             }
         }
+
     }
 }

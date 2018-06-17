@@ -37,8 +37,8 @@ namespace HeraWeb.Utils
         /// <param name="model">Variable del modelo a ser insertada</param>
         /// <param name="modelstate">Estado del modelo a ser validado</param>
         /// <param name="fnInsert">Función de inserción del modelo</param>
-        public static async Task<IActionResult> InsertModel<T>(this Controller controller,  T model,
-            ModelStateDictionary modelState, Func<Task<ApiResult<bool>>> fnInsert)
+        public static async Task<IActionResult> InsertModel<T, U>(this Controller controller,  T model,
+            ModelStateDictionary modelState, Func<Task<ApiResult<U>>> fnInsert)
         {
             if(modelState.IsValid)
             {
@@ -46,8 +46,8 @@ namespace HeraWeb.Utils
                 var result = await fnInsert();
                 addModelErrors(modelState, result.ModelErrors);
 
-                if (result.Value)
-                    return controller.Ok();
+                if (result.Success)
+                    return controller.Ok(result.Value);
                 else
                     return controller.BadRequest(modelState);
             }

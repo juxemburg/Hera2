@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Entities.Usuarios
 {
     public abstract class IUsuario
@@ -15,7 +17,10 @@ namespace Entities.Usuarios
                 return Nombres + " " + Apellidos;
             }
         }
-        
+
+        [NotMapped]
+        public string Role { get; set; }
+
 
     }
 }

@@ -37,7 +37,7 @@ namespace HeraWeb.Controllers
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
 
-            return await this.InsertModel<LoginViewModel>(model, ModelState, async () =>
+            return await this.InsertModel<LoginViewModel, UserInfoViewModel>(model, ModelState, async () =>
             {
                 return await _accountService.Login(model);
             });
@@ -76,7 +76,6 @@ namespace HeraWeb.Controllers
         [Authorize]
         public IActionResult IsAuthenticated()
         {
-
             return Ok();
         }
 

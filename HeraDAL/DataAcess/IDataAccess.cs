@@ -30,6 +30,7 @@ namespace HeraDAL.DataAcess
         Task<Estudiante> Find_Estudiante(int id);
         Task<Rel_CursoEstudiantes> Find_Estudiante(int idEstudiante,
             int idCurso, int idProfesor);
+        Task<Estudiante> Find_EstudianteU(int usuarioId);
         void Do_MatricularEstudiante(Curso curso, Estudiante estudiante,
            Rel_CursoEstudiantes model, string password);
 

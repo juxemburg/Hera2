@@ -99,6 +99,7 @@ namespace HeraWeb
                 app.UseDatabaseErrorPage();
                 app.UseCors(builder => 
                 {
+                    builder.AllowCredentials();
                     builder.AllowAnyOrigin();
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();

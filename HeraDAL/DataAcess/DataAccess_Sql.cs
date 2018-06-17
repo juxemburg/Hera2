@@ -32,6 +32,11 @@ namespace HeraDAL.DataAcess
             _context = context;
         }
 
+        /// <summary>
+        /// Retorna el usuario id de la entidad
+        /// </summary>
+        /// <param name="claims">Lista de claims del usuario</param>
+        /// <returns>El usuario id de la entidad</returns>
         public int Get_UserId(IEnumerable<Claim> claims)
         {
             try
@@ -261,6 +266,7 @@ namespace HeraDAL.DataAcess
                 .FirstAsync(e => e.Id.Equals(id));
         }
 
+
         public async Task<Rel_CursoEstudiantes> Find_Estudiante(int idEstudiante,
             int idCurso, int idProfesor)
         {
@@ -278,6 +284,19 @@ namespace HeraDAL.DataAcess
                 .FirstOrDefaultAsync();
 
             return query;
+        }
+
+        public async Task<Estudiante> Find_EstudianteU(int usuarioId)
+        {
+            try
+            {
+                var id = await Find_EstudianteId(usuarioId);
+                return await Find_Estudiante(id);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public void Do_MatricularEstudiante(Curso curso,
@@ -317,11 +336,10 @@ namespace HeraDAL.DataAcess
                 var id = await Find_ProfesorId(usuarioId);
                 return await Find_Profesor(id);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return null;
             }
-
         }
 
         public async Task<int> Find_ProfesorId(int usuarioId)
