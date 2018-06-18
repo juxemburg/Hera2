@@ -20,6 +20,8 @@ using HeraDAL.Services.FileServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using HeraServices.Services.UserServices;
 using HeraServices.Services.ApplicationServices;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace HeraWeb
 {
@@ -62,13 +64,27 @@ namespace HeraWeb
             });
 
             services.AddAuthentication(config => {
-                config.DefaultScheme = IdentityConstants.ApplicationScheme;
+                config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer();
-
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                    SaveSigninToken = true
+                };
+            });
 
 
             //Adding custom services
+            services.AddSingleton<JwtAuthenticationService>();
             services.AddSingleton<FileManagerService>();
             services.AddScoped<IDataAccess, DataAccess_Sql>();
             services.AddScoped<AccountService>();

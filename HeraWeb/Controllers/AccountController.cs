@@ -10,6 +10,7 @@ using HeraServices.ViewModels.AccountViewModels;
 using HeraWeb.Utils;
 using HeraServices.UserServices;
 using Microsoft.AspNetCore.Authorization;
+using HeraWeb.Services;
 
 namespace HeraWeb.Controllers
 {
@@ -20,26 +21,29 @@ namespace HeraWeb.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         private readonly AccountService _accountService;
+        private readonly JwtAuthenticationService _tokenService;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<AccountController> logger,
+            JwtAuthenticationService tokenService,
             AccountService accountService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _accountService = accountService;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
 
-            return await this.InsertModel<LoginViewModel, UserInfoViewModel>(model, ModelState, async () =>
+            return await this.InsertModel(model, ModelState, async () =>
             {
-                return await _accountService.Login(model);
+                return await _accountService.Login(model, () => _tokenService.BuildToken());
             });
 
         }
@@ -68,8 +72,8 @@ namespace HeraWeb.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return RedirectToPage("/Index");
+            //_logger.LogInformation("User logged out.");
+            return Ok();
         }
 
         [HttpGet]
