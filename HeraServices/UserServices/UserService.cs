@@ -97,7 +97,7 @@ namespace HeraServices.Services.UserServices
             };
         }
 
-        public async Task<UserInfoViewModel> Get_UserInfo(int usuarioId, string token)
+        public async Task<UserInfoViewModel> Get_UserInfo(int usuarioId)
         {
             
             var user = await Get_user(usuarioId);
@@ -108,8 +108,7 @@ namespace HeraServices.Services.UserServices
             {
                 UserId = usuarioId,
                 Role = user.Role,
-                Username = user.NombreCompleto,
-                Token = token
+                Username = user.NombreCompleto
             };
         }
 

@@ -43,7 +43,9 @@ namespace HeraWeb.Controllers
 
             return await this.InsertModel(model, ModelState, async () =>
             {
-                return await _accountService.Login(model, () => _tokenService.BuildToken());
+                var result =  await _accountService.Login(model);
+                result.Value.Token = await _tokenService.BuildToken(model.Email);
+                return result;
             });
 
         }
@@ -55,7 +57,9 @@ namespace HeraWeb.Controllers
         {
             return await this.InsertModel(model, ModelState, async () =>
             {
-                return await this._accountService.RegisterProfesor(model);
+                var result  = await _accountService.RegisterProfesor(model);
+                result.Value.Token = await _tokenService.BuildToken(model.Email);
+                return result;
             });
         }
 
@@ -64,7 +68,9 @@ namespace HeraWeb.Controllers
         {
             return await this.InsertModel(model, ModelState, async () =>
             {
-                return await this._accountService.RegisterEstudiante(model);
+                var result = await _accountService.RegisterEstudiante(model);
+                result.Value.Token = await _tokenService.BuildToken(model.Email);
+                return result;
             });
         }
 
@@ -81,6 +87,18 @@ namespace HeraWeb.Controllers
         public IActionResult IsAuthenticated()
         {
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public object Claims()
+        {
+            return User.Claims.Select(c =>
+            new
+            {
+                Type = c.Type,
+                Value = c.Value
+            });
         }
 
     }

@@ -84,7 +84,7 @@ namespace HeraWeb
 
 
             //Adding custom services
-            services.AddSingleton<JwtAuthenticationService>();
+            services.AddScoped<JwtAuthenticationService>();
             services.AddSingleton<FileManagerService>();
             services.AddScoped<IDataAccess, DataAccess_Sql>();
             services.AddScoped<AccountService>();

@@ -17,7 +17,7 @@ namespace HeraServices.UserServices
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        
+
         private readonly IDataAccess _dataAccess;
         private readonly UserService _userService;
 
@@ -35,7 +35,7 @@ namespace HeraServices.UserServices
             _userService = userService;
         }
 
-        public async Task<ApiResult<UserInfoViewModel>> Login(LoginViewModel model, Func<string> getToken, string returnUrl = "")
+        public async Task<ApiResult<UserInfoViewModel>> Login(LoginViewModel model, string returnUrl = "")
         {
             var apiResult = ApiResult<UserInfoViewModel>.Initialize(null);
             var result = await _signInManager
@@ -50,15 +50,15 @@ namespace HeraServices.UserServices
             else
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                apiResult.Value = await _userService.Get_UserInfo(user.UsuarioId, getToken());
+                apiResult.Value = await _userService.Get_UserInfo(user.UsuarioId);
             }
-            
+
 
             return apiResult;
         }
 
         public async Task<ApiResult<UserInfoViewModel>> RegisterProfesor
-            (RegisterProfesorViewModel model, string returnUrl = null)
+            (RegisterProfesorViewModel model)
         {
 
             return await RegisterUser(model, "Profesor",
@@ -110,7 +110,7 @@ namespace HeraServices.UserServices
                     //await _emailSender.SendEmailAsync(model.Email, "Confirma tu cuenta",
                     //    $"Por favor confirma tu correo al hacer click aquí: <a href='{callbackUrl}'>link</a>");
                     apiResult.Success = true;
-                    apiResult.Value = await _userService.Get_UserInfo(user.UsuarioId, "");
+                    apiResult.Value = await _userService.Get_UserInfo(user.UsuarioId);
                     return apiResult;
                 }
                 else
