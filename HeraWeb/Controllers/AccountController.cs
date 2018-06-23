@@ -63,6 +63,15 @@ namespace HeraWeb.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetStudentRegistrationMetadata()
+        {
+            return await this.GetModel(() =>
+            {
+                return _accountService.GetEstudianteRegistrationMetadata();
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegisterStudent([FromBody]RegisterEstudianteViewModel model)
         {
@@ -75,10 +84,10 @@ namespace HeraWeb.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            //_logger.LogInformation("User logged out.");
             return Ok();
         }
 
@@ -89,8 +98,9 @@ namespace HeraWeb.Controllers
             return Ok();
         }
 
-        [Authorize]
+        
         [HttpGet]
+        [Authorize]
         public object Claims()
         {
             return User.Claims.Select(c =>

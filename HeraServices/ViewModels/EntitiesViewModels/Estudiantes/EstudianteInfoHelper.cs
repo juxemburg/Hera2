@@ -9,9 +9,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Estudiantes
 {
     public static class EstudianteInfoHelper
     {
-        public static List<SelectListItemViewModel>
-            EstudianteInfo_UsoPcList
-        { get; } = new List<SelectListItemViewModel>()
+        public static List<SelectListItemViewModel> EstudianteInfo_UsoPcList { get; }
+            = new List<SelectListItemViewModel>()
             {
                 new SelectListItemViewModel()
                 {
@@ -35,9 +34,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Estudiantes
                 }
             };
 
-        public static List<SelectListItemViewModel>
-            EstudianteInfo_ActividadesList
-        { get; }
+        public static List<SelectListItemViewModel> EstudianteInfo_ActividadesList { get; }
             = new List<SelectListItemViewModel>()
             {
                 new SelectListItemViewModel()
@@ -96,9 +93,9 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Estudiantes
                 },
             };
 
-        public static List<SelectListItemViewModel>
-            EstudianteInfo_GeneroList
-        { get; } = new List<SelectListItemViewModel>()
+        public static List<SelectListItemViewModel> EstudianteInfo_GeneroList
+        { get; }
+            = new List<SelectListItemViewModel>()
             {
                 new SelectListItemViewModel()
                 {

@@ -22,6 +22,8 @@ using HeraServices.Services.UserServices;
 using HeraServices.Services.ApplicationServices;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace HeraWeb
 {
@@ -50,7 +52,8 @@ namespace HeraWeb
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options =>
+            {
                 // Password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
@@ -63,7 +66,8 @@ namespace HeraWeb
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddAuthentication(config => {
+            services.AddAuthentication(config =>
+            {
                 config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -88,7 +92,7 @@ namespace HeraWeb
             services.AddSingleton<FileManagerService>();
             services.AddScoped<IDataAccess, DataAccess_Sql>();
             services.AddScoped<AccountService>();
-            
+
             services.AddScoped<UserService>();
             services.AddScoped<ProfesorService>();
             services.AddScoped<DesafioService>();
@@ -110,10 +114,10 @@ namespace HeraWeb
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink(); 
+                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseCors(builder => 
+                app.UseCors(builder =>
                 {
                     builder.AllowCredentials();
                     builder.AllowAnyOrigin();
@@ -127,6 +131,13 @@ namespace HeraWeb
             }
 
             app.UseStaticFiles();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "App")),
+                RequestPath = "/App"
+            });
 
             app.UseAuthentication();
 

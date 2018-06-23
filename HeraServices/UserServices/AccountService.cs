@@ -3,6 +3,7 @@ using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.ViewModels.AccountViewModels;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.EntitiesViewModels.Estudiantes;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,17 @@ namespace HeraServices.UserServices
                     });
         }
 
+        public async Task<EstudianteRegistrationMetadataViewModel> GetEstudianteRegistrationMetadata()
+        {
+            return new EstudianteRegistrationMetadataViewModel()
+            {
+                FavoriteSubjectOptions = EstudianteInfoHelper.EstudianteInfo_MateriaFavoritaList,
+                GenderOptions = EstudianteInfoHelper.EstudianteInfo_GeneroList,
+                PcActivitiesOptions = EstudianteInfoHelper.EstudianteInfo_ActividadesList,
+                PcFrecuencyOptions = EstudianteInfoHelper.EstudianteInfo_UsoPcList
+            };
+        }
+
         public async Task<ApiResult<UserInfoViewModel>> RegisterEstudiante(RegisterEstudianteViewModel model)
         {
             return await RegisterUser(model, "Estudiante",
@@ -126,5 +138,7 @@ namespace HeraServices.UserServices
             }
 
         }
+
+
     }
 }
