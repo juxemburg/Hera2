@@ -16,7 +16,7 @@ namespace HeraWeb.Utils
         /// <typeparam name="T">Tipo de dato del recurso a obtener</typeparam>
         /// <param name="fnGetModel">Función que obtiene el modelo</param>
         /// <returns></returns>
-        public static async Task<IActionResult> GetModel<T>(this Controller controller, Func<Task<T>> fnGetModel)
+        public static async Task<IActionResult> Get<T>(this Controller controller, Func<Task<T>> fnGetModel)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace HeraWeb.Utils
         /// <param name="model">Variable del modelo a ser insertada</param>
         /// <param name="modelstate">Estado del modelo a ser validado</param>
         /// <param name="fnInsert">Función de inserción del modelo</param>
-        public static async Task<IActionResult> InsertModel<T, U>(this Controller controller,  T model,
+        public static async Task<IActionResult> Post<T, U>(this Controller controller,  T model,
             ModelStateDictionary modelState, Func<Task<ApiResult<U>>> fnInsert)
         {
             if(modelState.IsValid)

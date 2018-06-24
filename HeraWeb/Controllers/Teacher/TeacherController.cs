@@ -32,7 +32,7 @@ namespace HeraWeb.Controllers.Teacher
         public async Task<IActionResult> GetCourses([FromQuery]string searchString = "",
             [FromQuery]int skip = 0, [FromQuery]int take = 10)
         {
-            return await this.GetModel(async () =>
+            return await this.Get(async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _ctrlService.GetAll_Cursos(teacherId, searchString, skip, take);
@@ -43,7 +43,7 @@ namespace HeraWeb.Controllers.Teacher
         public async Task<IActionResult> GetDisabledCourses([FromQuery]string searchString = "",
             [FromQuery]int skip = 0, [FromQuery]int take = 10)
         {
-            return await this.GetModel(async () =>
+            return await this.Get(async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _ctrlService.GetAll_CursosI(teacherId, searchString, skip, take);

@@ -25,12 +25,12 @@ namespace HeraServices.ViewModels.ApiViewModels
 
         }
 
-        public static ApiResult<T> Initialize(T val)
+        public static ApiResult<T> Initialize(T val, bool success = false)
         {
             return new ApiResult<T>()
             {
                 ModelErrors = new Dictionary<string, string>(),
-                Success = false,
+                Success = success,
                 Value = val
             };
 

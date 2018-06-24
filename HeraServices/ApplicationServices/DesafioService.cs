@@ -21,7 +21,7 @@ namespace HeraServices.Services.ApplicationServices
             _data = data;
         }
 
-        public async Task<PaginationViewModel<DesafioDetailsViewModel>>
+        public async Task<ApiResult<PaginationViewModel<DesafioDetailsViewModel>>>
             GetAll_Desafios(int profId, SearchDesafioViewModel searchModel,
                 int skip, int take)
         {
@@ -39,8 +39,9 @@ namespace HeraServices.Services.ApplicationServices
             var list = await model.Select(m =>
                     new DesafioDetailsViewModel(m))
                 .ToListAsync();
-            return new PaginationViewModel<DesafioDetailsViewModel>(
-                list, skip, take);
+
+            return ApiResult<PaginationViewModel<DesafioDetailsViewModel>>
+                .Initialize(new PaginationViewModel<DesafioDetailsViewModel>(list, skip, take), true);
         }
 
         public async Task<DesafioDetailsViewModel> Get_Desafio(int id)
