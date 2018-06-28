@@ -61,6 +61,7 @@ namespace HeraServices.Services.ApplicationServices
             {
                 _data.AddDesafio(model.Map(profId));
                 result.Value = await _data.SaveAllAsync();
+                result.Success = result.Value;
                 return result;
 
             }

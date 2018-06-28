@@ -130,8 +130,7 @@ namespace HeraWeb
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
-
+            app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(

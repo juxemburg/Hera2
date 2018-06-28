@@ -60,7 +60,7 @@ namespace HeraServices.Services.UserServices
         {
             var enumerable = ToList(claims);
             var id = _data.Get_UserId(enumerable);
-            return (id == -1 || !Get_inRole(enumerable, "IsEstudiante")) 
+            return (id == -1 || !Get_inRole(enumerable, "Estudiante")) 
                 ? -1 : _data.Find_EstudianteId(id).Result;
         }
 
@@ -73,7 +73,7 @@ namespace HeraServices.Services.UserServices
         {
             var claimsList = ToList(claims);
             var id = _data.Get_UserId(claimsList);
-            return (id == -1 || !Get_inRole(claimsList, "IsProfesor")) 
+            return (id == -1 || !Get_inRole(claimsList, "Profesor")) 
                 ? -1 : _data.Find_ProfesorId(id).Result;
         }
 
@@ -121,7 +121,19 @@ namespace HeraServices.Services.UserServices
         {
             try
             {
-                return claims.Any(c => c.Type.Equals(role));
+                return claims.Any(c => c.Value.Equals(role));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool Get_inRole(IEnumerable<Claim> claims, IEnumerable<string> roles)
+        {
+            try
+            {
+                return claims.Any(c => roles.Any(role => role.Equals(c.Type)));
             }
             catch (Exception)
             {
