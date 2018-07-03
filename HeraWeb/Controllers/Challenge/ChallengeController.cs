@@ -11,6 +11,9 @@ using HeraServices.ViewModels.EntitiesViewModels;
 using Microsoft.AspNetCore.Authorization;
 using HeraServices.ViewModels.UtilityViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
+using HeraServices.Services;
+using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ServicesViewModels.Valoration;
 
 namespace HeraWeb.Controllers.Challenge
 {
@@ -26,6 +29,13 @@ namespace HeraWeb.Controllers.Challenge
         {
             _userService = userService;
             _ctrlService = ctrlService;
+        }
+
+        public async Task<IActionResult> GetGeneralValoration([FromQuery]string proyectId)
+        {
+            return await this.Get(async () => {
+                return await _ctrlService.GetValoration(proyectId);
+            });
         }
 
         [HttpPost]

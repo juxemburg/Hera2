@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HeraDAL.DataAcess;
+using HeraServices.Services.ScratchServices;
 using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 using HeraServices.ViewModels.EntitiesViewModels.Ratings;
+using HeraServices.ViewModels.ServicesViewModels.Valoration;
 using HeraServices.ViewModels.UtilityViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +17,12 @@ namespace HeraServices.Services.ApplicationServices
     public class DesafioService
     {
         private readonly IDataAccess _data;
+        private readonly ScratchService _scratchService;
 
-        public DesafioService(IDataAccess data)
+        public DesafioService(IDataAccess data, ScratchService scratchService)
         {
             _data = data;
+            _scratchService = scratchService;
         }
 
         public async Task<ApiResult<PaginationViewModel<DesafioDetailsViewModel>>>
@@ -42,6 +46,13 @@ namespace HeraServices.Services.ApplicationServices
 
             return ApiResult<PaginationViewModel<DesafioDetailsViewModel>>
                 .Initialize(new PaginationViewModel<DesafioDetailsViewModel>(list, skip, take), true);
+        }
+
+        public async Task<ApiResult<GeneralValorationViewModel>> GetValoration(string projectId)
+        {
+            var res = await _scratchService.Get_GeneralEvaluation(projectId);
+            var model = new GeneralValorationViewModel((GeneralInfo)res.AdditionalInfo);
+            return ApiResult<GeneralValorationViewModel>.Initialize(model, true);
         }
 
         public async Task<DesafioDetailsViewModel> Get_Desafio(int id)
