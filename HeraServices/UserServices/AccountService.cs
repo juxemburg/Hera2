@@ -69,15 +69,20 @@ namespace HeraServices.UserServices
                     });
         }
 
-        public async Task<EstudianteRegistrationMetadataViewModel> GetEstudianteRegistrationMetadata()
+        /// <summary>
+        /// Método que obtiene la metadata necesaria para el registro de un estudiante
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<EstudianteRegistrationMetadataViewModel>> GetEstudianteRegistrationMetadata()
         {
-            return new EstudianteRegistrationMetadataViewModel()
-            {
-                FavoriteSubjectOptions = EstudianteInfoHelper.EstudianteInfo_MateriaFavoritaList,
-                GenderOptions = EstudianteInfoHelper.EstudianteInfo_GeneroList,
-                PcActivitiesOptions = EstudianteInfoHelper.EstudianteInfo_ActividadesList,
-                PcFrecuencyOptions = EstudianteInfoHelper.EstudianteInfo_UsoPcList
-            };
+            return ApiResult<EstudianteRegistrationMetadataViewModel>.Initialize(
+                new EstudianteRegistrationMetadataViewModel()
+                {
+                    FavoriteSubjectOptions = EstudianteInfoHelper.EstudianteInfo_MateriaFavoritaList,
+                    GenderOptions = EstudianteInfoHelper.EstudianteInfo_GeneroList,
+                    PcActivitiesOptions = EstudianteInfoHelper.EstudianteInfo_ActividadesList,
+                    PcFrecuencyOptions = EstudianteInfoHelper.EstudianteInfo_UsoPcList
+                }, true);
         }
 
         public async Task<ApiResult<UserInfoViewModel>> RegisterEstudiante(RegisterEstudianteViewModel model)

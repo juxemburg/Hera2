@@ -1,4 +1,5 @@
 ﻿using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
@@ -16,12 +17,17 @@ namespace HeraWeb.Utils
         /// <typeparam name="T">Tipo de dato del recurso a obtener</typeparam>
         /// <param name="fnGetModel">Función que obtiene el modelo</param>
         /// <returns></returns>
-        public static async Task<IActionResult> Get<T>(this Controller controller, Func<Task<T>> fnGetModel)
+        public static async Task<IActionResult> Get<T>(this Controller controller, Func<Task<ApiResult<T>>> fnGetModel)
         {
             try
             {
-                var model = await fnGetModel();
-                return controller.Ok(model);
+                var result = await fnGetModel();
+                
+                return result.Success ? (IActionResult) controller.Ok(result.Value) : controller.NotFound();
+            }
+            catch(ApiUnauthorizedException)
+            {
+                return controller.Unauthorized();
             }
             catch (Exception err)
             {
@@ -46,10 +52,7 @@ namespace HeraWeb.Utils
                 var result = await fnInsert();
                 addModelErrors(modelState, result.ModelErrors);
 
-                if (result.Success)
-                    return controller.Ok(result.Value);
-                else
-                    return controller.BadRequest(modelState);
+                return result.Success ? (IActionResult)controller.Ok(result.Value) : controller.BadRequest(modelState);
             }
             else
             {

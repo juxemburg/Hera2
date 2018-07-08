@@ -11,6 +11,7 @@ using HeraWeb.Utils;
 using HeraServices.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using HeraWeb.Services;
+using HeraServices.Services.UserServices;
 
 namespace HeraWeb.Controllers
 {
@@ -22,19 +23,22 @@ namespace HeraWeb.Controllers
         private readonly ILogger _logger;
         private readonly AccountService _accountService;
         private readonly JwtAuthenticationService _tokenService;
+        private readonly UserService _userService;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<AccountController> logger,
             JwtAuthenticationService tokenService,
-            AccountService accountService)
+            AccountService accountService,
+            UserService userService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _accountService = accountService;
             _tokenService = tokenService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -66,6 +70,7 @@ namespace HeraWeb.Controllers
             });
         }
 
+        
         [HttpGet]
         public async Task<IActionResult> GetStudentRegistrationMetadata()
         {
@@ -98,9 +103,17 @@ namespace HeraWeb.Controllers
         [Authorize]
         public IActionResult IsAuthenticated()
         {
-            return Ok();
+            return Ok(true);
         }
 
+        [HttpGet("{role}")]
+        [Authorize]
+        public Task<IActionResult> IsInRole(string role)
+        {
+            return this.Get(() => {
+                return _userService.Get_IsInRole(User.Claims, role);
+            });
+        }
         
         [HttpGet]
         [Authorize]

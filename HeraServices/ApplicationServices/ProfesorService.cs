@@ -7,6 +7,7 @@ using Entities.Cursos;
 using Entities.Desafios;
 using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
+using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio;
 using HeraServices.ViewModels.EntitiesViewModels.Evaluacion;
@@ -28,26 +29,26 @@ namespace HeraServices.Services.ApplicationServices
             _data = data;
         }
 
-        public async Task<PaginationViewModel<Curso>>
+        public async Task<ApiResult<PaginationViewModel<Curso>>>
             GetAll_Cursos(int profId, string searchString, int skip,
                 int take)
         {
             var model = (string.IsNullOrWhiteSpace(searchString))
                 ? _data.GetAll_Cursos(profId) :
                 _data.Autocomplete_Cursos(searchString, profId);
-            return new PaginationViewModel<Curso>(await model.ToListAsync(),
-                skip, take);
+            return ApiResult<PaginationViewModel<Curso>>.Initialize(
+                new PaginationViewModel<Curso>(await model.ToListAsync(), skip, take), true);
         }
 
-        public async Task<PaginationViewModel<Curso>>
+        public async Task<ApiResult<PaginationViewModel<Curso>>>
             GetAll_CursosI(int profId, string searchString, int skip,
                 int take)
         {
             var model = (string.IsNullOrWhiteSpace(searchString))
                 ? _data.GetAll_Cursos(profId, false) :
                 _data.Autocomplete_CursosI(searchString, profId);
-            return new PaginationViewModel<Curso>(await model.ToListAsync(),
-                skip, take);
+            return ApiResult<PaginationViewModel<Curso>>.Initialize(
+                new PaginationViewModel<Curso>(await model.ToListAsync(), skip, take), true);
         }
 
 
@@ -169,9 +170,9 @@ namespace HeraServices.Services.ApplicationServices
         }
 
         public async Task<bool> Do_Calificar(int idProf, int idCurso,
-            int idEstudiante,int idDesafio, CalificarViewModel model)
+            int idEstudiante, int idDesafio, CalificarViewModel model)
         {
-            
+
             if (!await _data.Exist_Desafio(idDesafio, idCurso, idProf))
                 return false;
 

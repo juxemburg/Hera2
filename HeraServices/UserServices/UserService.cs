@@ -1,6 +1,8 @@
 ﻿using Entities.Usuarios;
 using HeraDAL.DataAcess;
 using HeraServices.ViewModels.AccountViewModels;
+using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,8 +62,17 @@ namespace HeraServices.Services.UserServices
         {
             var enumerable = ToList(claims);
             var id = _data.Get_UserId(enumerable);
-            return (id == -1 || !Get_inRole(enumerable, "Estudiante")) 
+            return (id == -1 || !Get_inRole(enumerable, "Estudiante"))
                 ? -1 : _data.Find_EstudianteId(id).Result;
+        }
+
+        public async Task<ApiResult<bool>> Get_IsInRole(IEnumerable<Claim> claims, string role)
+        {
+            if (Get_inRole(claims, role))
+                return ApiResult<bool>.Initialize(true, true);
+            else
+                throw new ApiUnauthorizedException();
+
         }
 
         public async Task<int?> Get_EstudianteUserId(int id)
@@ -73,7 +84,7 @@ namespace HeraServices.Services.UserServices
         {
             var claimsList = ToList(claims);
             var id = _data.Get_UserId(claimsList);
-            return (id == -1 || !Get_inRole(claimsList, "Profesor")) 
+            return (id == -1 || !Get_inRole(claimsList, "Profesor"))
                 ? -1 : _data.Find_ProfesorId(id).Result;
         }
 
@@ -99,7 +110,7 @@ namespace HeraServices.Services.UserServices
 
         public async Task<UserInfoViewModel> Get_UserInfo(int usuarioId)
         {
-            
+
             var user = await Get_user(usuarioId);
             if (user == null)
                 return null;

@@ -30,8 +30,9 @@ namespace HeraWeb.Controllers.Challenge
             _userService = userService;
             _ctrlService = ctrlService;
         }
-
-        public async Task<IActionResult> GetGeneralValoration([FromQuery]string proyectId)
+        
+        [HttpGet("{proyectId}")]
+        public async Task<IActionResult> GetGeneralValoration(string proyectId)
         {
             return await this.Get(async () => {
                 return await _ctrlService.GetValoration(proyectId);
