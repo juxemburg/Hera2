@@ -63,7 +63,9 @@ namespace HeraServices.Services.ApplicationServices
 
             _data.AddCurso(model.Map(profId, desafio,
                 _clrService.RandomColor));
-            result.Value  = await _data.SaveAllAsync();
+            var res = await _data.SaveAllAsync();
+            result.Value = res;
+            result.Success = res;
             return result;
         }
 

@@ -13,7 +13,7 @@ using HeraWeb.Utils;
 namespace HeraWeb.Controllers.Course
 {
     [Produces("application/json")]
-    [Route("api/Course")]
+    [Route("api/[controller]/[action]")]
     [Authorize(Roles = "Profesor")]
     public class CourseController : Controller
     {
@@ -26,7 +26,7 @@ namespace HeraWeb.Controllers.Course
             _ctrlService = ctrlService;
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> AddCourse([FromBody]CreateCursoViewModel model)
         {
             return await this.Post(model, ModelState, async () => {

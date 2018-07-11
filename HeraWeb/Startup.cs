@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using HeraServices.Services.UtilServices;
 
 namespace HeraWeb
 {
@@ -97,6 +98,8 @@ namespace HeraWeb
             services.AddScoped<ProfesorService>();
             services.AddScoped<DesafioService>();
             services.AddScoped<ScratchService>();
+            services.AddScoped<CursoService>();
+            services.AddScoped<ColorService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
