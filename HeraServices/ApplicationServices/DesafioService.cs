@@ -25,6 +25,21 @@ namespace HeraServices.Services.ApplicationServices
             _scratchService = scratchService;
         }
 
+        public async Task<ApiResult<List<AutocompleteResultDesafioViewModel>>>
+            AutocompleteDesafios(string searchString)
+        {
+            var resultList = await _data.Autocomplete_Desafios(searchString)
+                .Select(r => new AutocompleteResultDesafioViewModel
+                {
+                    Id = r.Id,
+                    Nombre = r.Nombre,
+                    Descripcion = r.Descripcion,
+                    Autor = r.Profesor.NombreCompleto
+                }).ToListAsync();
+            return ApiResult<List<AutocompleteResultDesafioViewModel>>
+                .Initialize(resultList, true);
+        }
+
         public async Task<ApiResult<PaginationViewModel<DesafioDetailsViewModel>>>
             GetAll_Desafios(int profId, SearchDesafioViewModel searchModel,
                 int skip, int take)

@@ -483,7 +483,7 @@ namespace HeraDAL.DataAcess
         public IQueryable<Desafio> Autocomplete_Desafios(string queryString)
         {
             return GetAll_Desafios()
-                .Where(d => d.Nombre.Contains(queryString))
+                .Where(d => d.Nombre.ToUpper().Contains(queryString.ToUpper()))
                 .Include(d => d.Profesor);
         }
 

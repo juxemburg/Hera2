@@ -30,13 +30,18 @@ namespace HeraWeb.Controllers.Challenge
             _userService = userService;
             _ctrlService = ctrlService;
         }
-        
+
         [HttpGet("{proyectId}")]
         public async Task<IActionResult> GetGeneralValoration(string proyectId)
         {
-            return await this.Get(async () => {
-                return await _ctrlService.GetValoration(proyectId);
-            });
+            return await this.Get(async () => await _ctrlService.GetValoration(proyectId) );
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAutocomplete([FromQuery]string searchString)
+        {
+            return await this.Get(async () =>
+                await _ctrlService.AutocompleteDesafios(searchString));
         }
 
         [HttpPost]
@@ -60,7 +65,7 @@ namespace HeraWeb.Controllers.Challenge
             });
         }
 
-        
+
 
     }
 }
