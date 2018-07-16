@@ -22,8 +22,11 @@ namespace HeraWeb.Utils
             try
             {
                 var result = await fnGetModel();
-                
-                return result.Success ? (IActionResult) controller.Ok(result.Value) : controller.NotFound();
+                //return result.Success ? (IActionResult) controller.Ok(result.Value) : controller.NotFound();
+                if (result.Success)
+                    return controller.Ok(result.Value);
+                else
+                    return controller.NotFound();
             }
             catch(ApiUnauthorizedException)
             {

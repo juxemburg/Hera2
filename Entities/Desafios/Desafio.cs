@@ -14,7 +14,7 @@ namespace Entities.Desafios
         public string DirSolucion { get; set; }
 
         public int ProfesorId { get; set; }
-        public Profesor Profesor { get; set; }
+        public virtual Profesor Profesor { get; set; }
 
         public InfoDesafio InfoDesafio { get; set; }
         public virtual List<RegistroCalificacion> Calificaciones { get; set; }

@@ -15,12 +15,12 @@ namespace Entities.Cursos
         public string ColorName  => ColorHelper.Get_ColorName(Color); 
         public int ProfesorId { get; set; }
         public bool Activo { get; set; }
-        public Profesor Profesor { get; set; }
+        public virtual Profesor Profesor { get; set; }
 
         public string Password { get; set; }
 
         
-        public Desafio Desafio => Desafios.FirstOrDefault(d => d.Initial).Desafio;
+        public Desafio Desafio => (Desafios != null) ? Desafios.FirstOrDefault(d => d.Initial).Desafio: null;
 
         public virtual List<Rel_CursoEstudiantes> Estudiantes { get; set; }
         public virtual List<Rel_DesafiosCursos> Desafios { get; set; }

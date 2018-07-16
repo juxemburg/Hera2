@@ -54,6 +54,7 @@ namespace HeraDAL.Contexts
             builder.Entity<Curso>()
                 .HasMany(c => c.Desafios)
                 .WithOne(rel => rel.Curso)
+                .HasForeignKey(entity => entity.CursoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Curso>()

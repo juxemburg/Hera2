@@ -27,7 +27,7 @@ namespace HeraWeb.Controllers.Course
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCourschallee([FromBody]CreateCursoViewModel model)
+        public async Task<IActionResult> AddCourse([FromBody]CreateCursoViewModel model)
         {
             return await this.Post(model, ModelState, async () => {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);

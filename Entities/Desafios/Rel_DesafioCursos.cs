@@ -6,9 +6,9 @@ namespace Entities.Desafios
         public bool Initial { get; set; }
 
         public int DesafioId { get; set; }
-        public Desafio Desafio { get; set; }
+        public virtual Desafio Desafio { get; set; }
 
         public int CursoId { get; set; }
-        public Curso Curso { get; set; }
+        public virtual Curso Curso { get; set; }
     }
 }

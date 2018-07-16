@@ -363,16 +363,17 @@ namespace HeraDAL.DataAcess
         {
             return _context.Cursos
                 .Where(c => c.Activo)
-                .Include(c => c.Desafios)
-                .Include(c => c.Profesor);
+                .Include(c => c.Profesor)
+                .Include(c => c.Desafios);
         }
         public IQueryable<Curso> GetAll_Cursos(int profId,
             bool active = true)
         {
             return _context.Cursos
-                .Where(c => c.ProfesorId == profId
-                && c.Activo == active)
-                .Include(c => c.Profesor);
+                .Where(c => c.ProfesorId == profId 
+                    && c.Activo == active)
+                .Include(c => c.Profesor)
+                .Include(c => c.Desafios);
         }
 
         public IQueryable<Curso> Search_CursosEstudiante(int idEst,

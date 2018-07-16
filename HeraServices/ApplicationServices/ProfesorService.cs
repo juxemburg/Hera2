@@ -8,6 +8,7 @@ using Entities.Desafios;
 using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio;
 using HeraServices.ViewModels.EntitiesViewModels.Evaluacion;
@@ -29,15 +30,28 @@ namespace HeraServices.Services.ApplicationServices
             _data = data;
         }
 
-        public async Task<ApiResult<PaginationViewModel<Curso>>>
+        public async Task<ApiResult<PaginationViewModel<CursoListViewModel>>>
             GetAll_Cursos(int profId, string searchString, int skip,
                 int take)
         {
             var model = (string.IsNullOrWhiteSpace(searchString))
                 ? _data.GetAll_Cursos(profId) :
                 _data.Autocomplete_Cursos(searchString, profId);
-            return ApiResult<PaginationViewModel<Curso>>.Initialize(
-                new PaginationViewModel<Curso>(await model.ToListAsync(), skip, take), true);
+
+            return ApiResult<PaginationViewModel<CursoListViewModel>>.Initialize(
+                new PaginationViewModel<CursoListViewModel>(
+                    await model.Select(item => item.MapToViewModel()).ToListAsync(), skip, take), true);
+        }
+
+        public async Task<ApiResult<List<Curso>>>
+            GetAll_CursosList(int profId, string searchString)
+        {
+            var model = (string.IsNullOrWhiteSpace(searchString))
+                ? _data.GetAll_Cursos(profId) :
+                _data.Autocomplete_Cursos(searchString, profId);
+
+            var list = await model.ToListAsync();
+            return ApiResult<List<Curso>>.Initialize(list, true);
         }
 
         public async Task<ApiResult<PaginationViewModel<Curso>>>
