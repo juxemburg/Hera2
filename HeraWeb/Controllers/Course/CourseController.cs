@@ -14,7 +14,7 @@ namespace HeraWeb.Controllers.Course
 {
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
-    [Authorize(Roles = "Profesor")]
+    [Authorize]
     public class CourseController : Controller
     {
         private readonly UserService _userService;
@@ -26,7 +26,17 @@ namespace HeraWeb.Controllers.Course
             _ctrlService = ctrlService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCourses([FromQuery]string searchString = "",
+            [FromQuery]int skip = 0, [FromQuery]int take = 10)
+        {
+            return await this.Get(() => {
+                return _ctrlService.Get_Cursos(searchString, skip, take);
+            });
+        }
+
         [HttpPost]
+        [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> AddCourse([FromBody]CreateCursoViewModel model)
         {
             return await this.Post(model, ModelState, async () => {
@@ -34,5 +44,6 @@ namespace HeraWeb.Controllers.Course
                 return await _ctrlService.Create_Curso(teacherId, model);
             });
         }
+
     }
 }

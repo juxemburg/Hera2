@@ -359,12 +359,15 @@ namespace HeraDAL.DataAcess
             return id;
         }
 
-        public IQueryable<Curso> GetAll_Cursos()
+        public IQueryable<Curso> GetAll_Cursos(string searchString, int skip, int take)
         {
             return _context.Cursos
                 .Where(c => c.Activo)
                 .Include(c => c.Profesor)
-                .Include(c => c.Desafios);
+                .Include(c => c.Desafios)
+                .Where(c => c.Nombre.Contains(searchString))
+                .Skip(skip)
+                .Take(take);
         }
         public IQueryable<Curso> GetAll_Cursos(int profId,
             bool active = true)
@@ -414,9 +417,8 @@ namespace HeraDAL.DataAcess
         public IQueryable<Curso> Autocomplete_Cursos(string queryString,
             int? profId = null)
         {
-            var query = (profId == null) ? GetAll_Cursos() :
+            var query = (profId == null) ? GetAll_Cursos(queryString, 0, 0) :
                 GetAll_Cursos(profId.GetValueOrDefault());
-            query = query.Where(c => c.Nombre.Contains(queryString));
             return query;
         }
 

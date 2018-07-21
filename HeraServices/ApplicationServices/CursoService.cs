@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Entities.Cursos;
 using Entities.Notifications;
@@ -10,6 +11,7 @@ using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -27,6 +29,14 @@ namespace HeraServices.Services.ApplicationServices
             _usrService = usrService;
         }
 
+        public async Task<ApiResult<List<CursoListViewModel>>> Get_Cursos(string searchString = "", int skip = 0, int take = 0)
+        {
+            var res = await _data.GetAll_Cursos(searchString, skip, take)
+                .Select(e => e.MapToViewModel())
+                .ToListAsync();
+
+            return ApiResult<List<CursoListViewModel>>.Initialize(res, true);
+        }
 
         public async Task<Curso> Get_Curso(int id)
         {

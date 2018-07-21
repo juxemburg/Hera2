@@ -1,40 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HeraServices.ViewModels.AccountViewModels;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HeraWeb.Controllers
+namespace HeraWeb.Controllers.Student
 {
     [Produces("application/json")]
-    [Route("api/Login")]
-    public class LoginController : Controller
+    [Route("api/Student/Courses/[action]")]
+    [Authorize(Roles = "Estudiante")]
+    public class StudentCoursesController : Controller
     {
-        // GET: api/Login
+        public StudentCoursesController()
+        {
+
+        }
+
+        // GET: api/StudentCourses
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Login/5
+        // GET: api/StudentCourses/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
             return "value";
         }
         
-        // POST: api/Login
+        // POST: api/StudentCourses
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]RegisterViewModel model)
+        public void Post([FromBody]string value)
         {
-            model.Email = "vacío";
-            return Ok(model);
         }
         
-        // PUT: api/Login/5
+        // PUT: api/StudentCourses/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
