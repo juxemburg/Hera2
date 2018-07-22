@@ -37,6 +37,12 @@ namespace HeraDAL.Contexts
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            base.OnConfiguring(optionsBuilder);
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

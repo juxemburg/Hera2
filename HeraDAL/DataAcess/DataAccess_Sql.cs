@@ -299,9 +299,10 @@ namespace HeraDAL.DataAcess
             }
         }
 
-        public void Do_MatricularEstudiante(Curso curso,
+        public void Do_MatricularEstudiante(
+            Curso curso,
             Estudiante estudiante,
-            Rel_CursoEstudiantes model, string password)
+            ref Rel_CursoEstudiantes model, string password)
         {
             if (curso.Password.Equals(password))
             {

@@ -1,4 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using HeraServices.Services.ApplicationServices;
+using HeraServices.Services.UserServices;
+using HeraServices.ViewModels.EntitiesViewModels;
+using HeraWeb.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,41 +14,26 @@ namespace HeraWeb.Controllers.Student
     [Authorize(Roles = "Estudiante")]
     public class StudentCoursesController : Controller
     {
-        public StudentCoursesController()
-        {
+        private readonly UserService _userService;
+        private readonly EstudianteService _estudianteService;
 
+        public StudentCoursesController(
+            UserService userService,
+            EstudianteService estudianteService)
+        {
+            _userService = userService;
+            _estudianteService = estudianteService;
         }
 
         // GET: api/StudentCourses
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/StudentCourses/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        
-        // POST: api/StudentCourses
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> EnrollStudent([FromBody]AddEstudianteViewModel model)
         {
+            return await this.Get(async () => {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.Do_MatricularEstudiante(estId, model);
+            });
         }
         
-        // PUT: api/StudentCourses/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

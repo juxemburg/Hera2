@@ -12,6 +12,7 @@ using HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio;
 using HeraDAL.DataAcess;
 using HeraServices.ViewModels.UtilityViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
+using HeraServices.ViewModels.ApiViewModels;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -46,26 +47,30 @@ namespace HeraServices.Services.ApplicationServices
             return new PaginationViewModel<Curso>(model, skip, take);
         }
 
-        public async Task<bool> Do_MatricularEstudiante(int estId,
+        public async Task<ApiResult<bool>> Do_MatricularEstudiante(int estId,
             AddEstudianteViewModel model)
         {
+            var result = ApiResult<bool>.Initialize(true);
             try
             {
                 var curso = await _data.Find_Curso(model.CursoId);
                 var estudiante = await _data.Find_Estudiante(estId);
+                var dataModel = model.Map(curso.Id, estudiante.Id);
                 _data.Do_MatricularEstudiante(curso, estudiante,
-                    model.Map(curso.Id, estudiante.Id), model.Password);
+                    ref dataModel, model.Password);
+                result.Success = await _data.SaveAllAsync();
 
-                if (!await _data.SaveAllAsync())
-                    throw new ApplicationServicesException(
-                        "Lo sentimos, la contraseña es inválida");
+                if (!result.Success)
+                    result.AddError("password", "Lo sentimos, la contraseña es inválida.");
 
-                return true;
+                return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw  new ApplicationServicesException(
-                    "Contraseña inválida");
+                //TODO: Log exception.
+                result.AddError("", "El estudiante ya se ha matriculado en el curso.");
+                result.Success = false;
+                return result;
             }
         }
 
