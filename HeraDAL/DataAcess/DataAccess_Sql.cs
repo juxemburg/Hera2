@@ -398,10 +398,18 @@ namespace HeraDAL.DataAcess
         public IQueryable<Curso> GetAll_CursosEstudiante(int idEst,
             string courseName = "", bool inverse = false)
         {
+
+
+            Func<int, int, bool> comparatorFn;
+            if (inverse)
+                comparatorFn = (val1, val2) => val1 != val2;
+            else
+                comparatorFn = (val1, val2) => val1 == val2;
+
             var query = Enumerable.Empty<Curso>().AsQueryable();
 
             var ids = _context.Rel_Cursos_Estudiantes
-                .Where(rel => rel.EstudianteId == idEst)
+                .Where(rel => comparatorFn(rel.EstudianteId,idEst))
                 .Select(rel => rel.CursoId);
             query = _context.Cursos
                 .Where(cur => ids.Contains(cur.Id)
@@ -412,7 +420,6 @@ namespace HeraDAL.DataAcess
                 query = query.Where(c => c.Nombre.Contains(courseName));
 
             return query;
-
         }
 
         public IQueryable<Curso> Autocomplete_Cursos(string queryString,

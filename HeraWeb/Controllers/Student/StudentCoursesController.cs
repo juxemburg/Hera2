@@ -25,15 +25,29 @@ namespace HeraWeb.Controllers.Student
             _estudianteService = estudianteService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUnenrolledCourses(
+            [FromQuery]string searchString = "",
+            [FromQuery]int skip = 0, 
+            [FromQuery]int take = 10)
+        {
+            return await this.Get(async () =>
+            {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.GetAll_Curso(estId, searchString, skip, take, true);
+            });
+        }
+
         // GET: api/StudentCourses
         [HttpPost]
         public async Task<IActionResult> EnrollStudent([FromBody]AddEstudianteViewModel model)
         {
-            return await this.Get(async () => {
+            return await this.Get(async () =>
+            {
                 var estId = _userService.Get_EstudianteId(User.Claims);
                 return await _estudianteService.Do_MatricularEstudiante(estId, model);
             });
         }
-        
+
     }
 }

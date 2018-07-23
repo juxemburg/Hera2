@@ -13,6 +13,7 @@ using HeraDAL.DataAcess;
 using HeraServices.ViewModels.UtilityViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -39,12 +40,14 @@ namespace HeraServices.Services.ApplicationServices
             return new PaginationViewModel<Curso>(model, skip, take);
         }
 
-        public async Task<PaginationViewModel<Curso>> GetAll_Curso(
-            int estId, string searchString, int skip, int take)
+        public async Task<ApiResult<PaginationViewModel<CursoListViewModel>>> GetAll_Curso(
+            int estId, string searchString, int skip, int take, bool inverse = false)
         {
             var model = await _data.GetAll_CursosEstudiante(estId,
-                searchString).ToListAsync();
-            return new PaginationViewModel<Curso>(model, skip, take);
+                searchString, inverse).Select(item => item.MapToViewModel()).ToListAsync();
+            var res = ApiResult<PaginationViewModel<CursoListViewModel>>
+                .Initialize(new PaginationViewModel<CursoListViewModel>(model, skip, take), true);
+            return res;
         }
 
         public async Task<ApiResult<bool>> Do_MatricularEstudiante(int estId,
@@ -77,7 +80,7 @@ namespace HeraServices.Services.ApplicationServices
         public async Task<EstudianteCursoViewModel> Get_Curso(int estId,
             int cursoId)
         {
-            if(!await _data.Exist_Estudiante_Curso(estId, cursoId))
+            if (!await _data.Exist_Estudiante_Curso(estId, cursoId))
                 throw new ApplicationServicesException();
 
             var model = await _desafioService
@@ -105,7 +108,7 @@ namespace HeraServices.Services.ApplicationServices
                     Calificaciones = new List<Calificacion>()
                 };
                 _data.Add(model);
-                if(!await _data.SaveAllAsync())
+                if (!await _data.SaveAllAsync())
                     throw new ApplicationServicesException("");
             }
             return new CalificacionDesafioViewModel(model);
@@ -116,7 +119,7 @@ namespace HeraServices.Services.ApplicationServices
         {
             var registro = await _data.Find_RegistroCalificacion(cursoId,
                     estId, desafioId);
-            if(registro == null)
+            if (registro == null)
                 throw new ApplicationServicesException("");
 
             var desafio = await _data.Find_Desafio(desafioId);
