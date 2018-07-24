@@ -19,4 +19,7 @@
     <ProjectReference Include="..\HeraDAL\HeraDAL.csproj" />
     <ProjectReference Include="..\HeraServices\HeraServices.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

@@ -132,13 +132,12 @@ namespace HeraWeb
                 app.UseExceptionHandler("/Error");
             }
 
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(options);
             app.UseDefaultFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "App")),
-                RequestPath = "/App"
-            });
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 
