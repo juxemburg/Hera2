@@ -11,13 +11,10 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
     {
         public int Id { get; set; }
 
-        public DateTime Tiempoinicio { get; set; }
+        public DateTime? Tiempoinicio { get; set; }
         public DateTime? TiempoFinal { get; set; }
 
-        public ResultadoScratch ResultadoGeneral { get; set; }
-        public virtual List<ResultadoScratch> Resultados { get; set; }
-        
-        public RegistroCalificacion RegistroCalificacion { get; set; }
+        public int RegistroCalificacionId { get; set; }
 
         public string DirArchivo { get; set; }
 
@@ -41,13 +38,6 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
             Id = model.Id;
             TiempoFinal = model.TiempoFinal;
             Tiempoinicio = model.Tiempoinicio;
-            Resultados = model.Resultados
-                .Where(res => !res.General)
-                .ToList();
-            ResultadoGeneral = model.Resultados
-                .Where(res => res.General)
-                .FirstOrDefault();
-            RegistroCalificacion = model.RegistroCalificacion;
             DirArchivo = model.DirArchivo;           
         }
 

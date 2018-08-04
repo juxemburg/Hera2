@@ -90,6 +90,7 @@ namespace HeraDAL.DataAcess
         Task<Rel_Rating> Find_Rel_Rating(int desafioId, int profesorId);
 
         //RegistroCalificacion
+        void Add_RegistroCalificacion(RegistroCalificacion model);
         Task<RegistroCalificacion> Find_RegistroCalificacion(
             int cursoId, int estudianteId,
             int desafioId, int? profesorId = null);

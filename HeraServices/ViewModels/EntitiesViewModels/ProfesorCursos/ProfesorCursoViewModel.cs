@@ -37,7 +37,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
                 .SelectMany(e => e.SelectMany(e2 => e2.Calificaciones));
 
             var group = dates.GroupJoin(califications,
-                d => d.Date, cal => cal.Tiempoinicio.Date,
+                d => d.Date, cal => cal.Tiempoinicio,
                 (d, cal) => new
                 {
                     Key = string.Format("{0:d}", d),

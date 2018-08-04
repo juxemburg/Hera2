@@ -1,4 +1,5 @@
-﻿using HeraServices.ViewModels.ApiViewModels;
+﻿using HeraDAL.Exceptions;
+using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -39,6 +40,11 @@ namespace HeraWeb.Utils
             catch (ApiUnauthorizedException)
             {
                 return controller.Unauthorized();
+            }
+            catch(DataAccessException e)
+            {
+                //Log error
+                return controller.StatusCode(500, e);
             }
             catch (Exception err)
             {

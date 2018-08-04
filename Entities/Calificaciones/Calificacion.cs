@@ -9,18 +9,18 @@ namespace Entities.Calificaciones
     {
         public int Id { get; set; }
 
-        public DateTime Tiempoinicio { get; set; }
+        public DateTime? Tiempoinicio { get; set; }
         public DateTime? TiempoFinal { get; set; }
 
         public virtual List<ResultadoScratch> Resultados { get; set; }
 
         public int? CalificacionCualitativaId { get; set; }
-        public CalificacionCualitativa CalificacionCualitativa { get; set; }
+        public virtual CalificacionCualitativa CalificacionCualitativa { get; set; }
 
         public int CursoId { get; set; }
         public int EstudianteId { get; set; }
         public int DesafioId { get; set; }
-        public RegistroCalificacion RegistroCalificacion { get; set; }
+        public virtual RegistroCalificacion RegistroCalificacion { get; set; }
         public string DirArchivo { get; set; }
 
 

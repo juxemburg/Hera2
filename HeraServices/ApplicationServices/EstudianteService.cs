@@ -15,6 +15,7 @@ using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
+using Entities.Valoracion;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -89,13 +90,13 @@ namespace HeraServices.Services.ApplicationServices
             return ApiResult<EstudianteCursoViewModel>.Initialize(model, true);
         }
 
-        public async Task<CalificacionDesafioViewModel> Get_Desafio(
+        public async Task<ApiResult<CalificacionDesafioViewModel>> Get_Desafio(
             int estId, int cursoId, int desafioId)
         {
             var curso = await _data.Find_Curso(cursoId);
             if (curso == null || !curso.ContieneEstudiante(estId)
                 || !curso.ContieneDesafio(desafioId))
-                throw new ApplicationServicesException("");
+                throw new ApiNotFoundException("El desafío al que intentas acceder no existe.");
 
             var model = await _data.Find_RegistroCalificacion(
                 cursoId, estId, desafioId);
@@ -107,12 +108,21 @@ namespace HeraServices.Services.ApplicationServices
                     DesafioId = desafioId,
                     EstudianteId = estId,
                     Calificaciones = new List<Calificacion>()
+                    {
+                        new Calificacion()
+                        {
+                            Resultados = new List<ResultadoScratch>(),
+                            CursoId = cursoId,
+                            DesafioId = desafioId,
+                            EstudianteId = estId,
+                            DirArchivo = ""
+                        }
+                    }
                 };
-                _data.Add(model);
-                if (!await _data.SaveAllAsync())
-                    throw new ApplicationServicesException("");
+                _data.Add_RegistroCalificacion(model);
+                await _data.SaveAllAsync();
             }
-            return new CalificacionDesafioViewModel(model);
+            return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model), true);
         }
 
         public async Task<DesafioProgresoViewModel> Get_DesafioProgreso(

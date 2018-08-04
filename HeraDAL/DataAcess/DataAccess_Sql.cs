@@ -5,6 +5,7 @@ using Entities.Notifications;
 using Entities.Usuarios;
 using Entities.Valoracion;
 using HeraDAL.Contexts;
+using HeraDAL.Exceptions;
 using HeraDAL.Services.FileServices;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -519,7 +520,16 @@ namespace HeraDAL.DataAcess
             }
             catch (Exception e)
             {
-                return false;
+                throw new DataAccessException("Error while excecuting DAL operation", e);
+            }
+        }
+
+        public void Add_RegistroCalificacion(RegistroCalificacion model)
+        {
+            Add(model);
+            foreach (var calificacion in model.Calificaciones)
+            {
+                AddCalificacion(calificacion);
             }
         }
 
