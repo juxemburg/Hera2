@@ -28,7 +28,15 @@ namespace HeraWeb.Utils
                 else
                     return result.Value == null ? (IActionResult) controller.NotFound(): controller.BadRequest(result.ModelErrors);
             }
-            catch(ApiUnauthorizedException)
+            catch (ApiNotFoundException e)
+            {
+                return controller.NotFound(e);
+            }
+            catch (ApiBadRequestException e)
+            {
+                return controller.BadRequest(e);
+            }
+            catch (ApiUnauthorizedException)
             {
                 return controller.Unauthorized();
             }

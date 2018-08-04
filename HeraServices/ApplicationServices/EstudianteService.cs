@@ -14,6 +14,7 @@ using HeraServices.ViewModels.UtilityViewModels;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -77,15 +78,15 @@ namespace HeraServices.Services.ApplicationServices
             }
         }
 
-        public async Task<EstudianteCursoViewModel> Get_Curso(int estId,
+        public async Task<ApiResult<EstudianteCursoViewModel>> Get_Curso(int estId,
             int cursoId)
         {
             if (!await _data.Exist_Estudiante_Curso(estId, cursoId))
-                throw new ApplicationServicesException();
+                throw new ApiNotFoundException("El estudiante no está matriculado en el curso");
 
             var model = await _desafioService
                 .Get_RelEstudianteCurso(cursoId, estId);
-            return model;
+            return ApiResult<EstudianteCursoViewModel>.Initialize(model, true);
         }
 
         public async Task<CalificacionDesafioViewModel> Get_Desafio(

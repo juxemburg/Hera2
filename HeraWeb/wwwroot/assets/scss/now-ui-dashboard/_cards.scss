@@ -14,6 +14,10 @@
             padding-left: 0;
             padding-right: 0;
         }
+
+        &[data-background-color="gray"]{
+            background-color: $medium-gray;
+        }
     }
 
     .card-header{
@@ -71,6 +75,10 @@
 
     &[data-background-color="green"]{
         background-color: $success-color;
+    }
+
+    &[data-background-color="gray"]{
+        background-color: $medium-gray;
     }
 
     .image{

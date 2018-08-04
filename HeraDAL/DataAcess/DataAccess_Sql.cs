@@ -374,7 +374,7 @@ namespace HeraDAL.DataAcess
             bool active = true)
         {
             return _context.Cursos
-                .Where(c => c.ProfesorId == profId 
+                .Where(c => c.ProfesorId == profId
                     && c.Activo == active)
                 .Include(c => c.Profesor)
                 .Include(c => c.Desafios);
@@ -399,19 +399,17 @@ namespace HeraDAL.DataAcess
             string courseName = "", bool inverse = false)
         {
 
-
-            Func<int, int, bool> comparatorFn;
-            if (inverse)
-                comparatorFn = (val1, val2) => val1 != val2;
-            else
-                comparatorFn = (val1, val2) => val1 == val2;
-
             var query = Enumerable.Empty<Curso>().AsQueryable();
 
             var ids = _context.Rel_Cursos_Estudiantes
-                .Where(rel => comparatorFn(rel.EstudianteId,idEst))
+                .Where(rel => rel.EstudianteId == idEst)
                 .Select(rel => rel.CursoId);
-            query = _context.Cursos
+
+            query = inverse ? _context.Cursos
+                .Where(cur => !ids.Contains(cur.Id)
+                && cur.Activo)
+                .Include(c => c.Profesor)
+                : _context.Cursos
                 .Where(cur => ids.Contains(cur.Id)
                 && cur.Activo)
                 .Include(c => c.Profesor);
@@ -620,7 +618,7 @@ namespace HeraDAL.DataAcess
             //        ["NombreCurso"] = curso.Nombre,
             //        ["NombreEstudiante"] = estudiante.NombreCompleto
             //    });
-            
+
         }
 
         public async Task<Calificacion> Find_Calificacion(

@@ -1,6 +1,8 @@
 ﻿using Entities.Cursos;
 using Entities.Desafios;
 using Entities.Usuarios;
+using HeraServices.ViewModels.EntitiesViewModels.Desafios;
+using HeraServices.ViewModels.EntityMapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +15,13 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        
-        public Profesor Profesor { get; set; }
 
-        public List<Desafio> DesafiosRealizados { get; set; }
-        public List<Desafio> DesafiosNoCompletados { get; set; }
-        public Desafio DesafioPendiente { get; set; }
+        public string NombreProfesor { get; set; }
+
+
+        public List<DesafioViewModel> DesafiosRealizados { get; set; }
+        public List<DesafioViewModel> DesafiosNoCompletados { get; set; }
+        public DesafioViewModel DesafioPendiente { get; set; }
 
         public EstudianteCursoViewModel(Curso model,
             List<Desafio> desafiosRealizados,
@@ -28,12 +31,12 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
             this.Id = model.Id;
             this.Nombre = model.Nombre;
             this.Descripcion = model.Descripcion;
-            this.Profesor = model.Profesor;
-            this.DesafiosNoCompletados = desafioNoCompletados;
+            this.NombreProfesor = model.Profesor.NombreCompleto;
+            this.DesafiosNoCompletados = desafioNoCompletados.Select(item => item.Map()).ToList();
             this.DesafiosRealizados =
-                desafiosRealizados != null ? desafiosRealizados
-                : new List<Desafio>();
-            this.DesafioPendiente = desafioPendiente;
+                desafiosRealizados != null ? desafiosRealizados.Select(item => item.Map()).ToList()
+                : new List<DesafioViewModel>();
+            this.DesafioPendiente = desafioPendiente.Map();
             
         }
     }
