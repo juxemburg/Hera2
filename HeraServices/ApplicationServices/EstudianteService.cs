@@ -125,6 +125,19 @@ namespace HeraServices.Services.ApplicationServices
             return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model), true);
         }
 
+        public async Task<ApiResult<bool>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion)
+        {
+            var model = await _data.Find_Calificacion(idCalificacion, estId, idCurso, idDesafio);
+            if (model == null)
+                throw new ApiNotFoundException();
+            if (model.Tiempoinicio != null)
+                throw new ApiBadRequestException("El desafío ya ha comenzado");
+
+            model.Tiempoinicio = DateTime.Now;
+            _data.Edit(model);
+            return ApiResult<bool>.Initialize(true, await _data.SaveAllAsync());
+        }
+
         public async Task<DesafioProgresoViewModel> Get_DesafioProgreso(
             int estId, int cursoId, int desafioId)
         {

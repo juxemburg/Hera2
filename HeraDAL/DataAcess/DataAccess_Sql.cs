@@ -609,6 +609,7 @@ namespace HeraDAL.DataAcess
                 Edit<Calificacion>(model);
             }
         }
+
         public void Do_TerminarCalificacion(Curso curso,
             Estudiante estudiante,
             Calificacion calificacion,
@@ -801,7 +802,7 @@ namespace HeraDAL.DataAcess
         public void Edit_Notification(Notification model)
         {
             _notificationCtx.Entry(model).State =
-                EntityState.Modified; ;
+                EntityState.Modified;
         }
 
         public async Task<Notification> Find_Notification(int id)

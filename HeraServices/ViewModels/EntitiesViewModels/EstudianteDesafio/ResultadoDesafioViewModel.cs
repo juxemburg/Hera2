@@ -13,7 +13,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
 
         public DateTime? Tiempoinicio { get; set; }
         public DateTime? TiempoFinal { get; set; }
-
+    
         public int RegistroCalificacionId { get; set; }
 
         public string DirArchivo { get; set; }

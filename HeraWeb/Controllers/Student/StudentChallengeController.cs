@@ -14,7 +14,7 @@ namespace HeraWeb.Controllers.Student
 
     [Produces("application/json")]
     [Authorize(Roles = "Estudiante")]
-    [Route("api/Student/Course/{courseId}/Challenge")]
+    [Route("api/Student/Course/{courseId}/Challenge/{challengeId}/[action]")]
     public class StudentChallengeController : Controller
     {
         private readonly UserService _userService;
@@ -28,12 +28,23 @@ namespace HeraWeb.Controllers.Student
             _estudianteService = estudianteService;
         }
 
-        [HttpGet("{challengeId}")]
-        public async Task<IActionResult> GetChallenge(int courseId, int challengeId)
+        [HttpGet]
+        public async Task<IActionResult> Get(int courseId, int challengeId)
         {
-            return await this.Get(async () => {
+            return await this.Get(async () =>
+            {
                 var estId = _userService.Get_EstudianteId(User.Claims);
                 return await _estudianteService.Get_Desafio(estId, courseId, challengeId);
+            });
+        }
+
+        [HttpGet("{noteId}")]
+        public async Task<IActionResult> Start(int courseId, int challengeId, int noteId)
+        {
+            return await this.Get(async () =>
+            {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.Do_IniciarDesafio(estId, courseId, challengeId, noteId);
             });
         }
 
