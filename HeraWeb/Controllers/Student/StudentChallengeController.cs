@@ -38,7 +38,7 @@ namespace HeraWeb.Controllers.Student
             });
         }
 
-        [HttpGet("{noteId}")]
+        [HttpPost("{noteId}")]
         public async Task<IActionResult> Start(int courseId, int challengeId, int noteId)
         {
             return await this.Get(async () =>
@@ -48,7 +48,7 @@ namespace HeraWeb.Controllers.Student
             });
         }
 
-        [HttpGet("{noteId}")]
+        [HttpPost("{noteId}")]
         public async Task<IActionResult> End(int courseId, int challengeId, int noteId, [FromQuery]string projId)
         {
             return await this.Get(async () =>
@@ -58,7 +58,7 @@ namespace HeraWeb.Controllers.Student
             });
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CreateRecord(int courseId, int challengeId)
         {
             return await this.Get(async () =>

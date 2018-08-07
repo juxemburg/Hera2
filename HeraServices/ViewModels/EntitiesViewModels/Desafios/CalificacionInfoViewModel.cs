@@ -20,5 +20,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Desafios
         public TimeSpan Duracion => (TiempoFinal - Tiempoinicio).GetValueOrDefault();
 
         public bool EnCurso => TiempoFinal == null;
+
+        public bool Iniciada => Tiempoinicio != null;
     }
 }

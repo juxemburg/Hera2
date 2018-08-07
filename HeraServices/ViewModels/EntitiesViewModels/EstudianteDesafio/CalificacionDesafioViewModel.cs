@@ -17,7 +17,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
         public string Descripcion { get; set; }
         
 
-        public virtual List<ResultadoDesafioViewModel> Calificaciones { get; set; }
+        public virtual List<CalificacionInfoViewModel> Calificaciones { get; set; }
 
         public bool Iniciada
         {
@@ -39,7 +39,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
             }
         }
 
-        public ResultadoDesafioViewModel CalificacionPendiente
+        public CalificacionInfoViewModel CalificacionPendiente
         {
             get
             {
@@ -57,7 +57,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
             Descripcion = model.Desafio.Descripcion;
 
             Calificaciones = model.Calificaciones
-                .Select(cal => new ResultadoDesafioViewModel(cal))
+                .Select(cal => cal.ToViewModel())
                 .ToList();
         }
     }
