@@ -48,6 +48,24 @@ namespace HeraWeb.Controllers.Student
             });
         }
 
+        [HttpGet("{noteId}")]
+        public async Task<IActionResult> End(int courseId, int challengeId, int noteId, [FromQuery]string projId)
+        {
+            return await this.Get(async () =>
+            {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.Do_CalificarDesafio(estId, courseId, challengeId, noteId, projId);
+            });
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> CreateRecord(int courseId, int challengeId)
+        {
+            return await this.Get(async () =>
+            {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId);
+            });
+        }
     }
 }

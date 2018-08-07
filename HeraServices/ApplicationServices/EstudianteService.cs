@@ -16,6 +16,8 @@ using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using Entities.Valoracion;
+using HeraServices.ViewModels.EntityMapping;
+using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -125,7 +127,7 @@ namespace HeraServices.Services.ApplicationServices
             return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model), true);
         }
 
-        public async Task<ApiResult<bool>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion)
+        public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion)
         {
             var model = await _data.Find_Calificacion(idCalificacion, estId, idCurso, idDesafio);
             if (model == null)
@@ -135,7 +137,40 @@ namespace HeraServices.Services.ApplicationServices
 
             model.Tiempoinicio = DateTime.Now;
             _data.Edit(model);
-            return ApiResult<bool>.Initialize(true, await _data.SaveAllAsync());
+            var success = await _data.SaveAllAsync();
+            return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
+        }
+
+        public async Task<ApiResult<CalificacionInfoViewModel>> Do_CalificarDesafio(int estId,
+            int idCurso, int idDesafio, int idCalificacion, string idProj)
+        {
+            var model = await _data.Find_Calificacion(idCalificacion, estId, idCurso, idDesafio);
+
+            try
+            {
+                if (model == null)
+                    throw new ApiNotFoundException();
+                if (model.Tiempoinicio == null)
+                    throw new ApiBadRequestException("Debes iniciar el desafío primero");
+                if (model.TiempoFinal != null)
+                    throw new ApiBadRequestException("El desafío ya ha terminado");
+
+
+                var res = await _evaluator.Get_Evaluation(idProj);
+                var est = await _data.Find_Estudiante(estId);
+                var curso = await _data.Find_Curso(idCurso);
+                var resultados = res.Select(val => val.Map(model.Id))
+                    .ToList();
+
+                _data.Do_TerminarCalificacion(curso,
+                    est, model, resultados, idProj);
+                var success = await _data.SaveAllAsync();
+                return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
+            }
+            catch (EvaluationException)
+            {
+                throw new ApiBadRequestException("Id de desafío inválido");
+            }
         }
 
         public async Task<DesafioProgresoViewModel> Get_DesafioProgreso(
@@ -160,34 +195,7 @@ namespace HeraServices.Services.ApplicationServices
             };
         }
 
-        public async Task<int> Do_CalificarDesafio(int estId,
-            int idCurso, int idDesafio, string idProj)
-        {
-            var model = await _data.Find_RegistroCalificacion(
-                idCurso, estId, idDesafio);
 
-            try
-            {
-                if (model == null || !model.Iniciada) return -1;
-
-                var cal = model.CalificacionPendiente;
-                var res = await _evaluator.Get_Evaluation(idProj);
-                var est = await _data.Find_Estudiante(estId);
-                var curso = await _data.Find_Curso(idCurso);
-                var resultados = res.Select(val => val.Map(cal.Id))
-                    .ToList();
-
-                _data.Do_TerminarCalificacion(curso,
-                    est, cal, resultados, idProj);
-                await _data.SaveAllAsync();
-                return cal.Id;
-            }
-            catch (EvaluationException)
-            {
-                throw new ApplicationServicesException(
-                    "Id de desafío inválido");
-            }
-        }
 
         public async Task<DesafioCompletadoViewModel>
             Get_DesafioCompletadoViewModel(int idEst, int idCurso,
@@ -206,18 +214,27 @@ namespace HeraServices.Services.ApplicationServices
                 desafio);
         }
 
-        public async Task<bool> IniciarDesafio(int idEst, int idCurso,
+        public async Task<ApiResult<CalificacionInfoViewModel>> Do_AddCalificacion
+            (int idEst, int idCurso,
             int idDesafio)
         {
+            var registroCalificacion = await _data.Find_RegistroCalificacion(idCurso, idEst, idDesafio);
+            if (registroCalificacion == null)
+                throw new ApiNotFoundException("Recurso no encontrado");
+            if (registroCalificacion.Iniciada)
+                throw new ApiBadRequestException("Debes terminar la calificación actual para poder registrar una nueva.");
+
+
             var model = new Calificacion()
             {
-                Tiempoinicio = DateTime.Now,
+                Tiempoinicio = null,
                 CursoId = idCurso,
                 EstudianteId = idEst,
                 DesafioId = idDesafio
             };
             _data.Add(model);
-            return await _data.SaveAllAsync();
+            var success = await _data.SaveAllAsync();
+            return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
         }
     }
 }
