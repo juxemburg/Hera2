@@ -67,5 +67,14 @@ namespace HeraWeb.Controllers.Student
                 return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId);
             });
         }
+
+        [HttpGet("{noteId}")]
+        public async Task<IActionResult> GetResults(int courseId, int challengeId, int noteId)
+        {
+            return await this.Get(async () => {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _estudianteService.Get_DesafioCompletadoViewModel(estId, courseId, challengeId, noteId);
+            });
+        }
     }
 }

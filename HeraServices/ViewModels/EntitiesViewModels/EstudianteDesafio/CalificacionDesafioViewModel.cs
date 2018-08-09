@@ -15,7 +15,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
         public int DesafioId { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        
+        public string UrlEscenarioInicial { get; set; }
+
 
         public virtual List<CalificacionInfoViewModel> Calificaciones { get; set; }
 
@@ -38,15 +39,10 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
                     && Calificaciones.Count > 0);
             }
         }
+        
 
-        public CalificacionInfoViewModel CalificacionPendiente
-        {
-            get
-            {
-                return Calificaciones
-                    .FirstOrDefault(cal => cal.EnCurso);
-            }
-        }
+        public CalificacionInfoViewModel CalificacionPendiente { get; set; }
+
 
         public CalificacionDesafioViewModel(RegistroCalificacion model)
         {
@@ -55,10 +51,17 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
             DesafioId = model.Desafio.Id;
             Nombre = model.Desafio.Nombre;
             Descripcion = model.Desafio.Descripcion;
+            UrlEscenarioInicial = model.Desafio.DirDesafioInicial;
 
             Calificaciones = model.Calificaciones
+                .Where(item => item.TiempoFinal != null)
                 .Select(cal => cal.ToViewModel())
+                .OrderByDescending(cal => cal.TiempoFinal)
                 .ToList();
+
+            var calPendiente = model.Calificaciones
+                    .FirstOrDefault(cal => cal.EnCurso);
+            CalificacionPendiente = (calPendiente != null)? calPendiente.ToViewModel(): null;
         }
     }
 }

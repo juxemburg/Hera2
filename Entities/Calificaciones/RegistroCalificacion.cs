@@ -24,7 +24,7 @@ namespace Entities.Calificaciones
                            .Any(cal => cal.EnCurso);
             }
         }
-
+        
         public bool Terminada
         {
             get

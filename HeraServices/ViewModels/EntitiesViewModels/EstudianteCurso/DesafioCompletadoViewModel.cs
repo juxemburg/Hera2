@@ -11,14 +11,14 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
     {
         public int CursoId { get; set; }
         public ResultadoScratch Resultado { get; set; }
-        public Desafio SiguienteDesafio { get; set; }
+        public int SiguienteDesafioId { get; set; }
 
         public DesafioCompletadoViewModel(int cursoId,
             ResultadoScratch resultado, Desafio siguienteDesafio)
         {
             this.CursoId = cursoId;
             this.Resultado = resultado;
-            this.SiguienteDesafio = siguienteDesafio;
+            this.SiguienteDesafioId = siguienteDesafio.Id;
         }
     }
 }
