@@ -21,6 +21,11 @@
     }
 
     .card-header{
+        
+        .title {
+            margin-top:0px;
+        }
+
       &:not([data-background-color]){
         background-color: transparent;
       }
@@ -28,7 +33,6 @@
       border: 0;
 
       .card-title{
-          
 
           button.btn-back {
             margin-top: 0px;

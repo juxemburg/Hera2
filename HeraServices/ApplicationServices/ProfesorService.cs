@@ -8,6 +8,7 @@ using Entities.Desafios;
 using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio;
@@ -106,14 +107,15 @@ namespace HeraServices.Services.ApplicationServices
         }
 
 
-        public async Task<ProfesorCursoViewModel> Get_Curso(int profId,
+        public async Task<ApiResult<ProfesorCursoViewModel>> Get_Curso(int profId,
             int cursoId)
         {
             var model = await _data.Find_Curso(cursoId);
             if (model == null || model.ProfesorId != profId)
             {
-                throw new ApplicationServicesException("Curso no encontrado");
+                throw new ApiNotFoundException("Curso no encontrado");
             }
+
             var registros =
                 await _data.GetAll_RegistroCalificacion(cursoId)
                     .GroupBy(reg => new
@@ -128,7 +130,7 @@ namespace HeraServices.Services.ApplicationServices
             model.Desafios = model.Desafios
                 .OrderByDescending(d => d.Initial)
                 .ToList();
-            return new ProfesorCursoViewModel(model, registros);
+            return ApiResult<ProfesorCursoViewModel>.Initialize(new ProfesorCursoViewModel(model, registros), true);
         }
 
         public async Task<DesafioCursoViewModel> Get_Desafio(int profId,

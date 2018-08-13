@@ -568,7 +568,7 @@ namespace HeraDAL.DataAcess
                 _context.RegistroCalificaiones
                 .Include(reg => reg.Calificaciones)
                 .ThenInclude(cal => cal.CalificacionCualitativa)
-                .Where(cal => !cal.Iniciada);
+                .Where(item => item.Terminada == true );
 
             if (cursoId != null)
                 query = query

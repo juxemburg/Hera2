@@ -36,6 +36,16 @@ namespace HeraWeb.Controllers.Teacher
                 return await _ctrlService.GetAll_Cursos(teacherId, searchString, skip, take);
             });
         }
+
+        [HttpGet("{courseId}")]
+        public async Task<IActionResult> GetCourse(int courseId)
+        {
+            return await this.Get(async () =>
+            {
+                var teacherId = _userService.Get_ProfesorId(User.Claims);
+                return await _ctrlService.Get_Curso(teacherId, courseId);
+            });
+        }
         
     }
 }

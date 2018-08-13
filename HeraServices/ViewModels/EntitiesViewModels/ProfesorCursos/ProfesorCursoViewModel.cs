@@ -11,6 +11,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
     public class ProfesorCursoViewModel
     {
         public Curso Curso { get; set; }
+        
 
         public Dictionary<Tuple<int,int>, List<RegistroCalificacion>>
             RegistrosCurso { get; set; }
