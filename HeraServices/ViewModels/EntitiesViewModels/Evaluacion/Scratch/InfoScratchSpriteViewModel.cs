@@ -1,11 +1,13 @@
-﻿
-namespace Entities.Valoracion
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HeraServices.ViewModels.EntitiesViewModels.Evaluacion.Scratch
 {
-    public class IInfoScratch_Sprite : IInfoScratch
+    public class InfoScratchSpriteViewModel
     {
         public int Id { get; set; }
         public int ResultadoScratchId { get; set; }
-        public virtual ResultadoScratch ResultadoScratch { get; set; }
         public bool NonUnusedBlocks { get; set; }
         public bool UserDefinedBlocks { get; set; }
         public bool CloneUse { get; set; }
@@ -23,6 +25,5 @@ namespace Entities.Valoracion
         public bool BasicOperators { get; set; }
         public bool MediumOperators { get; set; }
         public bool AdvancedOperators { get; set; }
-        
     }
 }

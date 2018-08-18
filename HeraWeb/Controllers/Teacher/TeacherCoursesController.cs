@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HeraServices.ApplicationServices;
 using HeraServices.Services.ApplicationServices;
 using HeraServices.Services.UserServices;
+using HeraServices.ViewModels.EntitiesViewModels.ProfesorEstudiante;
 using HeraWeb.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +20,16 @@ namespace HeraWeb.Controllers.Teacher
     {
         private readonly UserService _userService;
         private readonly ProfesorService _ctrlService;
+        private readonly ProfesorCursoService _profesorCursoService;
 
-        public TeacherCoursesController(UserService userService, ProfesorService ctrlService)
+        public TeacherCoursesController(
+            UserService userService,
+            ProfesorService ctrlService,
+            ProfesorCursoService profesorCursoService)
         {
             _userService = userService;
             _ctrlService = ctrlService;
+            _profesorCursoService = profesorCursoService;
         }
 
         // GET: api/TeacherCourses
@@ -43,9 +50,35 @@ namespace HeraWeb.Controllers.Teacher
             return await this.Get(async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
-                return await _ctrlService.Get_Curso(teacherId, courseId);
+                return await _profesorCursoService.Get_Curso(teacherId, courseId);
             });
         }
-        
+
+        [HttpGet("{courseId}/Student/{studentId}/Grades")]
+        public async Task<IActionResult> GetStudentGrades(int courseId, int studentId)
+        {
+            return await this.Get(async () =>
+            {
+                var teacherId = _userService.Get_ProfesorId(User.Claims);
+                return await _profesorCursoService.Get_RegistrosEstudiante(teacherId, courseId, studentId);
+            });
+        }
+
+
+        [HttpPost("{courseId}/Student/{studentId}/Challenge/{challengeId}/Valoration")]
+        public async Task<IActionResult> PostStudentValoration(
+            int courseId,
+            int studentId,
+            int challengeId,
+            [FromBody] CreateCalificacionCualitativaViewModel model)
+        {
+            return await this.Post(model, ModelState,
+                async () =>
+                {
+                    var teacherId = _userService.Get_ProfesorId(User.Claims);
+                    return await _profesorCursoService.Do_Calificar(teacherId, courseId, studentId, challengeId, model);
+                });
+        }
+
     }
 }

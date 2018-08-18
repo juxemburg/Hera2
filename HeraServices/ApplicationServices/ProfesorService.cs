@@ -107,31 +107,7 @@ namespace HeraServices.Services.ApplicationServices
         }
 
 
-        public async Task<ApiResult<ProfesorCursoViewModel>> Get_Curso(int profId,
-            int cursoId)
-        {
-            var model = await _data.Find_Curso(cursoId);
-            if (model == null || model.ProfesorId != profId)
-            {
-                throw new ApiNotFoundException("Curso no encontrado");
-            }
-
-            var registros =
-                await _data.GetAll_RegistroCalificacion(cursoId)
-                    .GroupBy(reg => new
-                    {
-                        reg.DesafioId,
-                        reg.EstudianteId
-                    })
-                    .ToDictionaryAsync(reg =>
-                            new Tuple<int, int>(
-                                reg.Key.DesafioId, reg.Key.EstudianteId),
-                                reg => reg.ToList());
-            model.Desafios = model.Desafios
-                .OrderByDescending(d => d.Initial)
-                .ToList();
-            return ApiResult<ProfesorCursoViewModel>.Initialize(new ProfesorCursoViewModel(model, registros), true);
-        }
+        
 
         public async Task<DesafioCursoViewModel> Get_Desafio(int profId,
             int cursoId, int desafioId)
@@ -185,31 +161,7 @@ namespace HeraServices.Services.ApplicationServices
 
         }
 
-        public async Task<bool> Do_Calificar(int idProf, int idCurso,
-            int idEstudiante, int idDesafio, CalificarViewModel model)
-        {
-
-            if (!await _data.Exist_Desafio(idDesafio, idCurso, idProf))
-                return false;
-
-            var estUserId = (await _usrService
-                .Get_EstudianteUserId(idEstudiante)).GetValueOrDefault();
-            var desafio = await _data.Find_Desafio(idDesafio);
-            var curso = await _data.Find_Curso(idCurso);
-
-            _data.Add(model.Map());
-            //Mover
-            //_data.Do_PushNotification(
-            //    NotificationType.NotificationDesafioCalificado, estUserId,
-            //    new Dictionary<string, string>
-            //    {
-            //        ["IdCurso"] = $"{idCurso}",
-            //        ["IdDesafio"] = $"{idDesafio}",
-            //        ["NombreDesafio"] = desafio.Nombre,
-            //        ["NombreCurso"] = curso.Nombre
-            //    });
-            return await _data.SaveAllAsync();
-        }
+        
 
         public async Task<ResultadosScratchViewModel> Get_EvaluacionModel(
             int idProf, int idCurso, int idEstudiante, int idDesafio,

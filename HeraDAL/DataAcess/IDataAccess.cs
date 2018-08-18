@@ -97,6 +97,8 @@ namespace HeraDAL.DataAcess
         IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(
             int? cursoId = null, int? estudianteId = null,
             int? desafioId = null);
+        IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(int cursoId);
+        IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(int cursoId, int estudianteId);
         Task Delete_RegistroCalificacion(int cursoId, int estId,
             int desafioId);
 

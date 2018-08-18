@@ -564,11 +564,10 @@ namespace HeraDAL.DataAcess
             int? desafioId = null)
         {
             var query =
-                (IQueryable<RegistroCalificacion>)
                 _context.RegistroCalificaiones
                 .Include(reg => reg.Calificaciones)
                 .ThenInclude(cal => cal.CalificacionCualitativa)
-                .Where(item => item.Terminada == true );
+                .Where(item => item.Terminada == true);
 
             if (cursoId != null)
                 query = query
@@ -587,6 +586,39 @@ namespace HeraDAL.DataAcess
 
             return query;
         }
+
+        public IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(int cursoId)
+        {
+            var query =
+                _context.RegistroCalificaiones
+                .Where(reg => reg.CursoId == cursoId)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.CalificacionCualitativa);
+            
+
+            return query;
+        }
+
+        public IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(int cursoId, int estudianteId)
+        {
+            var query =
+                _context.RegistroCalificaiones
+                .Where(reg => reg.CursoId == cursoId && reg.EstudianteId == estudianteId)
+                .Include(reg => reg.Desafio)
+                .ThenInclude(des => des.InfoDesafio)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.IInfoScratch_Sprite)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.IInfoScratch_General)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.CalificacionCualitativa);
+
+
+            return query;
+        }
+
         public async Task Delete_RegistroCalificacion(int cursoId, int estId,
             int desafioId)
         {

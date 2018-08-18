@@ -16,10 +16,10 @@ namespace Entities.Valoracion
         public bool General { get; set; }
 
         public int? IInfoScratch_SpriteId { get; set; }
-        public virtual IInfoScratch_Sprite IInfoScratch_Sprite { get; set; }
+        public IInfoScratch_Sprite IInfoScratch_Sprite { get; set; }
 
         public int? IInfoScratch_GeneralId { get; set; }
-        public virtual IInfoScratch_General IInfoScratch_General { get; set; }
+        public IInfoScratch_General IInfoScratch_General { get; set; }
 
         public int CalificacionId { get; set; }
         public virtual Calificacion Calificacion { get; set; }

@@ -21,6 +21,7 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using HeraServices.Services.UtilServices;
 using HeraServices.Services.DesafiosServices;
+using HeraServices.ApplicationServices;
 
 namespace HeraWeb
 {
@@ -92,6 +93,7 @@ namespace HeraWeb
 
             services.AddScoped<UserService>();
             services.AddScoped<ProfesorService>();
+            services.AddScoped<ProfesorCursoService>();
             services.AddScoped<EstudianteService>();
             services.AddScoped<DesafioEstudianteService>();
             services.AddScoped<DesafioService>();

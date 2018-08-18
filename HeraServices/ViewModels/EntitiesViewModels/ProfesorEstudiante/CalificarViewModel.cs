@@ -3,7 +3,7 @@ using Entities.Calificaciones;
 
 namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorEstudiante
 {
-    public class CalificarViewModel
+    public class CreateCalificacionCualitativaViewModel
     {
         public int? Id { get; set; }
         public bool Completada { get; set; }
@@ -11,12 +11,12 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorEstudiante
         public string Descripcion { get; set; }
         public int? CalificacionId { get; set; }
 
-        public CalificarViewModel()
+        public CreateCalificacionCualitativaViewModel()
         {
             
         }
 
-        public CalificarViewModel(int id)
+        public CreateCalificacionCualitativaViewModel(int id)
         {
             CalificacionId = id;
             Completada = false;
