@@ -32,6 +32,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Evaluacion
         public CalificacionViewModel(Calificacion cal,
             InfoDesafio infoDesafio)
         {
+
             Id = cal.Id;
             CursoId = cal.CursoId;
             EstudianteId = cal.EstudianteId;
@@ -40,13 +41,14 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Evaluacion
             Tiempoinicio = cal.Tiempoinicio;
             TiempoFinal = cal.TiempoFinal;
 
-            CalificacionCualitativaId = cal.CalificacionCualitativa.Id;
+            if (cal.CalificacionCualitativa != null)
+                CalificacionCualitativaId = cal.CalificacionCualitativa.Id;
 
             ResultadoSprites = cal.Resultados.Where(item => !item.General)
                 .Select(item => item.ToViewModel()).ToList();
 
             ResultadoGeneral = cal.ResultadoGeneral.ToViewModel();
-            
+
             Evaluacion = new EvaluacionViewModel(cal.ResultadoGeneral,
                 infoDesafio);
         }

@@ -1,0 +1,69 @@
+.nav{
+    margin-top: 20px;
+    display: block;
+
+    .caret{
+        top: 14px;
+        position: absolute;
+        right: 10px;
+    }
+
+    li{
+        > a + div .nav li > a{
+            margin-top: 7px;
+        }
+
+        > a{
+            margin: 10px 15px 0;
+            border-radius: $btn-round-radius;
+            color: $white-color;
+            display: block;
+            text-decoration: none;
+            position: relative;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: $font-size-mini;
+            padding: 10px 8px;
+            line-height: $line-height-nav-link;
+        }
+
+        &:first-child > a{
+            margin: 0 15px;
+        }
+
+        &:hover:not(.active) > a,
+        &:focus:not(.active) > a{
+            background-color: $opacity-1;
+
+            i{
+              color: $white-color;
+            }
+        }
+
+        &.active > a{
+          background-color: $white-color;
+          box-shadow: $box-shadow;
+          color: $primary-color;
+        }
+    }
+
+    p{
+        margin: 0;
+        line-height: 30px;
+        position: relative;
+        display: block;
+        height: auto;
+        white-space: nowrap;
+    }
+
+    i{
+        font-size: 20px;
+        float: left;
+        margin-right: 12px;
+        line-height: 30px;
+        width: 34px;
+        text-align: center;
+        color: $opacity-5;
+        position: relative;
+    }
+}

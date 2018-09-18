@@ -41,10 +41,10 @@ namespace HeraWeb.Controllers
             _userService = userService;
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
-
             return await this.Post(model, ModelState, async () =>
             {
                 var result =  await _accountService.Login(model);
@@ -54,7 +54,6 @@ namespace HeraWeb.Controllers
                 }
                 return result;
             });
-
         }
 
 
