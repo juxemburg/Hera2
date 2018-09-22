@@ -31,9 +31,7 @@ namespace HeraServices.ApplicationServices
         {
             var model = await _data.Find_Curso(cursoId);
             if (model == null || model.ProfesorId != profId)
-            {
                 throw new ApiNotFoundException("Curso no encontrado");
-            }
 
             var registros = await _data.GetAll_RegistroCalificacion(cursoId).ToListAsync();
             return ApiResult<ProfesorCursoViewModel>.Initialize(new ProfesorCursoViewModel(model, registros.Where(item => item.Terminada).ToList()), true);

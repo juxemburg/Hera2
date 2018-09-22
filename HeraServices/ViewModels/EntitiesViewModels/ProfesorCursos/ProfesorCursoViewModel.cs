@@ -17,6 +17,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
         public string DescripcionCurso { get; set; }
         public string PasswordCurso { get; set; }
         public CursoDesafioViewModel DesafioInicial { get; set; }
+        public List<CursoDesafioViewModel> Desafios { get; set; }
 
         public Dictionary<int, string> Estudiantes { get; set; }
 
@@ -30,6 +31,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
             NombreCurso = curso.Nombre;
             DescripcionCurso = curso.Descripcion;
             PasswordCurso = curso.Password;
+
+            Desafios = curso.Desafios.Select(item => new CursoDesafioViewModel(item.Desafio)).ToList();
             DesafioInicial = new CursoDesafioViewModel(curso.Desafio);
 
             Estudiantes = curso.Estudiantes
