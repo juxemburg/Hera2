@@ -8,6 +8,7 @@ using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.Services.UtilServices;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels;
 using HeraServices.ViewModels.EntitiesViewModels.Cursos;
 using HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos;
@@ -114,42 +115,38 @@ namespace HeraServices.Services.ApplicationServices
             return await _data.SaveAllAsync();
 
         }
-        public async Task<bool> Add_DesafioCurso(int profId,
-            AddDesafioViewModel model)
+        public async Task<ApiResult<bool>> Add_DesafioCurso(int profId, int cursoId, int desafioId)
         {
-            try
+            var result = ApiResult<bool>.Initialize();
+
+            if (!await Do_validateProfesor(profId, cursoId))
+                throw new ApiUnauthorizedException("No tienes permisos para ésta solicitud");
+
+            if (await _data.Exist_Desafio(desafioId, cursoId))
+                throw new ApiBadRequestException("El desafío ya se encuentra en el curso");
+
+
+            var desafio = await _data.Find_Desafio(desafioId);
+            var profesor = await _data
+                .Find_Profesor(desafio.ProfesorId);
+
+            _data.AddDesafio(cursoId, desafio);
+
+            if (profId != profesor.Id)
             {
-                if (!await Do_validateProfesor(profId, model.Id))
-                    return false;
-
-                if (await _data.Exist_Desafio(model.DesafioId, model.Id))
-                    throw new ApplicationServicesException(
-                        "El desafío ya se encuentra en el curso");
-
-                var desafio = await _data.Find_Desafio(model.DesafioId);
-                var profesor = await _data
-                    .Find_Profesor(desafio.ProfesorId);
-                _data.AddDesafio(model.Id, desafio);
-
-                if (profId != profesor.Id)
-                {
-                    //TODO: llamar al notification service
-                    //_data.Do_PushNotification(
-                    //    NotificationType.NotificationDesafioUsado,
-                    //    profesor.UsuarioId, new Dictionary<string, string>()
-                    //    {
-                    //        ["IdDesafio"] = $"{desafio.Id}",
-                    //        ["NombreDesafio"] = $"{desafio.Nombre}"
-                    //    });
-                }
-                return await _data.SaveAllAsync();
+                //TODO: llamar al notification service
+                //_data.Do_PushNotification(
+                //    NotificationType.NotificationDesafioUsado,
+                //    profesor.UsuarioId, new Dictionary<string, string>()
+                //    {
+                //        ["IdDesafio"] = $"{desafio.Id}",
+                //        ["NombreDesafio"] = $"{desafio.Nombre}"
+                //    });
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw new ApplicationServicesException(
-                    "Error en la creación de desafío", e);
-            }
+
+            result.Success = await _data.SaveAllAsync();
+            result.Value = true;
+            return result;
         }
 
         public async Task<bool> Remove_DesafioCurso(int profId,

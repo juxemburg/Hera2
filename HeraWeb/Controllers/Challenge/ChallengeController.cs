@@ -47,7 +47,7 @@ namespace HeraWeb.Controllers.Challenge
         [HttpPost]
         public async Task<IActionResult> AddChallenge([FromBody] CreateDesafioViewModel model)
         {
-            return await this.Post(model, ModelState, async () =>
+            return await this.Post(ModelState, async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _ctrlService.Create_Desafio(teacherId, model);
@@ -58,7 +58,7 @@ namespace HeraWeb.Controllers.Challenge
         public async Task<IActionResult> GetChallenges([FromBody]SearchDesafioViewModel model,
             [FromQuery]int skip = 0, [FromQuery]int take = 10)
         {
-            return await this.Post(model, ModelState, async () =>
+            return await this.Post(ModelState, async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _ctrlService.GetAll_Desafios(teacherId, model, skip, take);

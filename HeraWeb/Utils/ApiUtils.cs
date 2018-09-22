@@ -27,7 +27,7 @@ namespace HeraWeb.Utils
                 if (result.Success)
                     return controller.Ok(result.Value);
                 else
-                    return result.Value == null ? (IActionResult) controller.NotFound(): controller.BadRequest(result.ModelErrors);
+                    return result.Value == null ? (IActionResult)controller.NotFound() : controller.BadRequest(result.ModelErrors);
             }
             catch (ApiNotFoundException e)
             {
@@ -41,7 +41,7 @@ namespace HeraWeb.Utils
             {
                 return controller.Unauthorized();
             }
-            catch(DataAccessException e)
+            catch (DataAccessException e)
             {
                 //Log error
                 return controller.StatusCode(500, e);
@@ -60,23 +60,48 @@ namespace HeraWeb.Utils
         /// <param name="model">Variable del modelo a ser insertada</param>
         /// <param name="modelstate">Estado del modelo a ser validado</param>
         /// <param name="fnInsert">Función de inserción del modelo</param>
-        public static async Task<IActionResult> Post<T, U>(this Controller controller,  T model,
+        public static async Task<IActionResult> Post<U>(this Controller controller,
             ModelStateDictionary modelState, Func<Task<ApiResult<U>>> fnInsert)
         {
-            if(modelState.IsValid)
+            try
             {
-                
-                var result = await fnInsert();
-                addModelErrors(modelState, result.ModelErrors);
+                if (modelState.IsValid)
+                {
 
-                return result.Success ? (IActionResult)controller.Ok(result.Value) : controller.BadRequest(modelState);
+                    var result = await fnInsert();
+                    addModelErrors(modelState, result.ModelErrors);
+
+                    return result.Success ? (IActionResult)controller.Ok(result.Value) : controller.BadRequest(modelState);
+                }
+                else
+                {
+                    return controller.BadRequest(modelState);
+                }
             }
-            else
+            catch (ApiNotFoundException e)
             {
-                return controller.BadRequest(modelState);
+                return controller.NotFound(e);
+            }
+            catch (ApiBadRequestException e)
+            {
+                return controller.BadRequest(e);
+            }
+            catch (ApiUnauthorizedException)
+            {
+                return controller.Unauthorized();
+            }
+            catch (DataAccessException e)
+            {
+                //Log error
+                return controller.StatusCode(500, e);
+            }
+            catch (Exception err)
+            {
+                //Log error.
+                return controller.StatusCode(500, err);
             }
         }
-        
+
 
         private static void addModelErrors(ModelStateDictionary modelState, Dictionary<string, string> errDictionary)
         {

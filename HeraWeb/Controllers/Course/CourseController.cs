@@ -39,7 +39,7 @@ namespace HeraWeb.Controllers.Course
         [Authorize(Roles = "Profesor")]
         public async Task<IActionResult> AddCourse([FromBody]CreateCursoViewModel model)
         {
-            return await this.Post(model, ModelState, async () => {
+            return await this.Post(ModelState, async () => {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _ctrlService.Create_Curso(teacherId, model);
             });

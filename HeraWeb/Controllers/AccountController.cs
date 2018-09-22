@@ -45,7 +45,7 @@ namespace HeraWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
-            return await this.Post(model, ModelState, async () =>
+            return await this.Post(ModelState, async () =>
             {
                 var result =  await _accountService.Login(model);
                 if(result.Success)
@@ -61,7 +61,7 @@ namespace HeraWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterTeacher([FromBody]RegisterProfesorViewModel model)
         {
-            return await this.Post(model, ModelState, async () =>
+            return await this.Post(ModelState, async () =>
             {
                 var result  = await _accountService.RegisterProfesor(model);
                 result.Value.Token = await _tokenService.BuildToken(model.Email);
@@ -82,7 +82,7 @@ namespace HeraWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterStudent([FromBody]RegisterEstudianteViewModel model)
         {
-            return await this.Post(model, ModelState, async () =>
+            return await this.Post(ModelState, async () =>
             {
                 var result = await _accountService.RegisterEstudiante(model);
                 result.Value.Token = await _tokenService.BuildToken(model.Email);
