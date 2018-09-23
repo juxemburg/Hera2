@@ -115,9 +115,9 @@ namespace HeraServices.Services.ApplicationServices
             return await _data.SaveAllAsync();
 
         }
-        public async Task<ApiResult<bool>> Add_DesafioCurso(int profId, int cursoId, int desafioId)
+        public async Task<ApiResult<CursoDesafioViewModel>> Add_DesafioCurso(int profId, int cursoId, int desafioId)
         {
-            var result = ApiResult<bool>.Initialize();
+            var result = ApiResult<CursoDesafioViewModel>.Initialize();
 
             if (!await Do_validateProfesor(profId, cursoId))
                 throw new ApiUnauthorizedException("No tienes permisos para ésta solicitud");
@@ -145,7 +145,7 @@ namespace HeraServices.Services.ApplicationServices
             }
 
             result.Success = await _data.SaveAllAsync();
-            result.Value = true;
+            result.Value = new CursoDesafioViewModel(desafio);
             return result;
         }
 

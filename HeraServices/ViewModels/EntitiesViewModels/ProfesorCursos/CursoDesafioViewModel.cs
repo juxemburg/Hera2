@@ -15,7 +15,9 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
 
         public int ProfesorId { get; set; }
 
-        public CursoDesafioViewModel(Desafio desafio)
+        public bool Inicial { get; set; }
+
+        public CursoDesafioViewModel(Desafio desafio, bool inicial = false)
         {
             Id = desafio.Id;
             Nombre = desafio.Nombre;
@@ -23,6 +25,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
             DirDesafioInicial = desafio.DirDesafioInicial;
             DirSolucion = desafio.DirSolucion;
             ProfesorId = desafio.ProfesorId;
+            Inicial = inicial;
         }
     }
 }
