@@ -6,24 +6,20 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
 {
     public class InfoCursoViewModel
     {
-        public List<SingleValueSeriesViewModel> DistSexo { get; set; }
-        public Dictionary<string, MultiValueSeriesViewModel> ActividadCurso { get; set; }
+        public List<SingleValueSeriesViewModel> SexDistribution { get; set; }
+        public ChartLineViewModel CourseActivity { get; set; }
+        public ChartLineViewModel CompletedChallenges { get; set; }
+        public ChartLineViewModel FailedChallenges { get; set; }
+        public ChartLineViewModel BlockFrequency { get; set; }
 
-        
+
 
         public PieChartViewModel GetDistribucionSexo(string clss,
             string labelPosition, int labelOffset, bool showLabel = true)
         {
-            return ChartUtil.GetPieChartViewModel(DistSexo, "chart-sex",
+            return ChartUtil.GetPieChartViewModel(SexDistribution, "chart-sex",
                 clss, labelPosition, labelOffset, showLabel);
         }
 
-        public LineChartViewModel GetActividadCurso(string clss)
-        {
-            return ChartUtil.GetLineChartViewModel(ActividadCurso, 
-                "chart-activity", clss);
-        }
-
-        
     }
 }

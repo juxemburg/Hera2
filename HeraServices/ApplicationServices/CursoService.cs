@@ -115,6 +115,7 @@ namespace HeraServices.Services.ApplicationServices
             return await _data.SaveAllAsync();
 
         }
+
         public async Task<ApiResult<CursoDesafioViewModel>> Add_DesafioCurso(int profId, int cursoId, int desafioId)
         {
             var result = ApiResult<CursoDesafioViewModel>.Initialize();

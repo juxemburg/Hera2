@@ -50,10 +50,42 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
             var dates = Enumerable.Range(0, 7)
                 .Select(d => DateTime.Now.AddDays((d * -1)));
 
+            var activity = registroCurso
+                .SelectMany(reg => reg.Calificaciones)
+                .Where(cal => cal.Tiempoinicio.HasValue && cal.Tiempoinicio > (DateTime.Now.AddDays(-30)))
+                .GroupBy(cal => cal.Tiempoinicio.GetValueOrDefault().ToShortDateString())
+                .Select(grp => new SingleValueSeriesViewModel() { Label = grp.Key, Data = grp.Count() })
+                .ToList();
+
+            var completedChallenges = registroCurso
+                .SelectMany(reg => reg.Calificaciones)
+                .Where(cal => cal.Tiempoinicio.HasValue && cal.Tiempoinicio > DateTime.Now.AddDays(-30) && cal.Duracion.CompareTo(TimeSpan.FromMinutes(30)) > 0 )
+                .GroupBy(cal => cal.Tiempoinicio.GetValueOrDefault().ToShortDateString())
+                .Select(grp => new SingleValueSeriesViewModel() { Label = grp.Key, Data = grp.Count() })
+                .OrderByDescending(item => item.Data)
+                .ToList();
+
+            var failedChallenges = registroCurso
+                .SelectMany(reg => reg.Calificaciones)
+                .Where(cal => cal.Tiempoinicio.HasValue && cal.Tiempoinicio > DateTime.Now.AddDays(-30) && cal.Duracion.CompareTo(TimeSpan.FromMinutes(30)) < 0)
+                .GroupBy(cal => cal.Tiempoinicio.GetValueOrDefault().ToShortDateString())
+                .Select(grp => new SingleValueSeriesViewModel() { Label = grp.Key, Data = grp.Count() })
+                .OrderByDescending(item => item.Data)
+                .ToList();
+
+            //var blockFrequency = registroCurso
+            //    .SelectMany(reg => reg.Calificaciones)
+            //    .SelectMany(cal => cal.Resultados)
+            //    .SelectMany(res => res.Bloques)
+            //    .GroupBy(block => block.Nombre)
+            //    .Select(grp => new SingleValueSeriesViewModel() { Label = grp.Key, Data = grp.Count() })
+            //    .OrderByDescending(item => item.Data)
+            //    .ToList();
+
 
             Info = new InfoCursoViewModel()
             {
-                DistSexo = new List<SingleValueSeriesViewModel>()
+                SexDistribution = new List<SingleValueSeriesViewModel>()
                 {
                     new SingleValueSeriesViewModel()
                     {
@@ -68,19 +100,24 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
                         Name = "Femenino"
                     }
                 },
-                //ActividadCurso = new Dictionary<string, MultiValueSeriesViewModel>()
-                //{
-
-                //    ["Número de Calificaciones"]
-                //        = new MultiValueSeriesViewModel()
-                //        {
-                //            Data = group.Select(grp => (float)grp.Count),
-                //            Labels = group.Select(grp => grp.Key),
-                //            Name = "Número de Calificaciones"
-                //        }
-
-                //}
-
+                CourseActivity = new ChartLineViewModel()
+                {
+                    Name = "Actividad del curso",
+                    Description = "Últimos 30 días",
+                    Values = activity
+                },
+                CompletedChallenges = new ChartLineViewModel()
+                {
+                    Name = "Desafíos exitosos",
+                    Description = "Últimos 30 días",
+                    Values = completedChallenges
+                },
+                FailedChallenges = new ChartLineViewModel()
+                {
+                    Name = "Desafíos fallidos",
+                    Description = "Últimos 30 días",
+                    Values = failedChallenges
+                }
             };
         }
     }

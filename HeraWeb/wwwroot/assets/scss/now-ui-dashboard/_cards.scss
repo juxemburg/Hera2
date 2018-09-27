@@ -7,6 +7,10 @@
     margin-bottom: 20px;
     box-shadow: $box-shadow;
 
+    &[data-color="black"]{
+        background-color: $black-color;
+    }
+
     .card-body{
         padding: 15px 15px 10px 15px;
 
