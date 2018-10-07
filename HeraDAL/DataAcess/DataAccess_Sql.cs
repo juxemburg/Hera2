@@ -592,20 +592,42 @@ namespace HeraDAL.DataAcess
             var query =
                 _context.RegistroCalificaiones
                 .Where(reg => reg.CursoId == cursoId)
+                .Include(reg => reg.Rel_CursoEstudiantes)
+                .ThenInclude(rel => rel.Estudiante)
+                .Include(reg => reg.Desafio)
+                .ThenInclude(des => des.InfoDesafio)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.Bloques)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.IInfoScratch_Sprite)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.IInfoScratch_General)
                 .Include(reg => reg.Calificaciones)
                 .ThenInclude(cal => cal.CalificacionCualitativa);
-            
+
 
             return query;
         }
 
         public IQueryable<RegistroCalificacion> GetAll_RegistroCalificacion(int cursoId, int estudianteId)
         {
+            var calificaciones = _context.RegistroCalificaiones
+                .Where(reg => reg.CursoId == cursoId && reg.EstudianteId == estudianteId)
+                .ToList();
+
             var query =
                 _context.RegistroCalificaiones
                 .Where(reg => reg.CursoId == cursoId && reg.EstudianteId == estudianteId)
+                .Include(reg => reg.Rel_CursoEstudiantes)
+                .ThenInclude(rel => rel.Estudiante)
                 .Include(reg => reg.Desafio)
                 .ThenInclude(des => des.InfoDesafio)
+                .Include(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.Resultados)
+                .ThenInclude(res => res.Bloques)
                 .Include(reg => reg.Calificaciones)
                 .ThenInclude(cal => cal.Resultados)
                 .ThenInclude(res => res.IInfoScratch_Sprite)

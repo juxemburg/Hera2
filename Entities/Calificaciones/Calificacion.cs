@@ -23,7 +23,6 @@ namespace Entities.Calificaciones
         public virtual RegistroCalificacion RegistroCalificacion { get; set; }
         public string DirArchivo { get; set; }
 
-
         public TimeSpan Duracion => (TiempoFinal - Tiempoinicio).GetValueOrDefault();
         public bool EnCurso => TiempoFinal == null;
 

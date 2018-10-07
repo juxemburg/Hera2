@@ -12,16 +12,14 @@ namespace HeraServices.ViewModels.UtilityViewModels
         public Dictionary<string, MultiValueSeriesViewModel>
             DataDictionary { get; set; }
 
-        public float MaxValue => 
-            ChartUtil.GetChartMax(
-                DataDictionary.Values.SelectMany(d => d.Data));
+        public float MaxValue => 0;
 
         public string ToJson =>
             JsonConvert.SerializeObject(
                 new
                 {
                    labels = DataDictionary.First().Value.Labels,
-                   series = DataDictionary.Values.Select(d => d.Data)
+                   //series = DataDictionary.Values.Select(d => d.Data)
 
                 });
 

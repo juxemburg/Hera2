@@ -12,6 +12,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
         public ChartLineViewModel FailedChallenges { get; set; }
         public ChartLineViewModel BlockFrequency { get; set; }
 
+        public object AvgByStudent { get; set; }
+
 
 
         public PieChartViewModel GetDistribucionSexo(string clss,
