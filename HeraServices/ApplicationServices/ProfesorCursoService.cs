@@ -1,4 +1,5 @@
-﻿using HeraDAL.DataAcess;
+﻿using Entities.Valoracion;
+using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
@@ -51,28 +52,11 @@ namespace HeraServices.ApplicationServices
             return ApiResult<List<RegistroCalificacionViewModel>>.Initialize(registros.Select(item => item.ToViewModel()).ToList(), true);
         }
 
-        public async Task<ApiResult<StudentTracesViewModel>> Get_StudentTraces(int profId, int cursoId, int estId)
+        private StudentAggregateTraceViewModel getAggregateTrace(List<IInfoScratch_General> data)
         {
-            if (!(await _data.Exist_Profesor_Curso(profId, cursoId) && await _data.Exist_Estudiante_Curso(estId, cursoId)))
-            {
-                throw new ApiNotFoundException("Estudiante no encontrado");
-            }
-
-            var estudiante = await _data.Find_Estudiante(estId);
-            var registros = _data.GetAll_RegistroCalificacion(cursoId, estId)
-                .ToList();
-
-            var studentsTraces = registros
-                    .SelectMany(reg => reg.Calificaciones)
-                    .Where(cal => cal.ResultadoGeneral != null)
-                    .Select(cal => cal.ResultadoGeneral)
-                    .Select(res => res.IInfoScratch_General)
-                    .ToList();            
-
-            var aggregate =
-                    studentsTraces
-                    .Aggregate(
-                        new
+            return data
+                .Aggregate(
+                        seed: new StudentAggregateTraceViewModel
                         {
                             Count = 1,
                             SpriteCountAvg = 0,
@@ -113,7 +97,7 @@ namespace HeraServices.ApplicationServices
                             MediumOperatorsMode = new List<int>(),
                             AdvancedOperatorsMode = new List<int>()
                         },
-                        (acc, item) =>
+                        func: (acc, item) =>
                         {
                             acc.SpriteCountMode.Add(item.SpriteCount);
                             acc.NonUnusedBlocksMode.Add(item.NonUnusedBlocks);
@@ -134,7 +118,7 @@ namespace HeraServices.ApplicationServices
                             acc.MediumOperatorsMode.Add(item.MediumOperators);
                             acc.AdvancedOperatorsMode.Add(item.AdvancedOperators);
 
-                            return new
+                            return new StudentAggregateTraceViewModel
                             {
                                 Count = acc.Count + 1,
                                 SpriteCountAvg = (acc.SpriteCountAvg + item.SpriteCount) / acc.Count,
@@ -155,36 +139,35 @@ namespace HeraServices.ApplicationServices
                                 BasicOperatorsAvg = (acc.BasicOperatorsAvg + item.BasicOperators) / acc.Count,
                                 MediumOperatorsAvg = (acc.MediumOperatorsAvg + item.MediumOperators) / acc.Count,
                                 AdvancedOperatorsAvg = (acc.AdvancedOperatorsAvg + item.AdvancedOperators),
-                                acc.SpriteCountMode,
-                                acc.NonUnusedBlocksMode,
-                                acc.UserDefinedBlocksMode,
-                                acc.CloneUseMode,
-                                acc.SecuenceUseMode,
-                                acc.MultipleThreadsMode,
-                                acc.TwoGreenFlagTrheadMode,
-                                acc.AdvancedEventUseMode,
-                                acc.UseSimpleBlocksMode,
-                                acc.UseMediumBlocksMode,
-                                acc.UseNestedControlMode,
-                                acc.BasicInputUseMode,
-                                acc.VariableUseMode,
-                                acc.SpriteSensingMode,
-                                acc.VariableCreationMode,
-                                acc.BasicOperatorsMode,
-                                acc.MediumOperatorsMode,
-                                acc.AdvancedOperatorsMode
+                                SpriteCountMode = acc.SpriteCountMode,
+                                NonUnusedBlocksMode = acc.NonUnusedBlocksMode,
+                                UserDefinedBlocksMode = acc.UserDefinedBlocksMode,
+                                CloneUseMode = acc.CloneUseMode,
+                                SecuenceUseMode = acc.SecuenceUseMode,
+                                MultipleThreadsMode = acc.MultipleThreadsMode,
+                                TwoGreenFlagTrheadMode = acc.TwoGreenFlagTrheadMode,
+                                AdvancedEventUseMode = acc.AdvancedEventUseMode,
+                                UseSimpleBlocksMode = acc.UseSimpleBlocksMode,
+                                UseMediumBlocksMode = acc.UseMediumBlocksMode,
+                                UseNestedControlMode = acc.UseNestedControlMode,
+                                BasicInputUseMode = acc.BasicInputUseMode,
+                                VariableUseMode = acc.VariableUseMode,
+                                SpriteSensingMode = acc.SpriteSensingMode,
+                                VariableCreationMode = acc.VariableCreationMode,
+                                BasicOperatorsMode = acc.BasicOperatorsMode,
+                                MediumOperatorsMode = acc.MediumOperatorsMode,
+                                AdvancedOperatorsMode = acc.AdvancedOperatorsMode
                             };
-                        });
+                        }); ;
+        }
 
-            return ApiResult<StudentTracesViewModel>.Initialize(new StudentTracesViewModel()
+        private ChartMultiLineViewModel getChartViewModel(StudentAggregateTraceViewModel aggregate, string chartName)
+        {
+            return new ChartMultiLineViewModel()
             {
-                StudentId = estId,
-                StudentName = estudiante.NombreCompleto,
-                GeneralTraces = new ChartMultiLineViewModel()
-                {
-                    Name = "Huellas del Estudiante",
-                    Labels = new List<string> { "Media", "Mediana", "Moda" },
-                    AxisLabels = new List<string> {
+                Name = chartName,
+                Labels = new List<string> { "Media", "Mediana", "Moda" },
+                AxisLabels = new List<string> {
                         "Número de Sprites",
                         "Se usan todos los bloques",
                         "Use de bloques propios",
@@ -203,7 +186,7 @@ namespace HeraServices.ApplicationServices
                         "Uso de operadores lógicos complejos",
                         "Uso de operadores lógicos anidados"
                     },
-                    Values = new List<List<float>>
+                Values = new List<List<float>>
                     {
                         new List<float> { aggregate.SpriteCountAvg, aggregate.NonUnusedBlocksAvg, aggregate.UserDefinedBlocksAvg,
                             aggregate.CloneUseAvg, aggregate.SecuenceUseAvg, aggregate.MultipleThreadsAvg,
@@ -218,7 +201,50 @@ namespace HeraServices.ApplicationServices
                             aggregate.MediumOperatorsMode.Max(), aggregate.AdvancedOperatorsMode.Max()},
                         new List<float> { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
                     }
-                }
+            };
+        }
+
+        public async Task<ApiResult<StudentTracesViewModel>> Get_StudentTraces(int profId, int cursoId, int estId)
+        {
+            if (!(await _data.Exist_Profesor_Curso(profId, cursoId) && await _data.Exist_Estudiante_Curso(estId, cursoId)))
+            {
+                throw new ApiNotFoundException("Estudiante no encontrado");
+            }
+
+            var estudiante = await _data.Find_Estudiante(estId);
+            var registros = _data.GetAll_RegistroCalificacion(cursoId, estId)
+                .ToList();
+
+            var studentsTraces = registros
+                    .SelectMany(reg => reg.Calificaciones)
+                    .Where(cal => cal.ResultadoGeneral != null)
+                    .Select(cal => cal.ResultadoGeneral)
+                    .Select(res => res.IInfoScratch_General)
+                    .ToList();
+
+            var challengesTraces = registros
+               .GroupBy(reg => reg.Desafio)
+               .Select(grp => new ChallengeTraceViewModel()
+               {
+                   ChallengeId = grp.Key.Id,
+                   ChallengeName = grp.Key.Nombre,
+                   ChartModel = getChartViewModel(
+                       getAggregateTrace(grp.SelectMany(reg => reg.Calificaciones)
+                        .Where(cal => cal.ResultadoGeneral != null)
+                        .Select(cal => cal.ResultadoGeneral)
+                        .Select(res => res.IInfoScratch_General)
+                        .ToList()),
+                    "Huellas del desafío")
+               });
+
+            var aggregate = getAggregateTrace(studentsTraces);
+
+            return ApiResult<StudentTracesViewModel>.Initialize(new StudentTracesViewModel()
+            {
+                StudentId = estId,
+                StudentName = estudiante.NombreCompleto,
+                GeneralTraces = getChartViewModel(aggregate, "Huellas del estudiante"),
+                ChallengeTraces = challengesTraces.ToList()
             }, true);
         }
 
