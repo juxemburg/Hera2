@@ -8,6 +8,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Chart
     {
         public List<List<float>> Values { get; set; }
         public List<string> Labels { get; set; }
+        public List<string> AxisLabels { get; set; }
         public string Name { get; set; }
     }
 }

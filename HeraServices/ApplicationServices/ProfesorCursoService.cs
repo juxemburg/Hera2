@@ -184,6 +184,25 @@ namespace HeraServices.ApplicationServices
                 {
                     Name = "Huellas del Estudiante",
                     Labels = new List<string> { "Media", "Mediana", "Moda" },
+                    AxisLabels = new List<string> {
+                        "Número de Sprites",
+                        "Se usan todos los bloques",
+                        "Use de bloques propios",
+                        "Uso de clones",
+                        "Uso de secuencias",
+                        "Dos hilos por sprite",
+                        "Dos hilos inciando con bandera verde",
+                        "Más de un tipo de evento",
+                        "Uso de bloques de flujo simples",
+                        "Uso de bloques complejos",
+                        "Uso de bloques anidados",
+                        "Uso de bloques de entrada de datos",
+                        "Uso de variables no creadas",
+                        "Uso de sensores de sprite",
+                        "Uso de operadores lógicos básicos",
+                        "Uso de operadores lógicos complejos",
+                        "Uso de operadores lógicos anidados"
+                    },
                     Values = new List<List<float>>
                     {
                         new List<float> { aggregate.SpriteCountAvg, aggregate.NonUnusedBlocksAvg, aggregate.UserDefinedBlocksAvg,
@@ -197,7 +216,7 @@ namespace HeraServices.ApplicationServices
                         aggregate.UseMediumBlocksMode.Max(), aggregate.UseNestedControlMode.Max(), aggregate.BasicInputUseMode.Max(),
                             aggregate.VariableUseMode.Max(), aggregate.SpriteSensingMode.Max(), aggregate.BasicOperatorsMode.Max(),
                             aggregate.MediumOperatorsMode.Max(), aggregate.AdvancedOperatorsMode.Max()},
-                        new List<float> { 7, 8, 9}
+                        new List<float> { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
                     }
                 }
             }, true);
