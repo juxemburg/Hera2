@@ -163,6 +163,31 @@ namespace HeraServices.ApplicationServices
 
         private ChartMultiLineViewModel getChartViewModel(StudentAggregateTraceViewModel aggregate, string chartName)
         {
+            int calcMode(List<int> val)
+            {
+                return val.GroupBy(item => item)
+                       .OrderByDescending(grp => grp.Count())
+                       .Select(grp => grp.Key)
+                       .First();
+            }
+
+            float calMedian(List<int> val)
+            {
+                int numberCount = val.Count();
+                int halfIndex = numberCount / 2;
+                var sortedNumbers = val.OrderBy(n => n).ToList();
+                float median;
+                if ((numberCount % 2) == 0)
+                {
+                    median = (sortedNumbers.ElementAt(halfIndex) + sortedNumbers.ElementAt(halfIndex + 1)) / 2;
+                }
+                else
+                {
+                    median = sortedNumbers.ElementAt(halfIndex);
+                }
+                return median;
+            }
+
             return new ChartMultiLineViewModel()
             {
                 Name = chartName,
@@ -188,18 +213,63 @@ namespace HeraServices.ApplicationServices
                     },
                 Values = new List<List<float>>
                     {
-                        new List<float> { aggregate.SpriteCountAvg, aggregate.NonUnusedBlocksAvg, aggregate.UserDefinedBlocksAvg,
-                            aggregate.CloneUseAvg, aggregate.SecuenceUseAvg, aggregate.MultipleThreadsAvg,
-                            aggregate.TwoGreenFlagTrheadAvg, aggregate.AdvancedEventUseAvg, aggregate.UseSimpleBlocksAvg, aggregate.UseMediumBlocksAvg,
-                            aggregate.UseNestedControlAvg, aggregate.BasicInputUseAvg, aggregate.VariableUseAvg, aggregate.SpriteSensingAvg,
-                            aggregate.BasicOperatorsAvg, aggregate.MediumOperatorsAvg, aggregate.AdvancedOperatorsAvg},
-                        new List<float> { aggregate.SpriteCountMode.Max(), aggregate.NonUnusedBlocksMode.Max(), aggregate.UserDefinedBlocksMode.Max(),
-                        aggregate.CloneUseMode.Max(), aggregate.SecuenceUseMode.Max(), aggregate.MultipleThreadsMode.Max(),
-                        aggregate.TwoGreenFlagTrheadMode.Max(), aggregate.AdvancedEventUseMode.Max(), aggregate.UseSimpleBlocksMode.Max(),
-                        aggregate.UseMediumBlocksMode.Max(), aggregate.UseNestedControlMode.Max(), aggregate.BasicInputUseMode.Max(),
-                            aggregate.VariableUseMode.Max(), aggregate.SpriteSensingMode.Max(), aggregate.BasicOperatorsMode.Max(),
-                            aggregate.MediumOperatorsMode.Max(), aggregate.AdvancedOperatorsMode.Max()},
-                        new List<float> { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+                        new List<float> {
+                            aggregate.SpriteCountAvg,
+                            aggregate.NonUnusedBlocksAvg,
+                            aggregate.UserDefinedBlocksAvg,
+                            aggregate.CloneUseAvg,
+                            aggregate.SecuenceUseAvg,
+                            aggregate.MultipleThreadsAvg,
+                            aggregate.TwoGreenFlagTrheadAvg,
+                            aggregate.AdvancedEventUseAvg,
+                            aggregate.UseSimpleBlocksAvg,
+                            aggregate.UseMediumBlocksAvg,
+                            aggregate.UseNestedControlAvg,
+                            aggregate.BasicInputUseAvg,
+                            aggregate.VariableUseAvg,
+                            aggregate.SpriteSensingAvg,
+                            aggregate.BasicOperatorsAvg,
+                            aggregate.MediumOperatorsAvg,
+                            aggregate.AdvancedOperatorsAvg
+                        },
+                        new List<float> {
+                            calcMode(aggregate.SpriteCountMode),
+                            calcMode(aggregate.NonUnusedBlocksMode),
+                            calcMode(aggregate.UserDefinedBlocksMode),
+                            calcMode(aggregate.CloneUseMode),
+                            calcMode(aggregate.SecuenceUseMode),
+                            calcMode(aggregate.MultipleThreadsMode),
+                            calcMode(aggregate.TwoGreenFlagTrheadMode),
+                            calcMode(aggregate.AdvancedEventUseMode),
+                            calcMode(aggregate.UseSimpleBlocksMode),
+                            calcMode(aggregate.UseMediumBlocksMode),
+                            calcMode(aggregate.UseNestedControlMode),
+                            calcMode(aggregate.BasicInputUseMode),
+                            calcMode(aggregate.VariableUseMode),
+                            calcMode(aggregate.SpriteSensingMode),
+                            calcMode(aggregate.BasicOperatorsMode),
+                            calcMode(aggregate.MediumOperatorsMode),
+                            calcMode(aggregate.AdvancedOperatorsMode)
+                            },
+                        new List<float> {
+                            calMedian(aggregate.SpriteCountMode),
+                            calMedian(aggregate.NonUnusedBlocksMode),
+                            calMedian(aggregate.UserDefinedBlocksMode),
+                            calMedian(aggregate.CloneUseMode),
+                            calMedian(aggregate.SecuenceUseMode),
+                            calMedian(aggregate.MultipleThreadsMode),
+                            calMedian(aggregate.TwoGreenFlagTrheadMode),
+                            calMedian(aggregate.AdvancedEventUseMode),
+                            calMedian(aggregate.UseSimpleBlocksMode),
+                            calMedian(aggregate.UseMediumBlocksMode),
+                            calMedian(aggregate.UseNestedControlMode),
+                            calMedian(aggregate.BasicInputUseMode),
+                            calMedian(aggregate.VariableUseMode),
+                            calMedian(aggregate.SpriteSensingMode),
+                            calMedian(aggregate.BasicOperatorsMode),
+                            calMedian(aggregate.MediumOperatorsMode),
+                            calMedian(aggregate.AdvancedOperatorsMode)
+                            }
                     }
             };
         }
