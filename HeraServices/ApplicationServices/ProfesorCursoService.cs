@@ -174,18 +174,9 @@ namespace HeraServices.ApplicationServices
             float calMedian(List<int> val)
             {
                 int numberCount = val.Count();
-                int halfIndex = numberCount / 2;
+                int halfIndex = (int)Math.Floor((double)(numberCount / 2));
                 var sortedNumbers = val.OrderBy(n => n).ToList();
-                float median;
-                if ((numberCount % 2) == 0)
-                {
-                    median = (sortedNumbers.ElementAt(halfIndex) + sortedNumbers.ElementAt(halfIndex + 1)) / 2;
-                }
-                else
-                {
-                    median = sortedNumbers.ElementAt(halfIndex);
-                }
-                return median;
+                return sortedNumbers.ElementAt(halfIndex);
             }
 
             return new ChartMultiLineViewModel()
