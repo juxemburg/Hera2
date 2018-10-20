@@ -24,9 +24,12 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
 
         public InfoCursoViewModel Info { get; set; }
 
+        
+
         public ProfesorCursoViewModel(
             Curso curso,
-            List<RegistroCalificacion> registroCurso)
+            List<RegistroCalificacion> registroCurso,
+            ChartMultiLineViewModel traces)
         {
             Id = curso.Id;
             NombreCurso = curso.Nombre;
@@ -36,10 +39,10 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
             Desafios = curso.Desafios.Select(item => new CursoDesafioViewModel(item.Desafio, item.Initial)).ToList();
             DesafioInicial = new CursoDesafioViewModel(curso.Desafio, true);
 
+            
+
             Estudiantes = curso.Estudiantes
                 .ToDictionary(item => item.EstudianteId, item => item.Estudiante.NombreCompleto);
-
-
 
             var numM = curso.Estudiantes
                     .Count(rel =>
@@ -92,6 +95,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
                     Calificaciones = grp
                     .SelectMany(reg => reg.Calificaciones)
                     .Select(cal => cal.ResultadoGeneral)
+                    .Where(cal => cal != null)
                     .Select(res => new
                     {
                         res.IInfoScratch_General.SpriteCount,
@@ -163,6 +167,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
 
             Info = new InfoCursoViewModel()
             {
+                GeneralTraces = traces,
                 SexDistribution = new List<SingleValueSeriesViewModel>()
                 {
                     new SingleValueSeriesViewModel()

@@ -2,6 +2,7 @@
 export const baseUrl = '/api'; /* production */
 
 export let configVariables = {
-    authToken : ''
+    authToken : '',
+    userInfo: ''
 };
 

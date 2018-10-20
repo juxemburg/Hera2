@@ -11,6 +11,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
         public ChartLineViewModel CompletedChallenges { get; set; }
         public ChartLineViewModel FailedChallenges { get; set; }
         public ChartLineViewModel BlockFrequency { get; set; }
+        public ChartMultiLineViewModel GeneralTraces { get; set; }
 
         public object AvgByStudent { get; set; }
 

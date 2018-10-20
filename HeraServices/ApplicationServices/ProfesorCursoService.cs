@@ -36,7 +36,18 @@ namespace HeraServices.ApplicationServices
                 throw new ApiNotFoundException("Curso no encontrado");
 
             var registros = await _data.GetAll_RegistroCalificacion(cursoId).ToListAsync();
-            return ApiResult<ProfesorCursoViewModel>.Initialize(new ProfesorCursoViewModel(model, registros.Where(item => item.Terminada).ToList()), true);
+            return ApiResult<ProfesorCursoViewModel>.Initialize(
+                new ProfesorCursoViewModel(
+                    model, 
+                    registros.Where(item => item.Terminada).ToList(),
+                    getChartViewModel(
+                       getAggregateTrace(
+                        registros
+                        .SelectMany(reg => reg.Calificaciones)
+                        .Where(cal => cal.ResultadoGeneral != null)
+                        .Select(cal => cal.ResultadoGeneral)
+                        .Select(res => res.IInfoScratch_General)
+                        .ToList()), "Promedio general del curso")), true);
         }
 
         public async Task<ApiResult<List<RegistroCalificacionViewModel>>> Get_RegistrosEstudiante(int profId,
@@ -168,7 +179,7 @@ namespace HeraServices.ApplicationServices
                 return val.GroupBy(item => item)
                        .OrderByDescending(grp => grp.Count())
                        .Select(grp => grp.Key)
-                       .First();
+                       .FirstOrDefault();
             }
 
             float calMedian(List<int> val)
@@ -176,7 +187,7 @@ namespace HeraServices.ApplicationServices
                 int numberCount = val.Count();
                 int halfIndex = (int)Math.Floor((double)(numberCount / 2));
                 var sortedNumbers = val.OrderBy(n => n).ToList();
-                return sortedNumbers.ElementAt(halfIndex);
+                return sortedNumbers.ElementAtOrDefault(halfIndex);
             }
 
             return new ChartMultiLineViewModel()

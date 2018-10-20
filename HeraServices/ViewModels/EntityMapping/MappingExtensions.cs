@@ -138,7 +138,7 @@ namespace HeraServices.ViewModels.EntityMapping
 
                 Valorada = model.Valorada,
 
-                Calificaciones = model.Calificaciones.Select(cal => new CalificacionViewModel(cal, model.Desafio.InfoDesafio)).ToList()
+                Calificaciones = model.Calificaciones.Where(cal => cal != null && cal.ResultadoGeneral != null).Select(cal => new CalificacionViewModel(cal, model.Desafio.InfoDesafio)).ToList()
             };
         }
     }
