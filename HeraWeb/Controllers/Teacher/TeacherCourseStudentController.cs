@@ -20,7 +20,7 @@ namespace HeraWeb.Controllers.Teacher
         private readonly UserService _userService;
 
         public TeacherCourseStudentController(
-            ProfesorCursoService mgrService, 
+            ProfesorCursoService mgrService,
             UserService userService)
         {
             _mgrService = mgrService;
@@ -34,6 +34,23 @@ namespace HeraWeb.Controllers.Teacher
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _mgrService.Get_StudentTraces(teacherId, courseId, studentId);
+            });
+
+        [HttpGet]
+        public async Task<IActionResult> NextChallenge(int courseId, int studentId)
+            => await this.Get(async () =>
+            {
+                var teacherId = _userService.Get_ProfesorId(User.Claims);
+                return await _mgrService.Get_NextChallenge(teacherId, courseId, studentId);
+            });
+
+        [HttpPost("{challengeId}")]
+        public async Task<IActionResult> NextChallenge(int courseId, int studentId, int challengeId)
+            =>
+            await this.Post<bool>(ModelState, async () =>
+            {
+                var teacherId = _userService.Get_ProfesorId(User.Claims);
+                return await _mgrService.SetNextChallenge(teacherId, courseId, studentId, challengeId);
             });
 
     }

@@ -38,7 +38,7 @@ namespace HeraServices.ApplicationServices
             var registros = await _data.GetAll_RegistroCalificacion(cursoId).ToListAsync();
             return ApiResult<ProfesorCursoViewModel>.Initialize(
                 new ProfesorCursoViewModel(
-                    model, 
+                    model,
                     registros.Where(item => item.Terminada).ToList(),
                     getChartViewModel(
                        getAggregateTrace(
@@ -349,7 +349,37 @@ namespace HeraServices.ApplicationServices
             return ApiResult<CreateCalificacionCualitativaViewModel>.Initialize(model, success);
         }
 
+        public async Task<ApiResult<CursoDesafioViewModel>> Get_NextChallenge(int teacherId,
+            int courseId, int studentId)
+        {
+            if (!await _data.Exist_Profesor_Curso(teacherId, courseId))
+                throw new ApiNotFoundException("Recurso no encontrado");
+            
 
+            var curso = await _data.Find_Curso(courseId);
+            var rel = await _data.Find_Rel_CursoEstudiantes(courseId, studentId);
+            var nextChallenge = await _data.FindPure_Desafio(rel.SiguienteDesafioId);
+
+            if (nextChallenge == null)
+                nextChallenge = curso.Desafio;
+
+            return ApiResult<CursoDesafioViewModel>.Initialize(new CursoDesafioViewModel(nextChallenge, nextChallenge.Id == curso.Desafio.Id), true);
+        }
+
+        public async Task<ApiResult<bool>> SetNextChallenge(int teacherId, int courseId, int studentId, int challengeId)
+        {
+            if (!await _data.Exist_Profesor_Curso(teacherId, courseId))
+                throw new ApiNotFoundException("Recurso no encontrado");
+
+            if ((await _data.Find_Rel_DesafiosCursos(challengeId, courseId)) == null)
+                throw new ApiNotFoundException("El desafío no existe");
+
+            var rel = await _data.Find_Rel_CursoEstudiantes(courseId, studentId);
+            rel.SiguienteDesafioId = challengeId;
+            _data.Edit(rel);
+
+            return ApiResult<bool>.Initialize(true, await _data.SaveAllAsync());
+        }
 
 
     }

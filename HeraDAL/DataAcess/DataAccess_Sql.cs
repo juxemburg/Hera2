@@ -231,6 +231,15 @@ namespace HeraDAL.DataAcess
                 .FirstAsync(d => d.Id == id);
         }
 
+        public async Task<Desafio> FindPure_Desafio(int id)
+        {
+            return await _context.Desafios
+                .Include(d => d.InfoDesafio)
+                .Include(d => d.Profesor)
+                .Include(d => d.Ratings)
+                .FirstOrDefaultAsync(d => d.Id == id);
+        }
+
         public async Task Calificar_Desafio(int desafioId, int profesorId,
             int calificacion)
         {

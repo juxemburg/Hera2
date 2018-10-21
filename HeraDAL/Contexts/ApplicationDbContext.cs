@@ -69,6 +69,10 @@ namespace HeraDAL.Contexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Rel_CursoEstudiantes>()
+                .Property(entity => entity.SiguienteDesafioId)
+                .HasDefaultValue(0);
+
+            builder.Entity<Rel_CursoEstudiantes>()
                 .HasKey(entity =>
                 new { entity.CursoId, entity.EstudianteId });
             builder.Entity<Rel_CursoEstudiantes>()

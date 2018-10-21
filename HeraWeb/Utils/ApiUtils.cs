@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -91,6 +92,11 @@ namespace HeraWeb.Utils
                 return controller.Unauthorized();
             }
             catch (DataAccessException e)
+            {
+                //Log error
+                return controller.StatusCode(500, e);
+            }
+            catch (SqlException e)
             {
                 //Log error
                 return controller.StatusCode(500, e);

@@ -1,5 +1,6 @@
 ﻿using Entities.Desafios;
 using HeraDAL.DataAcess;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -35,7 +36,7 @@ namespace HeraServices.Services.DesafiosServices
             var desafiosRealizados = model.Registros
                 .Where(rel => rel.Terminada
                 && rel.Desafio != null)
-                .Select(rel => rel.Desafio)                
+                .Select(rel => rel.Desafio)
                 .ToList();
             var desafiosNoCompletados = model.Registros
                 .Where(rel => !rel.Terminada
@@ -47,7 +48,7 @@ namespace HeraServices.Services.DesafiosServices
                 desafiosRealizados.Count == 0)
             {
                 return new EstudianteCursoViewModel(model.Curso,
-                    desafiosRealizados, 
+                    desafiosRealizados,
                     desafiosNoCompletados,
                     model.Curso.Desafio);
             }
@@ -71,9 +72,16 @@ namespace HeraServices.Services.DesafiosServices
         public async Task<Desafio> Get_SiguienteDesafio(int idCurso,
             int idEstudiante)
         {
-            var desafios = await _data.GetAll_Desafios(idCurso)
-                .ToListAsync();
-            return desafios.ElementAt(_random.Next(desafios.Count));
+            var relEstCurso = await _data.Find_Rel_CursoEstudiantes(idCurso, idEstudiante);
+
+            if (relEstCurso == null)
+                throw new ApiNotFoundException();
+
+            var siguienteDesafio = await _data.Find_Desafio(relEstCurso.SiguienteDesafioId);
+            if (siguienteDesafio == null)
+                siguienteDesafio = (await _data.Find_Curso(idCurso)).Desafio;
+
+            return siguienteDesafio;
         }
     }
 }

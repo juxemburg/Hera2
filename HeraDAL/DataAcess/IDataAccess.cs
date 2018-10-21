@@ -52,6 +52,7 @@ namespace HeraDAL.DataAcess
             float avgValoration = 0);
         IQueryable<Desafio> Autocomplete_Desafios(string queryString);
         Task<Desafio> Find_Desafio(int id);
+        Task<Desafio> FindPure_Desafio(int id);
         Task<Rel_DesafiosCursos> Find_Rel_DesafiosCursos(int desafioId, int cursoId);
         Task<bool> Exist_Desafio(int id);
         Task<bool> Exist_Desafio(int idDesafio, int idCurso);

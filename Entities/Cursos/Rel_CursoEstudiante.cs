@@ -12,6 +12,8 @@ namespace Entities.Cursos
         public int EstudianteId { get; set; }
         public Estudiante Estudiante { get; set; }
 
+        public int SiguienteDesafioId { get; set; }
+
         public virtual List<RegistroCalificacion> Registros { get; set; }
     }
 }
