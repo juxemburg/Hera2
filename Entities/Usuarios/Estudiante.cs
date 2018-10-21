@@ -30,6 +30,8 @@ namespace Entities.Usuarios
         [Range(1, 10)]
         public int ConocimientoComputador { get; set; }
 
+        public string UsuarioScratch { get; set; }
+
         public virtual List<Rel_CursoEstudiantes> Cursos { get; set; }
     }
 }

@@ -35,6 +35,8 @@ namespace HeraServices.ViewModels.AccountViewModels
             "Error, escoge un número entre 1 y 10")]
         public int ConocimientoComputador { get; set; }
 
+        public string UsuarioScratch { get; set; }
+
 
         public Estudiante Map(int usuarioId)
         {

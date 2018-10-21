@@ -47,10 +47,11 @@ namespace HeraWeb.Controllers.Teacher
         [HttpPost("{challengeId}")]
         public async Task<IActionResult> NextChallenge(int courseId, int studentId, int challengeId)
             =>
-            await this.Post<bool>(ModelState, async () =>
+            await this.Post(ModelState, async () =>
             {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
-                return await _mgrService.SetNextChallenge(teacherId, courseId, studentId, challengeId);
+                await _mgrService.SetNextChallenge(teacherId, courseId, studentId, challengeId);
+                return await _mgrService.Get_NextChallenge(teacherId, courseId, studentId);
             });
 
     }

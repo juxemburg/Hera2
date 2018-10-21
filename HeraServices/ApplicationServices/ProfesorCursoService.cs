@@ -354,8 +354,7 @@ namespace HeraServices.ApplicationServices
         {
             if (!await _data.Exist_Profesor_Curso(teacherId, courseId))
                 throw new ApiNotFoundException("Recurso no encontrado");
-            
-
+           
             var curso = await _data.Find_Curso(courseId);
             var rel = await _data.Find_Rel_CursoEstudiantes(courseId, studentId);
             var nextChallenge = await _data.FindPure_Desafio(rel.SiguienteDesafioId);
