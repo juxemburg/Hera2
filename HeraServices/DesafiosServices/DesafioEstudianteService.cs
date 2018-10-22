@@ -77,7 +77,7 @@ namespace HeraServices.Services.DesafiosServices
             if (relEstCurso == null)
                 throw new ApiNotFoundException();
 
-            var siguienteDesafio = await _data.Find_Desafio(relEstCurso.SiguienteDesafioId);
+            var siguienteDesafio = await _data.FindPure_Desafio(relEstCurso.SiguienteDesafioId);
             if (siguienteDesafio == null)
                 siguienteDesafio = (await _data.Find_Curso(idCurso)).Desafio;
 

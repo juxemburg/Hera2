@@ -33,13 +33,13 @@ namespace HeraServices.ApplicationServices
         {
             var model = await _data.Find_Curso(cursoId);
             if (model == null || model.ProfesorId != profId)
-                throw new ApiNotFoundException("Curso no encontrado");
+                throw new ApiNotFoundException("Curso no encontrado curso id: "+model.Id + " ProfesorId:"+ model.ProfesorId + " - "+ profId);
 
             var registros = await _data.GetAll_RegistroCalificacion(cursoId).ToListAsync();
             return ApiResult<ProfesorCursoViewModel>.Initialize(
                 new ProfesorCursoViewModel(
                     model,
-                    registros.Where(item => item.Terminada).ToList(),
+                    registros.Where(item => item != null && item.Terminada).ToList(),
                     getChartViewModel(
                        getAggregateTrace(
                         registros

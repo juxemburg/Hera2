@@ -3,6 +3,7 @@ using HeraDAL.DataAcess;
 using HeraServices.Services.UserServices;
 using HeraServices.ViewModels.AccountViewModels;
 using HeraServices.ViewModels.ApiViewModels;
+using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels.Estudiantes;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -87,11 +88,19 @@ namespace HeraServices.UserServices
 
         public async Task<ApiResult<UserInfoViewModel>> RegisterEstudiante(RegisterEstudianteViewModel model)
         {
-            return await RegisterUser(model, "Estudiante",
+            try
+            {
+                return await RegisterUser(model, "Estudiante",
                     (usuarioId) =>
                     {
                         _dataAccess.AddEstudiante(model.Map(usuarioId));
                     });
+            }
+            catch (Exception)
+            {
+
+                throw new ApiBadRequestException();
+            }
         }
 
         private async Task<ApiResult<UserInfoViewModel>> RegisterUser(RegisterViewModel model,
@@ -133,13 +142,14 @@ namespace HeraServices.UserServices
                 else
                 {
                     apiResult.AddError("", result.Errors.ToString());
-                    return apiResult;
+                    throw new ApiBadRequestException("Error en el registro de datos");
                 }
 
             }
             catch (Exception e)
             {
-                return apiResult;
+                apiResult.AddError("", e.Message);
+                throw new ApiBadRequestException("Error en el registro de datos");
             }
 
         }

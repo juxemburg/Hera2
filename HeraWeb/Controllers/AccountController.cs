@@ -85,6 +85,7 @@ namespace HeraWeb.Controllers
         {
             return await this.Post(ModelState, async () =>
             {
+                model.Email = model.Email.Trim();
                 var result = await _accountService.RegisterEstudiante(model);
                 result.Value.Token = await _tokenService.BuildToken(model.Email);
                 return result;
