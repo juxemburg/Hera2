@@ -17,6 +17,8 @@ namespace Entities.Calificaciones
         public int? CalificacionCualitativaId { get; set; }
         public virtual CalificacionCualitativa CalificacionCualitativa { get; set; }
 
+        public virtual List<RegistrosColaborador> Colaboradores { get; set; }
+
         public int CursoId { get; set; }
         public int EstudianteId { get; set; }
         public int DesafioId { get; set; }

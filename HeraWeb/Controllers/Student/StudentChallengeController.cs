@@ -59,7 +59,7 @@ namespace HeraWeb.Controllers.Student
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRecord(int courseId, int challengeId)
+        public async Task<IActionResult> CreateRecord(int courseId, int challengeId, [FromBody] List<int> contributors)
         {
             return await this.Get(async () =>
             {

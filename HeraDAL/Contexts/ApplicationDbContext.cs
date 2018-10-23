@@ -109,13 +109,14 @@ namespace HeraDAL.Contexts
             builder.Entity<RegistrosColaborador>()
                 .HasOne(entity => entity.Calificacion)
                 .WithMany(cal => cal.Colaboradores)
-                .HasForeignKey(entity => new { entity.CursoId, entity.EstudianteId, entity.DesafioId })
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(entity => entity.CalificacionId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<RegistrosColaborador>()
                 .HasOne(entity => entity.Rel_CursoEstudiante)
                 .WithMany(rel => rel.Colaboraciones)
-                .HasForeignKey(entity => new { entity.CursoId, entity.EstudianteId });
+                .HasForeignKey(entity => new { entity.CursoId, entity.EstudianteId })
+                .OnDelete(DeleteBehavior.Restrict);
 
             //Registro Calificacion
             builder.Entity<RegistroCalificacion>()
