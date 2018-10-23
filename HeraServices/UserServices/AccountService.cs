@@ -148,7 +148,7 @@ namespace HeraServices.UserServices
             }
             catch (Exception e)
             {
-                apiResult.AddError("", e.Message);
+                apiResult.AddError("Message", "Ya existe una cuenta la cuenta de correo que intentas registrar");
                 throw new ApiBadRequestException("Error en el registro de datos");
             }
 
