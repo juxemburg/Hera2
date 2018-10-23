@@ -22,6 +22,7 @@ namespace HeraDAL.Contexts
         public DbSet<Calificacion> Calificaciones { get; set; }
         public DbSet<CalificacionCualitativa> CalificacionesCualitativas { get; set; }
         public DbSet<RegistroCalificacion> RegistroCalificaiones { get; set; }
+        public DbSet<RegistrosColaborador> RegistroColaboradores { get; set; }
         public DbSet<Rel_CursoEstudiantes> Rel_Cursos_Estudiantes { get; set; }
         public DbSet<Rel_DesafiosCursos> Rel_Cursos_Desafios { get; set; }
         public DbSet<ResultadoScratch> ResultadosScratch { get; set; }
@@ -104,19 +105,33 @@ namespace HeraDAL.Contexts
             //    .HasForeignKey(e => e.CursoId)
             //    .OnDelete(DeleteBehavior.SetNull);
 
+            //Registro Colaboradores
+            builder.Entity<RegistrosColaborador>()
+                .HasOne(entity => entity.Calificacion)
+                .WithMany(cal => cal.Colaboradores)
+                .HasForeignKey(entity => new { entity.CursoId, entity.EstudianteId, entity.DesafioId })
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<RegistrosColaborador>()
+                .HasOne(entity => entity.Rel_CursoEstudiante)
+                .WithMany(rel => rel.Colaboraciones)
+                .HasForeignKey(entity => new { entity.CursoId, entity.EstudianteId });
+
             //Registro Calificacion
             builder.Entity<RegistroCalificacion>()
                 .HasOne(e => e.Rel_CursoEstudiantes)
                 .WithMany(rel => rel.Registros)
                 .HasForeignKey(entity =>
                 new { entity.CursoId, entity.EstudianteId })
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<RegistroCalificacion>()
                 .HasOne(e => e.Desafio)
                 .WithMany(e => e.Calificaciones)
                 .HasForeignKey(e => e.DesafioId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            
 
             builder.Entity<RegistroCalificacion>()
                 .HasKey(entity =>
