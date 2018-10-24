@@ -1,9 +1,11 @@
 ﻿using Entities.Desafios;
 using HeraDAL.DataAcess;
+using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -82,6 +84,18 @@ namespace HeraServices.Services.DesafiosServices
                 siguienteDesafio = (await _data.Find_Curso(idCurso)).Desafio;
 
             return siguienteDesafio;
+        }
+
+        public async Task<ApiResult<List<Tuple<int, string>>>> Get_CourseStudents(int idCurso, int idEstudiante)
+        {
+            if (!await _data.Exist_Estudiante_Curso(idEstudiante, idCurso))
+                throw new ApiNotFoundException("Recurso no encontrado");
+
+            var estudiantes = (await _data.Find_Curso(idCurso))
+                .Estudiantes.Where(rel => rel.EstudianteId != idEstudiante)
+                .Select(rel => new Tuple<int,string>(rel.EstudianteId, rel.Estudiante.NombreCompleto))
+                .ToList();
+            return ApiResult<List<Tuple<int,string>>>.Initialize(estudiantes, true);
         }
     }
 }

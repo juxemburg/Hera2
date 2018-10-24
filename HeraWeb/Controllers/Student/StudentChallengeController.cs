@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HeraServices.Services.ApplicationServices;
+using HeraServices.Services.DesafiosServices;
 using HeraServices.Services.UserServices;
 using HeraWeb.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +20,16 @@ namespace HeraWeb.Controllers.Student
     {
         private readonly UserService _userService;
         private readonly EstudianteService _estudianteService;
+        private readonly DesafioEstudianteService _desafioEstudianteService;
 
         public StudentChallengeController(
             UserService userService,
-            EstudianteService estudianteService)
+            EstudianteService estudianteService,
+            DesafioEstudianteService desafioEstudianteService)
         {
             _userService = userService;
             _estudianteService = estudianteService;
+            _desafioEstudianteService = desafioEstudianteService;
         }
 
         [HttpGet]
@@ -35,6 +39,16 @@ namespace HeraWeb.Controllers.Student
             {
                 var estId = _userService.Get_EstudianteId(User.Claims);
                 return await _estudianteService.Get_Desafio(estId, courseId, challengeId);
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents(int courseId, int challengeId)
+        {
+            return await this.Get(async () =>
+            {
+                var estId = _userService.Get_EstudianteId(User.Claims);
+                return await _desafioEstudianteService.Get_CourseStudents(courseId, estId);
             });
         }
 
@@ -64,7 +78,7 @@ namespace HeraWeb.Controllers.Student
             return await this.Get(async () =>
             {
                 var estId = _userService.Get_EstudianteId(User.Claims);
-                return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId);
+                return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId, contributors);
             });
         }
 

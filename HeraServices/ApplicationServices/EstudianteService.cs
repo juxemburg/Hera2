@@ -220,13 +220,22 @@ namespace HeraServices.Services.ApplicationServices
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_AddCalificacion
             (int idEst, int idCurso,
-            int idDesafio)
+            int idDesafio, List<int> contributors)
         {
+            if (contributors == null)
+                contributors = new List<int>();
+
             var registroCalificacion = await _data.Find_RegistroCalificacion(idCurso, idEst, idDesafio);
             if (registroCalificacion == null)
                 throw new ApiNotFoundException("Recurso no encontrado");
             if (registroCalificacion.Iniciada)
                 throw new ApiBadRequestException("Debes terminar la calificación actual para poder registrar una nueva.");
+
+            if (contributors.Any(item => item.Equals(idEst)))
+                throw new ApiBadRequestException("El estudiante y el contribuidor deben ser diferentes");
+
+            if (contributors.GroupBy(item => item).Any(grp => grp.Count() > 1))
+                throw new ApiBadRequestException("No puedes repetir contribuidores");
 
 
             var model = new Calificacion()
@@ -237,6 +246,21 @@ namespace HeraServices.Services.ApplicationServices
                 DesafioId = idDesafio
             };
             _data.Add(model);
+            
+            foreach (var estId in contributors)
+            {
+                if (!await _data.Exist_Estudiante_Curso(estId, idCurso))
+                    continue;
+
+
+                _data.Add(new RegistrosColaborador()
+                {
+                    CalificacionId = model.Id,
+                    CursoId = idCurso,
+                    EstudianteId = estId
+                });
+            }
+
             var success = await _data.SaveAllAsync();
             return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
         }
