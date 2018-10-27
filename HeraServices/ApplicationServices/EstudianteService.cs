@@ -127,7 +127,7 @@ namespace HeraServices.Services.ApplicationServices
             return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model), true);
         }
 
-        public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion)
+        public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion, List<int> contributors)
         {
             var model = await _data.Find_Calificacion(idCalificacion, estId, idCurso, idDesafio);
             if (model == null)
@@ -137,6 +137,8 @@ namespace HeraServices.Services.ApplicationServices
 
             model.Tiempoinicio = DateTime.Now;
             _data.Edit(model);
+            await AddContributorsAsync(estId, idCurso, idDesafio, model.Id, contributors);
+
             var success = await _data.SaveAllAsync();
             return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
         }
@@ -220,23 +222,14 @@ namespace HeraServices.Services.ApplicationServices
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_AddCalificacion
             (int idEst, int idCurso,
-            int idDesafio, List<int> contributors)
+            int idDesafio)
         {
-            if (contributors == null)
-                contributors = new List<int>();
-
             var registroCalificacion = await _data.Find_RegistroCalificacion(idCurso, idEst, idDesafio);
+
             if (registroCalificacion == null)
                 throw new ApiNotFoundException("Recurso no encontrado");
             if (registroCalificacion.Iniciada)
                 throw new ApiBadRequestException("Debes terminar la calificación actual para poder registrar una nueva.");
-
-            if (contributors.Any(item => item.Equals(idEst)))
-                throw new ApiBadRequestException("El estudiante y el contribuidor deben ser diferentes");
-
-            if (contributors.GroupBy(item => item).Any(grp => grp.Count() > 1))
-                throw new ApiBadRequestException("No puedes repetir contribuidores");
-
 
             var model = new Calificacion()
             {
@@ -246,23 +239,35 @@ namespace HeraServices.Services.ApplicationServices
                 DesafioId = idDesafio
             };
             _data.Add(model);
-            
+
+            var success = await _data.SaveAllAsync();
+            return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
+        }
+
+        private async Task AddContributorsAsync(int idEst, int idCurso,
+            int idDesafio, int idCalificacion, List<int> contributors)
+        {
+            if (contributors == null)
+                contributors = new List<int>();
+
+            if (contributors.Any(item => item.Equals(idEst)))
+                throw new ApiBadRequestException("El estudiante y el contribuidor deben ser diferentes");
+
+            if (contributors.GroupBy(item => item).Any(grp => grp.Count() > 1))
+                throw new ApiBadRequestException("No puedes repetir contribuidores");
+
             foreach (var estId in contributors)
             {
                 if (!await _data.Exist_Estudiante_Curso(estId, idCurso))
-                    continue;
-
+                    throw new ApiBadRequestException("El estudiante no existe en el curso");
 
                 _data.Add(new RegistrosColaborador()
                 {
-                    CalificacionId = model.Id,
+                    CalificacionId = idCalificacion,
                     CursoId = idCurso,
                     EstudianteId = estId
                 });
             }
-
-            var success = await _data.SaveAllAsync();
-            return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
         }
     }
 }

@@ -53,12 +53,12 @@ namespace HeraWeb.Controllers.Student
         }
 
         [HttpPost("{noteId}")]
-        public async Task<IActionResult> Start(int courseId, int challengeId, int noteId)
+        public async Task<IActionResult> Start(int courseId, int challengeId, int noteId, [FromBody]List<int> contribuitors)
         {
             return await this.Get(async () =>
             {
                 var estId = _userService.Get_EstudianteId(User.Claims);
-                return await _estudianteService.Do_IniciarDesafio(estId, courseId, challengeId, noteId);
+                return await _estudianteService.Do_IniciarDesafio(estId, courseId, challengeId, noteId, contribuitors);
             });
         }
 
@@ -73,12 +73,12 @@ namespace HeraWeb.Controllers.Student
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRecord(int courseId, int challengeId, [FromBody] List<int> contributors)
+        public async Task<IActionResult> CreateRecord(int courseId, int challengeId)
         {
             return await this.Get(async () =>
             {
                 var estId = _userService.Get_EstudianteId(User.Claims);
-                return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId, contributors);
+                return await _estudianteService.Do_AddCalificacion(estId, courseId, challengeId);
             });
         }
 
