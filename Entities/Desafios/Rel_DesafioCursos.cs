@@ -10,5 +10,7 @@ namespace Entities.Desafios
 
         public int CursoId { get; set; }
         public virtual Curso Curso { get; set; }
+
+        public int Orden { get; set; }
     }
 }

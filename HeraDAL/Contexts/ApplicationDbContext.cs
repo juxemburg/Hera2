@@ -80,20 +80,15 @@ namespace HeraDAL.Contexts
                 .HasMany(rel => rel.Registros)
                 .WithOne(reg => reg.Rel_CursoEstudiantes)
                 .OnDelete(DeleteBehavior.Cascade);
-            //builder.Entity<Rel_CursoEstudiantes>()
-            //    .HasOne(e => e.Curso)
-            //    .WithMany(e2 => e2.Estudiantes)
-            //    .HasForeignKey(e => e.CursoId)
-            //    .OnDelete(DeleteBehavior.SetNull);
-            //builder.Entity<Rel_CursoEstudiantes>()
-            //    .HasOne(e => e.Estudiante)
-            //    .WithMany(e2 => e2.Cursos)
-            //    .HasForeignKey(e => e.EstudianteId)
-            //    .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<Rel_DesafiosCursos>()
                 .HasKey(entity =>
                 new { DesafioID = entity.DesafioId, entity.CursoId });
+
+            builder.Entity<Rel_DesafiosCursos>()
+                .Property(entity => entity.Orden)
+                .HasDefaultValue(1);
+
             //builder.Entity<Rel_DesafiosCursos>()
             //    .HasOne(e => e.Desafio)
             //    .WithMany(e2 => e2.Cursos)

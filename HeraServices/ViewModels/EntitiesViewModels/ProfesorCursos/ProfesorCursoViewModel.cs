@@ -36,7 +36,9 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorCursos
             DescripcionCurso = curso.Descripcion;
             PasswordCurso = curso.Password;
 
-            Desafios = curso.Desafios.Select(item => new CursoDesafioViewModel(item.Desafio, item.Initial)).ToList();
+            Desafios = curso.Desafios
+                .OrderBy(rel  => rel.Orden)
+                .Select(item => new CursoDesafioViewModel(item.Desafio, item.Initial)).ToList();
             DesafioInicial = new CursoDesafioViewModel(curso.Desafio, true);
 
             

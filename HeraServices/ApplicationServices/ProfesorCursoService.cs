@@ -33,7 +33,7 @@ namespace HeraServices.ApplicationServices
         {
             var model = await _data.Find_Curso(cursoId);
             if (model == null || model.ProfesorId != profId)
-                throw new ApiNotFoundException("Curso no encontrado curso id: "+model.Id + " ProfesorId:"+ model.ProfesorId + " - "+ profId);
+                throw new ApiNotFoundException("Curso no encontrado curso id: " + model.Id + " ProfesorId:" + model.ProfesorId + " - " + profId);
 
             var registros = await _data.GetAll_RegistroCalificacion(cursoId).ToListAsync();
             return ApiResult<ProfesorCursoViewModel>.Initialize(
@@ -354,7 +354,7 @@ namespace HeraServices.ApplicationServices
         {
             if (!await _data.Exist_Profesor_Curso(teacherId, courseId))
                 throw new ApiNotFoundException("Recurso no encontrado");
-           
+
             var curso = await _data.Find_Curso(courseId);
             var rel = await _data.Find_Rel_CursoEstudiantes(courseId, studentId);
             var nextChallenge = await _data.FindPure_Desafio(rel.SiguienteDesafioId);
@@ -380,6 +380,29 @@ namespace HeraServices.ApplicationServices
             return ApiResult<bool>.Initialize(true, await _data.SaveAllAsync());
         }
 
+        public async Task<ApiResult<bool>> SortChallenges(int teacherId, int courseId, List<int> challenges)
+        {
+            if (!await _data.Exist_Profesor_Curso(teacherId, courseId))
+                throw new ApiNotFoundException("Recurso no encontrado");
+
+            var curso = await _data.Find_Curso_Profesor(courseId, teacherId);
+
+            if (curso.Desafios.Count != challenges.Count)
+                throw new ApiBadRequestException("Los desafíos a ordenar no coinciden con los desafíos del curso");
+            var order = 1;
+            foreach (var challengeId in challenges)
+            {
+                if (!await _data.Exist_Desafio(challengeId, courseId))
+                    throw new ApiNotFoundException("Recurso no encontrado");
+
+                var challenge = await _data.Find_Rel_DesafiosCursos(challengeId, courseId);
+                challenge.Orden = order;
+                _data.Edit(challenge);
+                order++;
+            }
+            var success = await _data.SaveAllAsync();
+            return ApiResult<bool>.Initialize(success, success);
+        }
 
     }
 }

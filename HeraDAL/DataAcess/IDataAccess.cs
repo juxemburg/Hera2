@@ -54,6 +54,7 @@ namespace HeraDAL.DataAcess
         Task<Desafio> Find_Desafio(int id);
         Task<Desafio> FindPure_Desafio(int id);
         Task<Rel_DesafiosCursos> Find_Rel_DesafiosCursos(int desafioId, int cursoId);
+        IQueryable<Rel_DesafiosCursos> GetAll_Rel_DesafiosCursos(int cursoId, int? orden = 0);
         Task<bool> Exist_Desafio(int id);
         Task<bool> Exist_Desafio(int idDesafio, int idCurso);
         Task<bool> Exist_Desafio(int idDesafio, int idCurso,
@@ -78,6 +79,7 @@ namespace HeraDAL.DataAcess
             bool inverse = false);
         Task<Curso> Find_Curso(int id);
         Task<Curso> Find_Curso_Public(int id);
+        Task<Curso> Find_Curso_Profesor(int cursoId, int profId);
         Task ChangeStarterDesafio(int cursoId, int oldId, int newId);
         Task Delete_Curso(int id);
 

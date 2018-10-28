@@ -186,9 +186,22 @@ namespace HeraDAL.DataAcess
                 .Include("Estudiantes.Registros")
                 .FirstOrDefaultAsync();
         }
+        
+
         public async Task<Curso> Find_Curso_Public(int id)
         {
             return await _context.Cursos.FindAsync(id);
+        }
+
+        public async Task<Curso> Find_Curso_Profesor(int cursoId, int profId)
+        {
+            return await _context.Cursos
+                .Where(c => c.Id == cursoId && c.ProfesorId == profId)
+                .Include(c => c.Profesor)
+                .Include(c => c.Desafios)
+                .ThenInclude(des => des.Desafio)
+                .FirstOrDefaultAsync();
+
         }
         public async Task Delete_Curso(int id)
         {
@@ -217,6 +230,14 @@ namespace HeraDAL.DataAcess
             return await _context.Rel_Cursos_Desafios
                 .FirstAsync(r => r.CursoId == cursoId &&
                 r.DesafioId == desafioId);
+        }
+
+        public IQueryable<Rel_DesafiosCursos> GetAll_Rel_DesafiosCursos(int cursoId, int? orden = 0)
+        {
+            return _context.Rel_Cursos_Desafios
+                .Where(rel => rel.CursoId == cursoId && rel.Orden > orden)
+                .Include(rel => rel.Desafio)
+                .OrderBy(rel => rel.Orden);
         }
 
         public async Task<Desafio> Find_Desafio(int id)
