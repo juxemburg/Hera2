@@ -102,6 +102,9 @@ namespace HeraServices.Services.ApplicationServices
 
             var model = await _data.Find_RegistroCalificacion(
                 cursoId, estId, desafioId);
+
+            var calificacionesColaborador = new List<Calificacion>();
+
             int? nextChallenge = null;
             if (model == null)
             {
@@ -127,10 +130,15 @@ namespace HeraServices.Services.ApplicationServices
             }
             else
             {
+                var regEstudiante = await _data.Find_Rel_CursoEstudiantes(cursoId, estId);
+                calificacionesColaborador = regEstudiante.Colaboraciones.Select(colab => colab.Calificacion)
+                    .Where(cal => cal.DesafioId == desafioId)
+                    .ToList();
                 nextChallenge = await GetNextChallenge(cursoId, estId, desafioId);
             }
             
-            return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model, nextChallenge), true);
+            return ApiResult<CalificacionDesafioViewModel>.Initialize(
+                new CalificacionDesafioViewModel(model, calificacionesColaborador ,nextChallenge), true);
         }
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion, List<int> contributors)

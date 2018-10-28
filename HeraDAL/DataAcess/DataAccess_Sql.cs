@@ -1,4 +1,5 @@
-﻿using Entities.Calificaciones;
+﻿
+using Entities.Calificaciones;
 using Entities.Cursos;
 using Entities.Desafios;
 using Entities.Notifications;
@@ -218,6 +219,8 @@ namespace HeraDAL.DataAcess
                 .Include("Curso.Desafios.Desafio")
                 .Include("Curso.Desafios.Desafio.InfoDesafio")
                 .Include("Curso.Profesor")
+                .Include(cur => cur.Colaboraciones)
+                .ThenInclude(colab => colab.Calificacion)
                 .Include(cur => cur.Registros)
                 .ThenInclude(reg => reg.Calificaciones)
                 .FirstOrDefaultAsync(rel => rel.CursoId == idCurso &&

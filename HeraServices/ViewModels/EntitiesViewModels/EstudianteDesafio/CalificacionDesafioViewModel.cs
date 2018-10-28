@@ -45,7 +45,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
         public CalificacionInfoViewModel CalificacionPendiente { get; set; }
 
 
-        public CalificacionDesafioViewModel(RegistroCalificacion model, int? siguienteDesafioId)
+        public CalificacionDesafioViewModel(RegistroCalificacion model, List<Calificacion> calificacionesColaborador, int? siguienteDesafioId)
         {
             CursoId = model.CursoId;
             EstudianteId = model.EstudianteId;
@@ -55,7 +55,13 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteDesafio
             UrlEscenarioInicial = model.Desafio.DirDesafioInicial;
             SiguienteDesafioId = siguienteDesafioId.GetValueOrDefault();
 
-            Calificaciones = model.Calificaciones
+            if (calificacionesColaborador == null)
+                calificacionesColaborador = new List<Calificacion>();
+
+            var cals = model.Calificaciones;
+            cals.AddRange(calificacionesColaborador);
+
+            Calificaciones = cals
                 .Where(item => item.TiempoFinal != null)
                 .Select(cal => cal.ToViewModel())
                 .OrderByDescending(cal => cal.TiempoFinal)

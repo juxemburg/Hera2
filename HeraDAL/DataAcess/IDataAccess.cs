@@ -105,6 +105,8 @@ namespace HeraDAL.DataAcess
         Task Delete_RegistroCalificacion(int cursoId, int estId,
             int desafioId);
 
+        //RegistroColaborador
+
 
         //Calificacion
         Task<Calificacion> Find_Calificacion(int calificacionId);
