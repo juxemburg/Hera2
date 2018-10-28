@@ -102,6 +102,7 @@ namespace HeraServices.Services.ApplicationServices
 
             var model = await _data.Find_RegistroCalificacion(
                 cursoId, estId, desafioId);
+            int? nextChallenge = null;
             if (model == null)
             {
                 model = new RegistroCalificacion()
@@ -124,7 +125,12 @@ namespace HeraServices.Services.ApplicationServices
                 _data.Add_RegistroCalificacion(model);
                 await _data.SaveAllAsync();
             }
-            return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model), true);
+            else
+            {
+                nextChallenge = await GetNextChallenge(cursoId, estId, desafioId);
+            }
+            
+            return ApiResult<CalificacionDesafioViewModel>.Initialize(new CalificacionDesafioViewModel(model, nextChallenge), true);
         }
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion, List<int> contributors)
