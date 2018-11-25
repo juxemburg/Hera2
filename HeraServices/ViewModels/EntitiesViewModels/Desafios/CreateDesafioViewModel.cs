@@ -31,6 +31,17 @@ namespace HeraServices.ViewModels.EntitiesViewModels
         [Display(Name = "Descripción")]
         public string Descripcion { get; set; }
 
+        #region Assessment Attributes
+
+        public TipoEvaluacion TipoEvaluacion { get; set; }
+
+        public string Param1 { get; set; }
+        public string Param2 { get; set; }
+        public string Param3 { get; set; }
+        public string Param4 { get; set; }
+
+        #endregion
+
         #region Valoration Attributes
 
         //General Valoration
@@ -114,6 +125,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels
                 DirDesafioInicial = UrlEscenarioInicial,
                 DirSolucion = DirArchivo,
                 ProfesorId = profesorId,
+                TipoEvaluacion = TipoEvaluacion,
                 InfoDesafio = new InfoDesafio()
                 {
                     MultipleSpriteEvents = MultipleSpriteEvents,

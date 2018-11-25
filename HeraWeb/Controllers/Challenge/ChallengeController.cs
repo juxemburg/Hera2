@@ -44,6 +44,12 @@ namespace HeraWeb.Controllers.Challenge
                 await _ctrlService.AutocompleteDesafios(searchString));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetMetadata()
+        {
+            return await this.Get(async () => await _ctrlService.GetAssessmentsMetadata());
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddChallenge([FromBody] CreateDesafioViewModel model)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Entities.Desafios;
 using HeraDAL.DataAcess;
 using HeraServices.Services.ScratchServices;
 using HeraServices.ViewModels.ApiViewModels;
@@ -158,5 +159,13 @@ namespace HeraServices.Services.ApplicationServices
             await _data.Delete_Desafio(desafioId);
             return await _data.SaveAllAsync();
         }
+
+        public async Task<ApiResult<IEnumerable<SelectListItemViewModel>>> GetAssessmentsMetadata()
+        {
+            return ApiResult<IEnumerable<SelectListItemViewModel>>.Initialize(
+                Enum.GetValues(typeof(TipoEvaluacion)).Cast<TipoEvaluacion>()
+                .Select(i => new SelectListItemViewModel() { Text = i.ToString(), Value = $"{(int)i}" }), true);
+        }
+
     }
 }
