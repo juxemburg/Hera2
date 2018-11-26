@@ -22,7 +22,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public int SiguienteDesafioId { get; set; }
 
         //Assessment params
-        public TipoEvaluacion AssesmentType { get; set; }
+        public TipoEvaluacion AssessmentType { get; set; }
         public string Param1 { get; set; }
         public string Param2 { get; set; }
         public string Param3 { get; set; }
@@ -40,7 +40,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
             this.DeadCodeCount = resultado.DeadCodeCount;
             this.Nombre = resultado.Nombre;
 
-            this.AssesmentType = desafioCompletado.TipoEvaluacion;
+            this.AssessmentType = desafioCompletado.TipoEvaluacion;
             this.Param1 = desafioCompletado.Param1;
             this.Param2 = desafioCompletado.Param2;
             this.Param3 = desafioCompletado.Param3;
