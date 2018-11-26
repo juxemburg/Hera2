@@ -21,8 +21,15 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public int DeadCodeCount { get; set; }
         public int SiguienteDesafioId { get; set; }
 
+        //Assessment params
+        public TipoEvaluacion AssesmentType { get; set; }
+        public string Param1 { get; set; }
+        public string Param2 { get; set; }
+        public string Param3 { get; set; }
+        public string Param4 { get; set; }
+
         public DesafioCompletadoViewModel(int cursoId,
-            ResultadoScratch resultado, Desafio siguienteDesafio)
+            ResultadoScratch resultado, Desafio desafioCompletado, Desafio siguienteDesafio)
         {
             this.CursoId = cursoId;
 
@@ -32,6 +39,12 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
             this.DuplicateScriptsCount = resultado.DuplicateScriptsCount;
             this.DeadCodeCount = resultado.DeadCodeCount;
             this.Nombre = resultado.Nombre;
+
+            this.AssesmentType = desafioCompletado.TipoEvaluacion;
+            this.Param1 = desafioCompletado.Param1;
+            this.Param2 = desafioCompletado.Param2;
+            this.Param3 = desafioCompletado.Param3;
+            this.Param4 = desafioCompletado.Param4;
             
             this.SiguienteDesafioId = siguienteDesafio.Id;
         }

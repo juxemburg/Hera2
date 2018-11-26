@@ -223,7 +223,12 @@ namespace HeraServices.Services.ApplicationServices
             if (!await _data.Exist_Estudiante_Curso(idEst, idCurso))
                 throw new ApiNotFoundException();
 
-            var desafio = await _desafioService
+            if(!await _data.Exist_Desafio(idDesafio, idCurso))
+                throw new ApiNotFoundException();
+
+            var desafioCompletado = await _data.Find_Desafio(idDesafio);
+
+            var siguienteDesafio = await _desafioService
                 .Get_SiguienteDesafio(idCurso, idEst);
 
             var resultado = await _data
@@ -234,7 +239,7 @@ namespace HeraServices.Services.ApplicationServices
             
 
             return ApiResult<DesafioCompletadoViewModel>
-                .Initialize(new DesafioCompletadoViewModel(idCurso, resultado, desafio), true);
+                .Initialize(new DesafioCompletadoViewModel(idCurso, resultado, desafioCompletado, siguienteDesafio), true);
         }
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_AddCalificacion
