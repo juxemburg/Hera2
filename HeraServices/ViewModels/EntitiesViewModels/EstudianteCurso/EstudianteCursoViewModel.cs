@@ -24,20 +24,19 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public DesafioViewModel DesafioPendiente { get; set; }
 
         public EstudianteCursoViewModel(Curso model,
-            List<Desafio> desafiosRealizados,
-            List<Desafio> desafioNoCompletados,
+            List<DesafioViewModel> desafiosRealizados,
+            List<DesafioViewModel> desafioNoCompletados,
             Desafio desafioPendiente)
         {
-            this.Id = model.Id;
-            this.Nombre = model.Nombre;
-            this.Descripcion = model.Descripcion;
-            this.NombreProfesor = model.Profesor.NombreCompleto;
-            this.DesafiosNoCompletados = desafioNoCompletados.Select(item => item.Map()).ToList();
-            this.DesafiosRealizados =
-                desafiosRealizados != null ? desafiosRealizados.Select(item => item.Map()).ToList()
-                : new List<DesafioViewModel>();
-            this.DesafioPendiente = desafioPendiente.Map();
-            
+            Id = model.Id;
+            Nombre = model.Nombre;
+            Descripcion = model.Descripcion;
+            NombreProfesor = model.Profesor.NombreCompleto;
+            DesafiosNoCompletados = desafioNoCompletados;
+            DesafiosRealizados =
+                desafiosRealizados != null ? desafiosRealizados : new List<DesafioViewModel>();
+            DesafioPendiente = desafioPendiente.Map(0);
+
         }
     }
 }

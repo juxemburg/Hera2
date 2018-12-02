@@ -12,6 +12,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Desafios
         public int EstudianteId { get; set; }
         public int DesafioId { get; set; }
 
+        public float Puntuacion { get; set; }
+
         public DateTime? Tiempoinicio { get; set; }
         public DateTime? TiempoFinal { get; set; }
 

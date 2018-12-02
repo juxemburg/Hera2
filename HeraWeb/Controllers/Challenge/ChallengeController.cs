@@ -70,8 +70,5 @@ namespace HeraWeb.Controllers.Challenge
                 return await _ctrlService.GetAll_Desafios(teacherId, model, skip, take);
             });
         }
-
-
-
     }
 }

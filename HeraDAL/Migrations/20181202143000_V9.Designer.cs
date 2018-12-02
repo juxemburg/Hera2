@@ -14,9 +14,10 @@ using System;
 namespace HeraDAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181202143000_V9")]
+    partial class V9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +39,7 @@ namespace HeraDAL.Migrations
 
                     b.Property<int>("EstudianteId");
 
-                    b.Property<float>("Puntuacion");
+                    b.Property<int>("Puntuacion");
 
                     b.Property<DateTime?>("TiempoFinal");
 

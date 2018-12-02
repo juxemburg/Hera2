@@ -24,6 +24,7 @@ namespace Entities.Calificaciones
         public int DesafioId { get; set; }
         public virtual RegistroCalificacion RegistroCalificacion { get; set; }
         public string DirArchivo { get; set; }
+        public float Puntuacion { get; set; }
 
         public TimeSpan Duracion => (TiempoFinal - Tiempoinicio).GetValueOrDefault();
         public bool EnCurso => TiempoFinal == null;

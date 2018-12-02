@@ -22,6 +22,7 @@ using System.IO;
 using HeraServices.Services.UtilServices;
 using HeraServices.Services.DesafiosServices;
 using HeraServices.ApplicationServices;
+using HeraServices.DesafiosServices;
 
 namespace HeraWeb
 {
@@ -100,6 +101,7 @@ namespace HeraWeb
             services.AddScoped<ScratchService>();
             services.AddScoped<CursoService>();
             services.AddScoped<ColorService>();
+            services.AddScoped<CalificacionDesafioService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>

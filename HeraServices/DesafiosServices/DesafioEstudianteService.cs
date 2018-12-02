@@ -3,6 +3,7 @@ using HeraDAL.DataAcess;
 using HeraServices.ViewModels.ApiViewModels;
 using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso;
+using HeraServices.ViewModels.EntityMapping;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,12 +39,12 @@ namespace HeraServices.Services.DesafiosServices
             var desafiosRealizados = model.Registros
                 .Where(rel => rel.Terminada
                 && rel.Desafio != null)
-                .Select(rel => rel.Desafio)
+                .Select(rel => rel.Desafio.Map(rel.PuntuacionMaxima))
                 .ToList();
             var desafiosNoCompletados = model.Registros
                 .Where(rel => !rel.Terminada
                 && rel.Desafio != null)
-                .Select(rel => rel.Desafio)
+                .Select(rel => rel.Desafio.Map(rel.PuntuacionMaxima))
                 .ToList();
 
             if (desafiosRealizados == null ||

@@ -126,6 +126,10 @@ namespace HeraServices.ViewModels.EntitiesViewModels
                 DirSolucion = DirArchivo,
                 ProfesorId = profesorId,
                 TipoEvaluacion = TipoEvaluacion,
+                Param1 = Param1,
+                Param2 = Param2,
+                Param3 = Param3,
+                Param4 = Param4,
                 InfoDesafio = new InfoDesafio()
                 {
                     MultipleSpriteEvents = MultipleSpriteEvents,

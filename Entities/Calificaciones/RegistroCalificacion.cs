@@ -11,12 +11,20 @@ namespace Entities.Calificaciones
         public int CursoId { get; set; }
         public int EstudianteId { get; set; }
         public Rel_CursoEstudiantes Rel_CursoEstudiantes { get; set; }
-        
+
 
         public int DesafioId { get; set; }
         public Desafio Desafio { get; set; }
 
         public virtual List<Calificacion> Calificaciones { get; set; }
+
+        public float PuntuacionMaxima
+        {
+            get
+            {
+                return Calificaciones == null ? 0 : Calificaciones.Select(cal => cal.Puntuacion).Max();
+            }
+        }
 
         public bool Iniciada
         {
@@ -26,18 +34,18 @@ namespace Entities.Calificaciones
                            .Any(cal => cal.EnCurso);
             }
         }
-        
+
         public bool Terminada
         {
             get
             {
-                return (Calificaciones != null) 
+                return (Calificaciones != null)
                     && (Calificaciones.Any(cal => !cal.EnCurso)
                     && Calificaciones.Count > 0);
             }
         }
 
-        public bool Valorada => 
+        public bool Valorada =>
             Calificaciones.All(c => c.CalificacionCualitativa != null);
 
         public Calificacion CalificacionPendiente =>

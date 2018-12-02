@@ -181,10 +181,12 @@ namespace HeraDAL.DataAcess
                 .Where(c => c.Id == id)
                 .Include(c => c.Profesor)
                 .Include(c => c.Desafios)
-                .ThenInclude(c => c.Desafio)
+                    .ThenInclude(c => c.Desafio)
                 .Include(c => c.Estudiantes)
-                .ThenInclude(rel => rel.Estudiante)
-                .Include("Estudiantes.Registros")
+                    .ThenInclude(rel => rel.Estudiante)
+                .Include(c => c.Estudiantes)
+                    .ThenInclude(est => est.Registros)
+                        .ThenInclude(reg => reg.Calificaciones)
                 .FirstOrDefaultAsync();
         }
         

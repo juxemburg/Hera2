@@ -18,6 +18,8 @@ using HeraServices.ViewModels.ApiViewModels.Exceptions;
 using Entities.Valoracion;
 using HeraServices.ViewModels.EntityMapping;
 using HeraServices.ViewModels.EntitiesViewModels.Desafios;
+using HeraServices.DesafiosServices;
+using HeraServices.ViewModels.EntitiesViewModels.Estudiantes;
 
 namespace HeraServices.Services.ApplicationServices
 {
@@ -26,13 +28,17 @@ namespace HeraServices.Services.ApplicationServices
         private readonly IDataAccess _data;
         private readonly DesafioEstudianteService _desafioService;
         private readonly ScratchService _evaluator;
+        private readonly CalificacionDesafioService _calificacionDesafioService;
 
-        public EstudianteService(IDataAccess data, ScratchService evaluator,
-            DesafioEstudianteService desafioService)
+        public EstudianteService(IDataAccess data,
+            ScratchService evaluator,
+            DesafioEstudianteService desafioService,
+            CalificacionDesafioService calificacionDesafioService)
         {
             _data = data;
             _desafioService = desafioService;
             _evaluator = evaluator;
+            _calificacionDesafioService = calificacionDesafioService;
         }
 
         public async Task<PaginationViewModel<Curso>> Search_Curso(int estId,
@@ -136,9 +142,9 @@ namespace HeraServices.Services.ApplicationServices
                     .ToList();
                 nextChallenge = await GetNextChallenge(cursoId, estId, desafioId);
             }
-            
+
             return ApiResult<CalificacionDesafioViewModel>.Initialize(
-                new CalificacionDesafioViewModel(model, calificacionesColaborador ,nextChallenge), true);
+                new CalificacionDesafioViewModel(model, calificacionesColaborador, nextChallenge), true);
         }
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_IniciarDesafio(int estId, int idCurso, int idDesafio, int idCalificacion, List<int> contributors)
@@ -171,12 +177,20 @@ namespace HeraServices.Services.ApplicationServices
                 if (model.TiempoFinal != null)
                     throw new ApiBadRequestException("El desafío ya ha terminado");
 
-
                 var res = await _evaluator.Get_Evaluation(idProj);
                 var est = await _data.Find_Estudiante(estId);
                 var curso = await _data.Find_Curso(idCurso);
+                var desafio = await _data.FindPure_Desafio(idDesafio);
                 var resultados = res.Select(val => val.Map(model.Id))
                     .ToList();
+
+                model.Puntuacion = _calificacionDesafioService.GetCalificacionDesafio(
+                    desafio.TipoEvaluacion,
+                    desafio.Param1,
+                    desafio.Param2,
+                    desafio.Param3,
+                    desafio.Param4,
+                    res);
 
                 _data.Do_TerminarCalificacion(curso,
                     est, model, resultados, idProj);
@@ -214,8 +228,6 @@ namespace HeraServices.Services.ApplicationServices
             };
         }
 
-
-
         public async Task<ApiResult<DesafioCompletadoViewModel>>
             Get_DesafioCompletadoViewModel(int idEst, int idCurso,
                 int idDesafio, int idCalificacion)
@@ -223,7 +235,7 @@ namespace HeraServices.Services.ApplicationServices
             if (!await _data.Exist_Estudiante_Curso(idEst, idCurso))
                 throw new ApiNotFoundException();
 
-            if(!await _data.Exist_Desafio(idDesafio, idCurso))
+            if (!await _data.Exist_Desafio(idDesafio, idCurso))
                 throw new ApiNotFoundException();
 
             var desafioCompletado = await _data.Find_Desafio(idDesafio);
@@ -233,13 +245,15 @@ namespace HeraServices.Services.ApplicationServices
 
             var resultado = await _data
                 .Find_ResultadoScratchGeneral(idCalificacion);
+            var calificacion = await _data.Find_Calificacion(idCalificacion);
 
-            if(resultado == null)
+
+            if (resultado == null)
                 throw new ApiNotFoundException();
-            
+
 
             return ApiResult<DesafioCompletadoViewModel>
-                .Initialize(new DesafioCompletadoViewModel(idCurso, resultado, desafioCompletado, siguienteDesafio), true);
+                .Initialize(new DesafioCompletadoViewModel(idCurso, resultado, desafioCompletado, siguienteDesafio, calificacion.Puntuacion), true);
         }
 
         public async Task<ApiResult<CalificacionInfoViewModel>> Do_AddCalificacion
@@ -266,6 +280,27 @@ namespace HeraServices.Services.ApplicationServices
             return ApiResult<CalificacionInfoViewModel>.Initialize(model.ToViewModel(), success);
         }
 
+        public async Task<ApiResult<IEnumerable<EstudianteDesafioResultadoViewModel>>> GetPeersResults(
+            int idCurso, int idEstudiante, int idDesafio)
+        {
+            if (!await _data.Exist_Estudiante_Curso(idEstudiante, idCurso))
+                throw new ApiNotFoundException("Recurso no encontrado");
+
+            var curso = await _data.Find_Curso(idCurso);
+            var registros = curso.Estudiantes
+                .Where(rel => rel.EstudianteId != idEstudiante)
+                .SelectMany(rel => rel.Registros)
+                .Where(reg => reg.DesafioId == idDesafio)
+                .Select(reg => new EstudianteDesafioResultadoViewModel()
+                {
+                    NombreEstudiante = $"{reg.Rel_CursoEstudiantes.Estudiante.NombreCompleto}",
+                    Puntuacion = reg.PuntuacionMaxima
+                })
+                .OrderByDescending(item => item.Puntuacion);
+            return ApiResult<IEnumerable<EstudianteDesafioResultadoViewModel>>.Initialize(registros, true);
+
+        }
+
         private async Task<int> GetNextChallenge(int idCurso, int idEstudiante, int desafioId)
         {
             var relEstCurso = await _data.Find_Rel_CursoEstudiantes(idCurso, idEstudiante);
@@ -273,11 +308,11 @@ namespace HeraServices.Services.ApplicationServices
             if (relEstCurso == null)
                 throw new ApiNotFoundException("Recurso no encontrado");
 
-            if(!await _data.Exist_Desafio(desafioId, idCurso))
+            if (!await _data.Exist_Desafio(desafioId, idCurso))
                 throw new ApiNotFoundException("Recurso no encontrado");
 
             var curso = await _data.Find_Curso(idCurso);
-            
+
 
             if (!await _data.Exist_Desafio(desafioId, idCurso))
                 throw new ApiNotFoundException("Recurso no encontrado");
@@ -313,6 +348,8 @@ namespace HeraServices.Services.ApplicationServices
                 });
             }
         }
+
+
     }
 }
 

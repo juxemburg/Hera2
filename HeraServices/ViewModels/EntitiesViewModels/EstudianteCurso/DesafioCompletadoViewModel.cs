@@ -20,6 +20,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public int DuplicateScriptsCount { get; set; }
         public int DeadCodeCount { get; set; }
         public int SiguienteDesafioId { get; set; }
+        public float Puntuacion { get; set; }
 
         //Assessment params
         public TipoEvaluacion AssessmentType { get; set; }
@@ -29,24 +30,25 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public string Param4 { get; set; }
 
         public DesafioCompletadoViewModel(int cursoId,
-            ResultadoScratch resultado, Desafio desafioCompletado, Desafio siguienteDesafio)
+            ResultadoScratch resultado, Desafio desafioCompletado, Desafio siguienteDesafio, float puntuacion)
         {
-            this.CursoId = cursoId;
+            CursoId = cursoId;
 
-            this.ResultadoId = resultado.Id;
-            this.NumScripts = resultado.NumScripts;
-            this.NumBloques = resultado.NumBloques;
-            this.DuplicateScriptsCount = resultado.DuplicateScriptsCount;
-            this.DeadCodeCount = resultado.DeadCodeCount;
-            this.Nombre = resultado.Nombre;
+            ResultadoId = resultado.Id;
+            NumScripts = resultado.NumScripts;
+            NumBloques = resultado.NumBloques;
+            DuplicateScriptsCount = resultado.DuplicateScriptsCount;
+            DeadCodeCount = resultado.DeadCodeCount;
+            Nombre = resultado.Nombre;
 
-            this.AssessmentType = desafioCompletado.TipoEvaluacion;
-            this.Param1 = desafioCompletado.Param1;
-            this.Param2 = desafioCompletado.Param2;
-            this.Param3 = desafioCompletado.Param3;
-            this.Param4 = desafioCompletado.Param4;
+            AssessmentType = desafioCompletado.TipoEvaluacion;
+            Param1 = desafioCompletado.Param1;
+            Param2 = desafioCompletado.Param2;
+            Param3 = desafioCompletado.Param3;
+            Param4 = desafioCompletado.Param4;
             
-            this.SiguienteDesafioId = siguienteDesafio.Id;
+            SiguienteDesafioId = siguienteDesafio.Id;
+            Puntuacion = puntuacion;
         }
     }
 }
