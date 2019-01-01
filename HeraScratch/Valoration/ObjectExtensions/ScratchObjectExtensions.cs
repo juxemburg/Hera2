@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using HeraScratch.Valoration;
 using HeraScratch.Objects;
+using System.Text.RegularExpressions;
 
 namespace HeraScratch.ObjectExtensions
 {
@@ -50,9 +51,21 @@ namespace HeraScratch.ObjectExtensions
         private static Dictionary<string, string> _SensingBlocks
             = new Dictionary<string, string>()
             {
-                ["keyPressed"] ="",
+                ["keyPressed"] = "",
                 ["whenKeyPressed"] = "",
                 ["touching:"] = ""
+            };
+
+        private static Dictionary<string, string> _ThreadingBlocks
+            = new Dictionary<string, string>()
+            {
+                ["whenGreenFlag"] = "whenGreenFlag",
+                ["whenKeyPressed"] = "whenKeyPressed",
+                ["whenClicked"] = "whenClicked",
+                ["whenIReceive"] = "whenIReceive",
+                ["whenSceneStarts"] = "whenSceneStarts",
+                ["whenSensorGreaterThan"] = "whenSensorGreaterThan",
+                ["whenCloned"] = "whenCloned"
             };
 
         private static Dictionary<string, string> _EventBlocks
@@ -73,8 +86,8 @@ namespace HeraScratch.ObjectExtensions
             = new Dictionary<string, string>()
             {
                 ["doIf"] = "doIf",
-                ["stopScripts"] = "whenKeyPressed",
-                ["doForever"] = "whenClicked",
+                ["stopScripts"] = "stopScripts",
+                ["doForever"] = "doForever",
                 ["doRepeat"] = "doRepeat",
                 ["wait:elapsed:from:"] = "wait:elapsed:from:"
             };
@@ -92,7 +105,7 @@ namespace HeraScratch.ObjectExtensions
                 ["doUntil"] = "doUntil",
                 ["doIfElse"] = "doIfElse",
                 ["doIf"] = "doIf",
-                ["doForever"] = "whenClicked",
+                ["doForever"] = "doForever",
                 ["doRepeat"] = "doRepeat"
             };
         private static Dictionary<string, string> _reservedBlocks
@@ -203,23 +216,23 @@ namespace HeraScratch.ObjectExtensions
                 {
                     scriptList.AddRange(child.ScriptsString);
                 }
-                if(child.MessagesRecieved != null)
+                if (child.MessagesRecieved != null)
                 {
                     messagesRecieved.AddRange(child.MessagesRecieved);
                 }
-                if(child.MessagesSent != null)
+                if (child.MessagesSent != null)
                 {
                     messagesSent.AddRange(child.MessagesSent);
                 }
             }
-            var vars = obj.Variables != null ? obj.Variables.ToList():
+            var vars = obj.Variables != null ? obj.Variables.ToList() :
                 new List<Variable>();
             var lists = obj.Lists != null ? obj.Lists.ToList() :
                 new List<ScratchList>();
             return Get_generalValoration<T, U, S>(scripts,
-                blocks,scriptList, objectName, previousValorations,
-                vars, lists,deadCodeSums, previousValorations.Count,
-                messagesRecieved, messagesSent,true);
+                blocks, scriptList, objectName, previousValorations,
+                vars, lists, deadCodeSums, previousValorations.Count,
+                messagesRecieved, messagesSent, true);
 
         }
 
@@ -236,7 +249,7 @@ namespace HeraScratch.ObjectExtensions
             return "unknown";
 
         }
-        
+
         public static int Get_ScriptLength(object[] script)
         {
             return script.Length;
@@ -269,6 +282,11 @@ namespace HeraScratch.ObjectExtensions
             where T : IValoration, new()
             where U : ISpriteValoration, new()
         {
+            var threadCount = scripts.Where(s =>
+                 _ThreadingBlocks.Any(b => b.Key.Equals(Get_firstBlock(s))))
+                    .Count();
+            var loopRegex = new Regex(@"(^doRepeat)|(^doUntil)|(^doWaitUntil)|(^doForever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var nestedRegex = new Regex(@"(^doRepeat)|(^doUntil)|(^doWaitUntil)|(^doForever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
             return new T()
             {
                 generalValoration = general,
@@ -292,7 +310,7 @@ namespace HeraScratch.ObjectExtensions
 
                 AdditionalInfo = new U()
                 {
-                    HasEvents = scripts.Count >0, 
+                    HasEvents = threadCount > 0,
 
                     //Abstraction
                     NonUnusedBlocks = deadCodeCount == 0,
@@ -300,7 +318,7 @@ namespace HeraScratch.ObjectExtensions
                     blocks.Any(b => b == "procDef"),
                     CloneUse =
                      blocks.Any(b => b == "createCloneOf"),
-                    
+
                     //Algorithmic thinking
                     SecuenceUse =
                         scripts.Any(list =>
@@ -310,15 +328,15 @@ namespace HeraScratch.ObjectExtensions
 
                     //Sync
                     MultipleThreads =
-                    scripts.Count > 1,
+                    threadCount > 1,
                     TwoGreenFlagTrhead =
                     scripts.Where(s =>
                     Get_firstBlock(s).Equals("whenGreenFlag"))
                     .Count() > 1,
-                    
-                    
+
+
                     AdvancedEventUse =
-                scripts.GroupBy(s
+                    scripts.GroupBy(s
                         => Get_firstBlock(s))
                         .Count() > 1,
                     //Flux control
@@ -335,18 +353,22 @@ namespace HeraScratch.ObjectExtensions
                         .Any(b => _NonUserVariables.ContainsKey(b)
                         ),
                     SpriteSensing = blocks
-                .Any(b => b == "touching:" || b == "touching"),
-                    
+                    .Any(b => b == "touching:" || b == "touching"),
+
                     //Analysis
                     BasicOperators = blocks
-                .Any(b => _BasicOperators.ContainsKey(b)),
+                    .Any(b => _BasicOperators.ContainsKey(b)),
 
                     MediumOperators = blocks
-                .Any(b => _MediumOperators.ContainsKey(b)),
-                    AdvancedOperators = nestedOperator
+                    .Any(b => _MediumOperators.ContainsKey(b)),
+                    AdvancedOperators = nestedOperator,
+
+                    ThreadCount = threadCount,
+                    CloneCount = blocks.Where(b => b.Equals("createCloneOf")).Count(),
+                    CloneRemovalCount = blocks.Where(b => b == "deleteClone").Count(),
+                    SequentialLoopsCount = scriptList.Select(item => loopRegex.Matches(item).Count).Sum()
+
                 }
-
-
             };
         }
 
@@ -366,7 +388,54 @@ namespace HeraScratch.ObjectExtensions
             where U : ISpriteValoration, new()
             where S : IGeneralValoration, new()
         {
-
+            var previousAggregate =
+                previousValorations
+                .Select(item => new
+                {
+                    NonUnusedBlocks = item.NonUnusedBlocks ? 1 : 0,
+                    UserDefinedBlocks = item.UserDefinedBlocks ? 1 : 0,
+                    CloneUse = item.CloneUse ? 1 : 0,
+                    SecuenceUse = item.SecuenceUse ? 1 : 0,
+                    MultipleThreads = item.MultipleThreads ? 1 : 0,
+                    TwoGreenFlagTrhead = item.TwoGreenFlagTrhead ? 1 : 0,
+                    AdvancedEventUse = item.AdvancedEventUse ? 1 : 0,
+                    UseSimpleBlocks = item.UseSimpleBlocks ? 1 : 0,
+                    UseMediumBlocks = item.UseMediumBlocks ? 1 : 0,
+                    UseNestedControl = item.UseNestedControl ? 1 : 0,
+                    BasicInputUse = item.BasicInputUse ? 1 : 0,
+                    VariableUse = item.VariableUse ? 1 : 0,
+                    SpriteSensing = item.SpriteSensing ? 1 : 0,
+                    BasicOperators = item.BasicOperators ? 1 : 0,
+                    MediumOperators = item.MediumOperators ? 1 : 0,
+                    AdvancedOperators = item.AdvancedOperators ? 1 : 0,
+                    item.ThreadCount,
+                    item.CloneCount,
+                    item.CloneRemovalCount,
+                    item.SequentialLoopsCount
+                })
+                .Aggregate((acc, item) => new
+                {
+                    NonUnusedBlocks = item.NonUnusedBlocks + acc.NonUnusedBlocks,
+                    UserDefinedBlocks = item.UserDefinedBlocks + acc.UserDefinedBlocks,
+                    CloneUse = item.CloneUse + acc.CloneUse,
+                    SecuenceUse = item.SecuenceUse + acc.SecuenceUse,
+                    MultipleThreads = item.MultipleThreads + acc.MultipleThreads,
+                    TwoGreenFlagTrhead = item.TwoGreenFlagTrhead + acc.TwoGreenFlagTrhead,
+                    AdvancedEventUse = item.AdvancedEventUse + acc.AdvancedEventUse,
+                    UseSimpleBlocks = item.UseSimpleBlocks + acc.UseSimpleBlocks,
+                    UseMediumBlocks = item.UseMediumBlocks + acc.UseMediumBlocks,
+                    UseNestedControl = item.UseNestedControl + acc.UseNestedControl,
+                    BasicInputUse = item.BasicInputUse + acc.BasicInputUse,
+                    VariableUse = item.VariableUse + acc.VariableUse,
+                    SpriteSensing = item.SpriteSensing + acc.SpriteSensing,
+                    BasicOperators = item.BasicOperators + acc.BasicOperators,
+                    MediumOperators = item.MediumOperators + acc.MediumOperators,
+                    AdvancedOperators = item.AdvancedOperators + acc.AdvancedOperators,
+                    ThreadCount = item.ThreadCount + acc.ThreadCount,
+                    CloneCount = item.CloneCount + acc.CloneCount,
+                    CloneRemovalCount = item.CloneRemovalCount + acc.CloneRemovalCount,
+                    SequentialLoopsCount = item.SequentialLoopsCount + acc.SequentialLoopsCount
+                });
 
             return new T()
             {
@@ -389,7 +458,6 @@ namespace HeraScratch.ObjectExtensions
                 .Select(grp => grp.Key)
                 .Count(),
 
-
                 AdditionalInfo = new S()
                 {
                     SpriteCount = objCount,
@@ -404,52 +472,27 @@ namespace HeraScratch.ObjectExtensions
                     ListUse = lists.Count > 0,
 
                     //Particular Variables
-                    NonUnusedBlocks = previousValorations
-                    .Where(val => val.NonUnusedBlocks).Count(),
-
-                    UserDefinedBlocks = previousValorations
-                    .Where(val => val.UserDefinedBlocks).Count(),
-
-                    CloneUse =
-                     previousValorations
-                    .Where(val => val.CloneUse).Count(),
-
-                    SecuenceUse = previousValorations
-                    .Where(val => val.SecuenceUse).Count()
-                    ,
-                    MultipleThreads = previousValorations
-                    .Where(val => val.MultipleThreads).Count(),
-
-                    TwoGreenFlagTrhead = previousValorations
-                    .Where(val => val.TwoGreenFlagTrhead).Count(),
-
-                    AdvancedEventUse = previousValorations
-                    .Where(val => val.AdvancedEventUse).Count(),
-                    UseSimpleBlocks = previousValorations
-                    .Where(val => val.UseSimpleBlocks).Count(),
-                    UseMediumBlocks = previousValorations
-                    .Where(val => val.UseMediumBlocks).Count(),
-                    UseNestedControl = previousValorations
-                    .Where(val => val.UseNestedControl).Count(),
-                    BasicInputUse = previousValorations
-                    .Where(val => val.BasicInputUse).Count(),
-
-                    VariableUse = previousValorations
-                    .Where(val => val.VariableUse).Count(),
-                    SpriteSensing = previousValorations
-                    .Where(val => val.SpriteSensing).Count(),
-
-                    BasicOperators = previousValorations
-                    .Where(val => val.BasicOperators).Count(),
-
-                    MediumOperators = previousValorations
-                    .Where(val => val.MediumOperators).Count(),
-
-                    AdvancedOperators = previousValorations
-                    .Where(val => val.AdvancedOperators).Count()
+                    NonUnusedBlocks = previousAggregate.NonUnusedBlocks,
+                    UserDefinedBlocks = previousAggregate.UserDefinedBlocks,
+                    CloneUse = previousAggregate.CloneUse,
+                    SecuenceUse = previousAggregate.SecuenceUse,
+                    MultipleThreads = previousAggregate.MultipleThreads,
+                    TwoGreenFlagTrhead = previousAggregate.TwoGreenFlagTrhead,
+                    AdvancedEventUse = previousAggregate.AdvancedEventUse,
+                    UseSimpleBlocks = previousAggregate.UseSimpleBlocks,
+                    UseMediumBlocks = previousAggregate.UseMediumBlocks,
+                    UseNestedControl = previousAggregate.UseNestedControl,
+                    BasicInputUse = previousAggregate.BasicInputUse,
+                    VariableUse = previousAggregate.VariableUse,
+                    SpriteSensing = previousAggregate.SpriteSensing,
+                    BasicOperators = previousAggregate.BasicOperators,
+                    MediumOperators = previousAggregate.MediumOperators,
+                    AdvancedOperators = previousAggregate.AdvancedOperators,
+                    ThreadCount = previousAggregate.ThreadCount,
+                    CloneCount = previousAggregate.CloneCount,
+                    CloneRemovalCount = previousAggregate.CloneRemovalCount,
+                    SequentialLoopsCount = previousAggregate.SequentialLoopsCount
                 }
-
-
             };
         }
 

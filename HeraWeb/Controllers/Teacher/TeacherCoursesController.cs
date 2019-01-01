@@ -72,7 +72,8 @@ namespace HeraWeb.Controllers.Teacher
 
         [HttpPost("{courseId}/SortChallenges")]
         public async Task<IActionResult> SortChallenges(int courseId, [FromBody]List<int> model) =>
-            await this.Post(ModelState, async () => {
+            await this.Post(ModelState, async () =>
+            {
                 var teacherId = _userService.Get_ProfesorId(User.Claims);
                 return await _profesorCursoService.SortChallenges(teacherId, courseId, model);
             });

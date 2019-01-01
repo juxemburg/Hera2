@@ -8,6 +8,8 @@ namespace Entities.Desafios
     {
         ParallelCars,
         FlowPipes,
-        RepeatingDucks
+        RepeatingDucks,
+        CloningTroubles,
+        RepeatingRains
     }
 }

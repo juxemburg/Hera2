@@ -42,5 +42,10 @@ namespace HeraScratch.Valoration
         int BasicOperators { get; set; }
         int MediumOperators { get; set; }
         int AdvancedOperators { get; set; }
+
+        int ThreadCount { get; set; }
+        int CloneCount { get; set; }
+        int CloneRemovalCount { get; set; }
+        int SequentialLoopsCount { get; set; }
     }
 }

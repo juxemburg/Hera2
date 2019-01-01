@@ -17,9 +17,17 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
         public int ResultadoId { get; set; }
         public int NumScripts { get; set; }
         public int NumBloques { get; set; }
+
         public int DuplicateScriptsCount { get; set; }
         public int DeadCodeCount { get; set; }
         public int SiguienteDesafioId { get; set; }
+
+
+        public int ThreadCount { get; set; }
+        public int CloneCount { get; set; }
+        public int CloneRemovalCount { get; set; }
+        public int SequentialLoopsCount { get; set; }
+
         public float Puntuacion { get; set; }
 
         //Assessment params
@@ -40,6 +48,11 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
             DuplicateScriptsCount = resultado.DuplicateScriptsCount;
             DeadCodeCount = resultado.DeadCodeCount;
             Nombre = resultado.Nombre;
+
+            ThreadCount = resultado.IInfoScratch_General.ThreadCount;
+            CloneCount = resultado.IInfoScratch_General.CloneCount;
+            CloneRemovalCount = resultado.IInfoScratch_General.CloneRemovalCount;
+            SequentialLoopsCount = resultado.IInfoScratch_General.SequentialLoopsCount;
 
             AssessmentType = desafioCompletado.TipoEvaluacion;
             Param1 = desafioCompletado.Param1;

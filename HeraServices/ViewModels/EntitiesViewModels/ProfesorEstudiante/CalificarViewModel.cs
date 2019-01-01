@@ -6,8 +6,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorEstudiante
     public class CreateCalificacionCualitativaViewModel
     {
         public int? Id { get; set; }
+        public int Valoracion { get; set; }
         public bool Completada { get; set; }
-        public DateTime FechaRegistro { get; set; }
         public string Descripcion { get; set; }
         public int? CalificacionId { get; set; }
 
@@ -30,7 +30,8 @@ namespace HeraServices.ViewModels.EntitiesViewModels.ProfesorEstudiante
                 CalificacionId = CalificacionId.GetValueOrDefault(),
                 FechaRegistro = DateTime.Now,
                 Descripcion = Descripcion,
-                Completada = Completada
+                Completada = Completada,
+                Valoracion = Valoracion
             };
         }
     }

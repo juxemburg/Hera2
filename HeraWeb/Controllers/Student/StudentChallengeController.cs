@@ -92,6 +92,7 @@ namespace HeraWeb.Controllers.Student
         }
 
         [HttpGet]
+
         public async Task<IActionResult> GetPeersResults(int courseId, int challengeId)
         {
             return await this.Get(async () => {

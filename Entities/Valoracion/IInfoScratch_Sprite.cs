@@ -23,6 +23,10 @@ namespace Entities.Valoracion
         public bool BasicOperators { get; set; }
         public bool MediumOperators { get; set; }
         public bool AdvancedOperators { get; set; }
-        
+        public int ThreadCount { get; set; }
+        public int CloneCount { get; set; }
+        public int CloneRemovalCount { get; set; }
+        public int SequentialLoopsCount { get; set; }
+
     }
 }

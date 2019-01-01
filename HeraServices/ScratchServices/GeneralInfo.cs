@@ -32,6 +32,11 @@ namespace HeraServices.Services.ScratchServices
         public int MediumOperators { get; set; }
         public int AdvancedOperators { get; set; }
 
+        public int ThreadCount { get; set; }
+        public int CloneCount { get; set; }
+        public int CloneRemovalCount { get; set; }
+        public int SequentialLoopsCount { get; set; }
+
         public string Info => "";
         
 
@@ -62,7 +67,11 @@ namespace HeraServices.Services.ScratchServices
                 VariableCreation = VariableCreation,
                 BasicOperators = BasicOperators,
                 MediumOperators = MediumOperators,
-                AdvancedOperators = AdvancedOperators
+                AdvancedOperators = AdvancedOperators,
+                ThreadCount = ThreadCount,
+                CloneCount = CloneCount,
+                CloneRemovalCount = CloneRemovalCount,
+                SequentialLoopsCount = SequentialLoopsCount
             };
         }
     }

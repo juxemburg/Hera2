@@ -14,9 +14,10 @@ using System;
 namespace HeraDAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181224134442_V11")]
+    partial class V11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,8 +64,6 @@ namespace HeraDAL.Migrations
                     b.Property<string>("Descripcion");
 
                     b.Property<DateTime>("FechaRegistro");
-
-                    b.Property<int>("Valoracion");
 
                     b.HasKey("Id");
 

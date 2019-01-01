@@ -190,7 +190,7 @@ namespace HeraServices.Services.ApplicationServices
                     desafio.Param2,
                     desafio.Param3,
                     desafio.Param4,
-                    res);
+                    resultados);
 
                 _data.Do_TerminarCalificacion(curso,
                     est, model, resultados, idProj);

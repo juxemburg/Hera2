@@ -12,6 +12,9 @@ namespace HeraServices.Services.ScratchServices
         public string SpriteName { get; set; }
         public bool generalValoration { get; set; }
 
+        public int ThreadCount { get; set; }
+        public int CloneCount { get; set; }
+        public int CloneRemovalCount { get; set; }
         public int ScriptCount { get; set; }
         public int BlockCount { get; set; }
         public int DeadCodeCount { get; set; }
