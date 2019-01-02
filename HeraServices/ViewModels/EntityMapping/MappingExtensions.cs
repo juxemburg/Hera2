@@ -14,14 +14,16 @@ namespace HeraServices.ViewModels.EntityMapping
 {
     public static class MappingExtensions
     {
-        public static DesafioViewModel Map(this Desafio model, float puntuacion)
+        public static DesafioViewModel Map(this Desafio model, bool completada, float puntuacion, float valoracion)
         {
             return new DesafioViewModel()
             {
                 Id = model.Id,
                 Descripcion = model.Descripcion,
                 Nombre = model.Nombre,
-                PuntuacionMax = puntuacion
+                PuntuacionMax = puntuacion,
+                Completado = completada,
+                Valoracion = valoracion
             };
         }
 

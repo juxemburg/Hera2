@@ -11,5 +11,6 @@ namespace HeraServices.ViewModels.EntitiesViewModels.Desafios
         public string Descripcion { get; set; }
         public float PuntuacionMax { get; set; }
         public bool Completado { get; set; }
+        public float Valoracion { get; set; }
     }
 }

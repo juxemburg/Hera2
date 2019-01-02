@@ -39,12 +39,12 @@ namespace HeraServices.Services.DesafiosServices
             var desafiosRealizados = model.Registros
                 .Where(rel => rel.Terminada
                 && rel.Desafio != null)
-                .Select(rel => rel.Desafio.Map(rel.PuntuacionMaxima))
+                .Select(rel => rel.Desafio.Map(rel.Valorada, rel.PuntuacionMaxima, rel.ValoracionMaxima))
                 .ToList();
             var desafiosNoCompletados = model.Registros
                 .Where(rel => !rel.Terminada
                 && rel.Desafio != null)
-                .Select(rel => rel.Desafio.Map(rel.PuntuacionMaxima))
+                .Select(rel => rel.Desafio.Map(rel.Valorada, rel.PuntuacionMaxima, rel.ValoracionMaxima))
                 .ToList();
 
             if (desafiosRealizados == null ||

@@ -46,7 +46,10 @@ namespace Entities.Calificaciones
         }
 
         public bool Valorada =>
-            Calificaciones.All(c => c.CalificacionCualitativa != null);
+            Calificaciones != null ? Calificaciones.All(c => c.CalificacionCualitativa != null) : false;
+
+        public float ValoracionMaxima =>
+            Calificaciones != null ? Calificaciones.Max(c => c.CalificacionCualitativa != null ? c.CalificacionCualitativa.Valoracion : 0) : 0;
 
         public Calificacion CalificacionPendiente =>
             Calificaciones.FirstOrDefault(cal => cal.EnCurso);

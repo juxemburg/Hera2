@@ -225,6 +225,7 @@ namespace HeraDAL.DataAcess
                 .ThenInclude(colab => colab.Calificacion)
                 .Include(cur => cur.Registros)
                 .ThenInclude(reg => reg.Calificaciones)
+                .ThenInclude(cal => cal.CalificacionCualitativa)
                 .FirstOrDefaultAsync(rel => rel.CursoId == idCurso &&
                 rel.EstudianteId == idEstudiante);
 

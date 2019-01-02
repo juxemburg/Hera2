@@ -35,7 +35,7 @@ namespace HeraServices.ViewModels.EntitiesViewModels.EstudianteCurso
             DesafiosNoCompletados = desafioNoCompletados;
             DesafiosRealizados =
                 desafiosRealizados != null ? desafiosRealizados : new List<DesafioViewModel>();
-            DesafioPendiente = desafioPendiente.Map(0);
+            DesafioPendiente = desafioPendiente.Map(false, 0, 0);
 
         }
     }
