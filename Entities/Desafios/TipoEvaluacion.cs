@@ -10,6 +10,7 @@ namespace Entities.Desafios
         FlowPipes,
         RepeatingDucks,
         CloningTroubles,
-        RepeatingRains
+        RepeatingRains,
+        AbandonedBlocks
     }
 }
