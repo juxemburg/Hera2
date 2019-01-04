@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using HeraScratch.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace HeraScratch
 {
@@ -18,24 +19,44 @@ namespace HeraScratch
         {
             _client = new Client("https://projects.scratch.mit.edu");
         }
-        public async Task<IEnumerable<T>> Evaluate<T,U,S>(string proyectId)
+        public async Task<IEnumerable<T>> Evaluate<T, U, S>(string proyectId)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
             where S : IGeneralValoration, new()
         {
             try
             {
-                var result = await _client.Get<ScratchObject>(
-                "internalapi/project", proyectId, "get");
+                //TODO: Review
+                var result = await _client.GetDynamic<ScratchProject>(
+                "",
+                (json, resource) =>
+                {
+                    var index = 0;
+                    foreach (var target in json["targets"])
+                    {
+                        if (resource.Targets.Count > index)
+                        {
+                            resource.Targets[index].BlocksDictionary = new Dictionary<string, ScratchBlock>();
+                        }
 
-                
+                        var blocks = target["blocks"];
+                        foreach (var property in blocks.Children<JProperty>())
+                        {
+                            var sobject = property.Value.ToObject<ScratchBlock>();
+                            sobject.Id = property.Name;
+                            resource.Targets[index].BlocksDictionary.Add(sobject.Id, sobject);
+                        }
+                        resource.Targets[index].Initialize();
+                        index++;
+                    }
+                    resource.Initialize();
+                    return resource;
+                },proyectId);
+
+
                 var list = result
-                    .Children
-                    .Where(child => child.RawScripts != null &&
-                    !string.IsNullOrWhiteSpace(child.ObjName))
-                    .Select(child => 
-                    child.Evaluate<T,U,S>(child.ObjName));
-                list = list.Append(result.Evaluate<T, U, S>("Stage"));
+                    .Targets
+                    .Select(sprite => sprite.Get_singleValoration<T, U>());
                 var previousList =
                     list.Select(item => (U)item.AdditionalInfo)
                     .ToList();

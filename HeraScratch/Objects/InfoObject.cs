@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace HeraScratch.Objects
 {
     [DataContract(Name = "info")]
-    class InfoObject
+    public class InfoObject
     {
         [DataMember(Name = "projectID")]
         public int Id { get; set; }

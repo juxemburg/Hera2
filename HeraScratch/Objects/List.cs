@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace HeraScratch.Objects
 {
     [DataContract(Name = "list")]
-    class ScratchList
+    public class ScratchList
     {
         [DataMember(Name ="listName")]
         public string ListName { get; set; }

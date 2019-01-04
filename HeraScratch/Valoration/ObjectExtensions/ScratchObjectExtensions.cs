@@ -9,104 +9,158 @@ namespace HeraScratch.ObjectExtensions
 {
     static class ScratchObjectExtensions
     {
+        private static Dictionary<string, string> _NonStackBlocks
+            = new Dictionary<string, string>()
+            {
+                ["sensing_touchingobject"] = "sensing_touchingobject",
+                ["sensing_touchingobjectmenu"] = "sensing_touchingobjectmenu",
+                ["sensing_touchingcolor"] = "sensing_touchingcolor",
+                ["sensing_coloristouchingcolor"] = "sensing_coloristouchingcolor",
+                ["sensing_keypressed"] = "sensing_keypressed",
+                ["sensing_keyoptions"] = "sensing_keyoptions",
+                ["operator_gt"] = "operator_gt",
+                ["operator_lt"] = "operator_lt",
+                ["operator_equals"] = "operator_equals",
+                ["operator_and"] = "operator_and",
+                ["operator_or"] = "operator_or",
+                ["operator_not"] = "operator_not",
+                ["operator_contains"] = "operator_contains",
+                //variables
+                ["motion_xposition"] = "motion_xposition",
+                ["motion_yposition"] = "motion_yposition",
+                ["motion_direction"] = "motion_direction",
+                ["looks_costumenumbername"] = "looks_costumenumbername",
+                ["looks_backdropnumbername"] = "looks_backdropnumbername",
+                ["looks_size"] = "looks_size",
+                ["sound_volume"] = "sound_volume",
+                ["sensing_answer"] = "sensing_answer",
+                ["sensing_mousex"] = "sensing_mousex",
+                ["sensing_mousey"] = "sensing_mousey",
+                ["sensing_loudness"] = "sensing_loudness",
+                ["sensing_timer"] = "sensing_timer",
+                ["sensing_current"] = "sensing_current",
+                ["sensing_dayssince2000"] = "sensing_dayssince2000",
+                ["sensing_username"] = "sensing_username",
+                ["operator_mod"] = "operator_mod",
+                ["operator_random"] = "operator_random",
+                ["operator_letter_of"] = "operator_letter_of",
+                ["operator_join"] = "operator_join",
+                ["operator_length"] = "operator_length",
+                ["operator_round"] = "operator_round",
+                ["operator_mathop"] = "operator_mathop"
+            };
+
         private static Dictionary<string, string> _NonUserVariables
             = new Dictionary<string, string>()
             {
-                ["answer"] = "answer",
-                ["soundLevel"] = "soundLevel",
-                ["timer"] = "timer",
-                ["timeAndDate"] = "timeAndDate",
-                ["senseVideoMotion"] = "senseVideoMotion",
-                ["xpos"] = "",
-                ["ypos"] = "",
-                ["heading"] = "",
-                ["costumeIndex"] = "",
-                ["sceneName"] = "",
-                ["scale"] = "",
-                ["volume"] = "",
-                ["tempo"] = ""
+                ["motion_xposition"] = "motion_xposition",
+                ["motion_yposition"] = "motion_yposition",
+                ["motion_direction"] = "motion_direction",
+                ["looks_costumenumbername"] = "looks_costumenumbername",
+                ["looks_backdropnumbername"] = "looks_backdropnumbername",
+                ["looks_size"] = "looks_size",
+                ["sound_volume"] = "sound_volume",
+                ["sensing_answer"] = "sensing_answer",
+                ["sensing_mousex"] = "sensing_mousex",
+                ["sensing_mousey"] = "sensing_mousey",
+                ["sensing_loudness"] = "sensing_loudness",
+                ["sensing_timer"] = "sensing_timer",
+                ["sensing_current"] = "sensing_current",
+                ["sensing_dayssince2000"] = "sensing_dayssince2000",
+                ["sensing_username"] = "sensing_username",
+                ["operator_mod"] = "operator_mod",
+                ["operator_random"] = "operator_random",
+                ["operator_letter_of"] = "operator_letter_of",
+                ["operator_join"] = "operator_join",
+                ["operator_length"] = "operator_length",
+                ["operator_round"] = "operator_round",
+                ["operator_mathop"] = "operator_mathop"
             };
 
         private static Dictionary<string, string> _BasicOperators
             = new Dictionary<string, string>()
             {
-                ["+"] = "+",
-                ["-"] = "-",
-                ["*"] = "*",
-                ["/"] = "/",
-                ["concatenate:with:"] = "concatenate:with:"
+                ["operator_add"] = "operator_add",
+                ["operator_subtract"] = "operator_subtract",
+                ["operator_multiply"] = "operator_multiply",
+                ["operator_divide"] = "operator_divide",
+                ["operator_join"] = "operator_join"
             };
 
         private static Dictionary<string, string> _MediumOperators
             = new Dictionary<string, string>()
             {
-                ["<"] = "<",
-                ["="] = "=",
-                [">"] = ">",
-                ["randomFrom:to:"] = "randomFrom:to:",
-                ["&"] = "&",
-                ["|"] = "|",
-                ["not"] = "not"
+                ["operator_gt"] = "operator_gt",
+                ["operator_equals"] = "operator_equals",
+                ["operator_lt"] = "operator_lt",
+                ["operator_random"] = "operator_random",
+                ["operator_and"] = "operator_and",
+                ["operator_or"] = "operator_or",
+                ["operator_not"] = "operator_not"
             };
         private static Dictionary<string, string> _SensingBlocks
             = new Dictionary<string, string>()
             {
-                ["keyPressed"] = "",
-                ["whenKeyPressed"] = "",
-                ["touching:"] = ""
+                ["sensing_keypressed"] = "sensing_keypressed",
+                ["event_whenkeypressed"] = "event_whenkeypressed",
+                ["sensing_touchingobject"] = "sensing_touchingobject"
             };
 
         private static Dictionary<string, string> _ThreadingBlocks
             = new Dictionary<string, string>()
             {
-                ["whenGreenFlag"] = "whenGreenFlag",
-                ["whenKeyPressed"] = "whenKeyPressed",
-                ["whenClicked"] = "whenClicked",
+                ["event_whenflagclicked"] = "event_whenflagclicked",
+                ["event_whenkeypressed"] = "event_whenkeypressed",
+                ["event_whenthisspriteclicked"] = "event_whenthisspriteclicked",
                 ["whenIReceive"] = "whenIReceive",
                 ["whenSceneStarts"] = "whenSceneStarts",
                 ["whenSensorGreaterThan"] = "whenSensorGreaterThan",
-                ["whenCloned"] = "whenCloned"
+                ["control_start_as_clone"] = "control_start_as_clone"
             };
 
         private static Dictionary<string, string> _EventBlocks
             = new Dictionary<string, string>()
             {
-                ["whenGreenFlag"] = "whenGreenFlag",
-                ["whenKeyPressed"] = "whenKeyPressed",
-                ["whenClicked"] = "whenClicked",
-                ["whenIReceive"] = "whenIReceive",
-                ["whenSceneStarts"] = "whenSceneStarts",
-                ["whenSensorGreaterThan"] = "whenSensorGreaterThan",
-                ["broadcast:"] = "broadcast:",
-                ["doBroadcastAndWait"] = "doBroadcastAndWait",
-                ["procDef"] = "procDef",
-                ["whenCloned"] = "whenCloned"
+                ["event_whenflagclicked"] = "event_whenflagclicked",
+                ["event_whenkeypressed"] = "event_whenkeypressed",
+                ["event_whenthisspriteclicked"] = "event_whenthisspriteclicked",
+                ["event_whengreaterthan"] = "event_whengreaterthan",
+                ["event_whenbackdropswitchesto"] = "event_whenbackdropswitchesto",
+                ["event_whenbroadcastreceived"] = "event_whenbroadcastreceived",
+                ["control_start_as_clone"] = "control_start_as_clone",
+                //["doBroadcastAndWait"] = "doBroadcastAndWait",
+                //["procDef"] = "procDef",
+                //["control_start_as_clone"] = "control_start_as_clone"
             };
         private static Dictionary<string, string> _BasicControlBlocks
             = new Dictionary<string, string>()
             {
-                ["doIf"] = "doIf",
-                ["stopScripts"] = "stopScripts",
-                ["doForever"] = "doForever",
-                ["doRepeat"] = "doRepeat",
+                ["control_if"] = "control_if",
+                ["control_stop"] = "control_stop",
+                ["control_forever"] = "control_forever",
+                ["control_repeat"] = "control_repeat",
                 ["wait:elapsed:from:"] = "wait:elapsed:from:"
             };
         private static Dictionary<string, string> _MediumControlBlocks
             = new Dictionary<string, string>()
             {
-                ["doWaitUntil"] = "doWaitUntil",
-                ["doUntil"] = "doUntil",
-                ["doIfElse"] = "doIfElse"
+                ["control_wait_until"] = "control_wait_until",
+                ["control_repeat_until"] = "control_repeat_until",
+                ["control_if_else"] = "control_if_else"
             };
         private static Dictionary<string, string> _ControlBlocks
             = new Dictionary<string, string>()
             {
-                ["doWaitUntil"] = "doWaitUntil",
-                ["doUntil"] = "doUntil",
-                ["doIfElse"] = "doIfElse",
-                ["doIf"] = "doIf",
-                ["doForever"] = "doForever",
-                ["doRepeat"] = "doRepeat"
+                ["control_wait"] = "control_wait",
+                ["control_repeat"] = "control_repeat",
+                ["control_forever"] = "control_forever",
+                ["control_if"] = "control_if",
+                ["control_if_else"] = "control_if_else",
+                ["control_wait_until"] = "control_wait_until",
+                ["control_repeat_until"] = "control_repeat_until",
+                ["control_stop"] = "control_stop",
+                ["control_create_clone_of"] = "control_create_clone_of",
+                ["control_delete_this_clone"] = "control_delete_this_clone"
             };
         private static Dictionary<string, string> _reservedBlocks
             = new Dictionary<string, string>()
@@ -143,6 +197,12 @@ namespace HeraScratch.ObjectExtensions
 
             };
 
+        public static bool IsNonStackBlock(this ScratchObject _this,
+            string name)
+        {
+            return _NonStackBlocks.ContainsKey(name);
+        }
+
         public static bool IsControlBlock(this ScratchObject _this,
             string name)
         {
@@ -159,33 +219,26 @@ namespace HeraScratch.ObjectExtensions
         {
             return _reservedBlocks.ContainsKey(name);
         }
-        public static T Evaluate<T, U, S>(this ScratchObject obj,
+
+        public static T SpriteValoration<T, U>(this ScratchObject sprite,
             string objectName, bool general = false)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
-            where S : IGeneralValoration, new()
         {
-            if (obj.RawScripts == null)
-            {
-                return (T)ValorationHelper
-                    .Get_DefaultSingle<T, U>(objectName);
-            }
-
-            return Get_singleValoration<T, U>(obj.Scripts,
-                obj.Blocks,
-                obj.ScriptsString, objectName, obj.DeadCodeCount,
-                obj.NestedControl, obj.NestedOperator, general);
+            return default(T);
         }
+
+        
         public static T GeneralEvaluation<T, U, S>(
-            this ScratchObject obj, string objectName,
+            this ScratchProject proj, string objectName,
             List<U> previousValorations)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
             where S : IGeneralValoration, new()
         {
-            if (obj.Children == null)
-                return (T)ValorationHelper
-                    .Get_DefaultSingle<T, U>(objectName);
+            //if (obj.Children == null)
+            //    return (T)ValorationHelper
+            //        .Get_DefaultSingle<T, U>(objectName);
 
             var blocks = new List<string>();
             var scripts = new List<List<object>>();
@@ -193,42 +246,41 @@ namespace HeraScratch.ObjectExtensions
             var messagesRecieved = new List<string>();
             var messagesSent = new List<string>();
             var deadCodeSums = 0;
-            if (obj.RawScripts != null)
+            //if (obj.RawScripts != null)
+            //{
+            //    blocks.AddRange(obj.Blocks);
+            //    sprite.Scripts.AddRange(obj.Scripts);
+            //    scriptList.AddRange(obj.ScriptsString);
+            //    messagesRecieved.AddRange(obj.MessagesRecieved);
+            //    messagesSent.AddRange(obj.MessagesSent);
+            //}
+            foreach (var child in proj.Targets)
             {
-                blocks.AddRange(obj.Blocks);
-                scripts.AddRange(obj.Scripts);
-                scriptList.AddRange(obj.ScriptsString);
-                messagesRecieved.AddRange(obj.MessagesRecieved);
-                messagesSent.AddRange(obj.MessagesSent);
-            }
-            foreach (var child in obj.Children)
-            {
-                deadCodeSums += child.DeadCodeCount;
+                //deadCodeSums += child.DeadCodeCount;
                 if (child.Blocks != null)
                 {
                     blocks.AddRange(child.Blocks);
                 }
-                if (child.Scripts != null)
-                {
-                    scripts.AddRange(child.Scripts);
-                }
-                if (child.ScriptsString != null)
-                {
-                    scriptList.AddRange(child.ScriptsString);
-                }
-                if (child.MessagesRecieved != null)
-                {
-                    messagesRecieved.AddRange(child.MessagesRecieved);
-                }
-                if (child.MessagesSent != null)
-                {
-                    messagesSent.AddRange(child.MessagesSent);
-                }
+                //if (child.Scripts != null)
+                //{
+                //    sprite.Scripts.AddRange(child.Scripts);
+                //}
+                //if (child.ScriptsString != null)
+                //{
+                //    scriptList.AddRange(child.ScriptsString);
+                //}
+                //if (child.MessagesRecieved != null)
+                //{
+                //    messagesRecieved.AddRange(child.MessagesRecieved);
+                //}
+                //if (child.MessagesSent != null)
+                //{
+                //    messagesSent.AddRange(child.MessagesSent);
+                //}
             }
-            var vars = obj.Variables != null ? obj.Variables.ToList() :
-                new List<Variable>();
-            var lists = obj.Lists != null ? obj.Lists.ToList() :
-                new List<ScratchList>();
+            var vars = new List<Variable>();
+            var lists = new List<ScratchList>();
+
             return Get_generalValoration<T, U, S>(scripts,
                 blocks, scriptList, objectName, previousValorations,
                 vars, lists, deadCodeSums, previousValorations.Count,
@@ -236,19 +288,7 @@ namespace HeraScratch.ObjectExtensions
 
         }
 
-        private static string Get_firstBlock(List<object> script)
-        {
-            var i = ((IEnumerable<object>)script[0]).First();
-            var item = ((IEnumerable<object>)i).FirstOrDefault();
-            if (item != null &&
-                typeof(string) == item.GetType())
-            {
-                var value = !_EventBlocks.ContainsKey(item.ToString());
-                return item.ToString();
-            }
-            return "unknown";
-
-        }
+       
 
         public static int Get_ScriptLength(object[] script)
         {
@@ -272,36 +312,39 @@ namespace HeraScratch.ObjectExtensions
             }
         }
 
-        private static T Get_singleValoration<T, U>
-            (List<List<object>> scripts, List<string> blocks,
-            List<string> scriptList, string objName,
-            int deadCodeCount,
-            bool nestedControl,
-            bool nestedOperator,
-            bool general = false)
+        public static T Get_singleValoration<T, U>(this ScratchObject sprite)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
         {
-            var threadCount = scripts.Where(s =>
-                 _ThreadingBlocks.Any(b => b.Key.Equals(Get_firstBlock(s))))
-                    .Count();
-            var loopRegex = new Regex(@"(^doRepeat)|(^doUntil)|(^doWaitUntil)|(^doForever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            var nestedRegex = new Regex(@"(^doRepeat)|(^doUntil)|(^doWaitUntil)|(^doForever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            var threadCount = sprite.Scripts.Where(s =>
+            _ThreadingBlocks.Any(b => b.Key.Equals(s.BlockName))).Count();
+            var deadCodeCount = sprite.Scripts.Where(b => !_EventBlocks.ContainsKey(b.BlockName)).Count();
+            var loopRegex = new Regex(@"(^control_repeat)|(^control_repeat_until)|(^control_wait_until)|(^control_forever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var nestedRegex = new Regex(@"(^control_repeat)|(^control_repeat_until)|(^control_wait_until)|(^control_forever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+
+
+
+
+
             return new T()
             {
-                generalValoration = general,
-                SpriteName = objName,
-                ScriptCount = scripts.Count,
-                BlockCount = blocks.Count(),
+                generalValoration = false, //TODO:Review
+
+                SpriteName = sprite.Name,
+                ScriptCount = sprite.Scripts.Count,
+                BlockCount = sprite.Blocks.Count,
                 DeadCodeCount = deadCodeCount,
 
-                BlockFrequency = blocks.GroupBy(b => b)
+                BlockFrequency = sprite.BlocksDictionary.Values.GroupBy(b => b.BlockName)
                 .Select(b => new Tuple<string, int>(
                     b.Key,
                     b.Count()))
                 .OrderByDescending(i => i.Item2)
                 .ToList(),
-                DuplicateScriptCount = scriptList
+
+                DuplicateScriptCount = sprite.ScriptsString
                 .GroupBy(i => i)
                 .Where(grp => grp.Count() > 1)
                 .Select(grp => grp.Key)
@@ -315,58 +358,63 @@ namespace HeraScratch.ObjectExtensions
                     //Abstraction
                     NonUnusedBlocks = deadCodeCount == 0,
                     UserDefinedBlocks =
-                    blocks.Any(b => b == "procDef"),
+                    sprite.BlockNames.Any(b => b == "procedures_definition"),
                     CloneUse =
-                     blocks.Any(b => b == "createCloneOf"),
+                     sprite.BlockNames.Any(b => b == "control_create_clone_of"),
 
                     //Algorithmic thinking
                     SecuenceUse =
-                        scripts.Any(list =>
-                        _EventBlocks.ContainsKey(Get_firstBlock(list))
-                        && list.Count > 0),
+                        sprite.Scripts.Any(b =>
+                        _EventBlocks.ContainsKey(b.BlockName)
+                        && b.NextBlock != null),
 
 
                     //Sync
                     MultipleThreads =
                     threadCount > 1,
+
                     TwoGreenFlagTrhead =
-                    scripts.Where(s =>
-                    Get_firstBlock(s).Equals("whenGreenFlag"))
+                    sprite.Scripts.Where(s =>
+                    s.BlockName.Equals("event_whenflagclicked"))
                     .Count() > 1,
 
-
+                    //TODO: Review
                     AdvancedEventUse =
-                    scripts.GroupBy(s
-                        => Get_firstBlock(s))
+                    sprite.Scripts.GroupBy(s
+                        => s.BlockName)
                         .Count() > 1,
+
                     //Flux control
                     UseSimpleBlocks =
-                    blocks.Any(b => _BasicControlBlocks.ContainsKey(b)),
+                    sprite.BlockNames.Any(b => _BasicControlBlocks.ContainsKey(b)),
                     UseMediumBlocks =
-                    blocks.Any(b => _MediumControlBlocks.ContainsKey(b)),
-                    UseNestedControl = nestedControl,
+                    sprite.BlockNames.Any(b => _MediumControlBlocks.ContainsKey(b)),
+
+                    //TODO: Review
+                    UseNestedControl = false, //nestedControl,
 
                     //Input
-                    BasicInputUse = blocks
+                    BasicInputUse = sprite.BlockNames
                         .Any(b => _SensingBlocks.ContainsKey(b)),
-                    VariableUse = blocks
+                    VariableUse = sprite.BlockNames
                         .Any(b => _NonUserVariables.ContainsKey(b)
                         ),
-                    SpriteSensing = blocks
+                    SpriteSensing = sprite.BlockNames
                     .Any(b => b == "touching:" || b == "touching"),
 
                     //Analysis
-                    BasicOperators = blocks
+                    BasicOperators = sprite.BlockNames
                     .Any(b => _BasicOperators.ContainsKey(b)),
 
-                    MediumOperators = blocks
+                    MediumOperators = sprite.BlockNames
                     .Any(b => _MediumOperators.ContainsKey(b)),
-                    AdvancedOperators = nestedOperator,
+                    //TODO: Review
+                    AdvancedOperators = false,
 
                     ThreadCount = threadCount,
-                    CloneCount = blocks.Where(b => b.Equals("createCloneOf")).Count(),
-                    CloneRemovalCount = blocks.Where(b => b == "deleteClone").Count(),
-                    SequentialLoopsCount = scriptList.Select(item => loopRegex.Matches(item).Count).Sum()
+                    CloneCount = sprite.BlockNames.Where(b => b.Equals("control_create_clone_of")).Count(),
+                    CloneRemovalCount = sprite.BlockNames.Where(b => b == "deleteClone").Count(),
+                    SequentialLoopsCount = sprite.ScriptsString.Select(item => loopRegex.Matches(item).Count).Sum()
 
                 }
             };
@@ -383,7 +431,7 @@ namespace HeraScratch.ObjectExtensions
             int objCount,
             List<string> messagesRecieved,
             List<string> messagesSent,
-            bool general = false)
+            bool general = true)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
             where S : IGeneralValoration, new()
@@ -442,7 +490,8 @@ namespace HeraScratch.ObjectExtensions
 
                 generalValoration = general,
                 SpriteName = objName,
-                ScriptCount = scripts.Count,
+                //ScriptCount = sprite.Scripts.Count,
+                ScriptCount = 0,
                 BlockCount = blocks.Count(),
                 DeadCodeCount = deadCodeSum,
 
@@ -465,10 +514,7 @@ namespace HeraScratch.ObjectExtensions
                     EventsUse = previousValorations
                     .Where(val => val.HasEvents).Count() > 1,
                     SharedVariables = variables.Count > 0,
-                    MessageUse = messagesRecieved
-                    .All(m => messagesSent.Contains(m))
-                    && blocks.Any(b => b.Equals("broadcast:"))
-                    && blocks.Any(b => b.Equals("whenIReceive")),
+                    MessageUse = blocks.Any(b => b.Equals("event_whenbroadcastreceived")),
                     ListUse = lists.Count > 0,
 
                     //Particular Variables
