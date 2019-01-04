@@ -228,7 +228,7 @@ namespace HeraScratch.ObjectExtensions
             return default(T);
         }
 
-        
+
         public static T GeneralEvaluation<T, U, S>(
             this ScratchProject proj, string objectName,
             List<U> previousValorations)
@@ -245,50 +245,23 @@ namespace HeraScratch.ObjectExtensions
             var scriptList = new List<string>();
             var messagesRecieved = new List<string>();
             var messagesSent = new List<string>();
-            var deadCodeSums = 0;
-            //if (obj.RawScripts != null)
-            //{
-            //    blocks.AddRange(obj.Blocks);
-            //    sprite.Scripts.AddRange(obj.Scripts);
-            //    scriptList.AddRange(obj.ScriptsString);
-            //    messagesRecieved.AddRange(obj.MessagesRecieved);
-            //    messagesSent.AddRange(obj.MessagesSent);
-            //}
+            
             foreach (var child in proj.Targets)
             {
-                //deadCodeSums += child.DeadCodeCount;
                 if (child.Blocks != null)
                 {
                     blocks.AddRange(child.Blocks);
                 }
-                //if (child.Scripts != null)
-                //{
-                //    sprite.Scripts.AddRange(child.Scripts);
-                //}
-                //if (child.ScriptsString != null)
-                //{
-                //    scriptList.AddRange(child.ScriptsString);
-                //}
-                //if (child.MessagesRecieved != null)
-                //{
-                //    messagesRecieved.AddRange(child.MessagesRecieved);
-                //}
-                //if (child.MessagesSent != null)
-                //{
-                //    messagesSent.AddRange(child.MessagesSent);
-                //}
+                
             }
             var vars = new List<Variable>();
             var lists = new List<ScratchList>();
 
-            return Get_generalValoration<T, U, S>(scripts,
-                blocks, scriptList, objectName, previousValorations,
-                vars, lists, deadCodeSums, previousValorations.Count,
-                messagesRecieved, messagesSent, true);
+            return Get_generalValoration<T, U, S>(proj.Targets, previousValorations);
 
         }
 
-       
+
 
         public static int Get_ScriptLength(object[] script)
         {
@@ -322,10 +295,6 @@ namespace HeraScratch.ObjectExtensions
             var deadCodeCount = sprite.Scripts.Where(b => !_EventBlocks.ContainsKey(b.BlockName)).Count();
             var loopRegex = new Regex(@"(^control_repeat)|(^control_repeat_until)|(^control_wait_until)|(^control_forever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
             var nestedRegex = new Regex(@"(^control_repeat)|(^control_repeat_until)|(^control_wait_until)|(^control_forever)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-
-
-
 
 
             return new T()
@@ -422,15 +391,8 @@ namespace HeraScratch.ObjectExtensions
 
 
         private static T Get_generalValoration<T, U, S>
-            (List<List<object>> scripts, List<string> blocks,
-            List<string> scriptList, string objName,
+            (List<ScratchObject> sprites,
             List<U> previousValorations,
-            List<Variable> variables,
-            List<ScratchList> lists,
-            int deadCodeSum,
-            int objCount,
-            List<string> messagesRecieved,
-            List<string> messagesSent,
             bool general = true)
             where T : IValoration, new()
             where U : ISpriteValoration, new()
@@ -489,19 +451,19 @@ namespace HeraScratch.ObjectExtensions
             {
 
                 generalValoration = general,
-                SpriteName = objName,
-                //ScriptCount = sprite.Scripts.Count,
-                ScriptCount = 0,
-                BlockCount = blocks.Count(),
-                DeadCodeCount = deadCodeSum,
+                SpriteName = "General",
+                ScriptCount = sprites.Sum(s => s.Scripts.Count),
+                BlockCount = sprites.Sum(s => s.Blocks.Count),
+                
+                DeadCodeCount = sprites.SelectMany(s => s.Scripts).Where(b => !_EventBlocks.ContainsKey(b.BlockName)).Count(),
 
-                BlockFrequency = blocks.GroupBy(b => b)
+                BlockFrequency = sprites.SelectMany(s => s.BlockNames).GroupBy(b => b)
                 .Select(b => new Tuple<string, int>(
                     b.Key,
                     b.Count()))
                 .OrderByDescending(i => i.Item2)
                 .ToList(),
-                DuplicateScriptCount = scriptList
+                DuplicateScriptCount = sprites.SelectMany(s => s.ScriptsString)
                 .GroupBy(i => i)
                 .Where(grp => grp.Count() > 1)
                 .Select(grp => grp.Key)
@@ -509,13 +471,13 @@ namespace HeraScratch.ObjectExtensions
 
                 AdditionalInfo = new S()
                 {
-                    SpriteCount = objCount,
+                    SpriteCount = sprites.Count,
                     //General Variables
                     EventsUse = previousValorations
                     .Where(val => val.HasEvents).Count() > 1,
-                    SharedVariables = variables.Count > 0,
-                    MessageUse = blocks.Any(b => b.Equals("event_whenbroadcastreceived")),
-                    ListUse = lists.Count > 0,
+                    SharedVariables = false,
+                    MessageUse = sprites.SelectMany(s => s.BlockNames).Any(b => b.Equals("event_whenbroadcastreceived")),
+                    ListUse = false,
 
                     //Particular Variables
                     NonUnusedBlocks = previousAggregate.NonUnusedBlocks,
